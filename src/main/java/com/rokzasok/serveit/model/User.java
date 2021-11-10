@@ -3,6 +3,7 @@ package com.rokzasok.serveit.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Builder
 
 @Entity
+@Table(name = "users") //Mora jer je "user" keyword
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

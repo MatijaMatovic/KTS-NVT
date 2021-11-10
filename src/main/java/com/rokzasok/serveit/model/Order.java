@@ -15,6 +15,7 @@ import java.util.Set;
 @Builder
 
 @Entity
+@Table(name = "orders") //mora jer je "order" keyword
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "table_id", referencedColumnName = "id")
-    private Table table;
+    private SittingTable sittingTable;
 
     @ManyToMany
     @JoinTable(name = "order_dishes",

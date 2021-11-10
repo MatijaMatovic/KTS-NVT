@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Builder
 
 @Entity
-public class Table {
+public class SittingTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
