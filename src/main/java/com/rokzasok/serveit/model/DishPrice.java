@@ -24,6 +24,6 @@ public class DishPrice {
 
     //TODO: Pitati da li se referencira ID ili Code kolona
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "dish_code", referencedColumnName = "code", nullable = false)
+    @JoinColumn(name = "dish_id", referencedColumnName = "id", nullable = false)
     private Dish dish;
 }
