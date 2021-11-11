@@ -24,7 +24,6 @@ public class DrinkPrice {
     private Date priceDate;
     private Boolean isDeleted;
 
-    //TODO: Videti je li referenciran ID ili Code polje
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "drink_id", referencedColumnName = "id")
     private Drink drink;
