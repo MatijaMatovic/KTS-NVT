@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.model;
 
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.persistence.Table;
