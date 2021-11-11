@@ -3,6 +3,7 @@ package com.rokzasok.serveit.converters;
 import com.rokzasok.serveit.dto.SittingTableDTO;
 import com.rokzasok.serveit.model.SittingTable;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * Model -> DTO
  */
+@Component
 public class SittingTableToSittingTableDTO implements Converter<SittingTable, SittingTableDTO> {
     @Override
     public SittingTableDTO convert(SittingTable source) {
