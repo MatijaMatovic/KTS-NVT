@@ -100,7 +100,7 @@ public class UserController {
     public ResponseEntity<UserDTO> getUserByID(@PathVariable Integer id) {
         User theOne = userService.findOne(id);
         if (theOne == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with given ID not found");
         return new ResponseEntity<>(new UserDTO(theOne), HttpStatus.OK);
     }
 }
