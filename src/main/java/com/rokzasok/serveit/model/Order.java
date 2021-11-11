@@ -6,10 +6,11 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,6 +20,7 @@ import java.util.Set;
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.STRING)
@@ -36,12 +38,14 @@ public class Order {
     @JoinTable(name = "order_dishes",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Set<DishOrderItem> dishes;
 
     @ManyToMany
     @JoinTable(name = "order_drinks",
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "item_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Set<DrinkOrderItem> drinks;
 
     @ManyToOne(fetch = FetchType.EAGER)

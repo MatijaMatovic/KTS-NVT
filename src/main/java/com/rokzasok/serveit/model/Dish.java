@@ -4,10 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -16,6 +17,7 @@ import javax.persistence.*;
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.STRING)

@@ -5,10 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -17,6 +18,7 @@ import java.util.Date;
 public class DishPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
     private Double price;
     private Date priceDate;

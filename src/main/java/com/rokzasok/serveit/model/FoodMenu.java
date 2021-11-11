@@ -6,10 +6,11 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,6 +19,7 @@ import java.util.Set;
 public class FoodMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
     private Date date;
     private Boolean isDeleted;
@@ -26,5 +28,6 @@ public class FoodMenu {
     @JoinTable(name = "menu_prices",
             joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Set<DishPrice> dishes;
 }

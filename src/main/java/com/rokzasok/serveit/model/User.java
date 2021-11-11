@@ -5,10 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.persistence.Table;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,6 +19,7 @@ import javax.persistence.Table;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Column(nullable = false, unique = true)

@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,6 +20,7 @@ import java.util.Set;
 public class DrinkMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer id;
     private Date date;
     private Boolean isDeleted;
@@ -27,5 +29,6 @@ public class DrinkMenu {
     @JoinTable(name = "menu_prices",
                 joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id"))
+    @ToString.Exclude
     private Set<DrinkPrice> drinks = new HashSet<>();
 }
