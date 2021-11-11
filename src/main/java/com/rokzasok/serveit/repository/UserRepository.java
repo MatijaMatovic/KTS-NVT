@@ -1,4 +1,7 @@
 package com.rokzasok.serveit.repository;
 
-public class UserRepository {
+import com.rokzasok.serveit.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface UserRepository extends JpaRepository<User, Integer> {
 }
