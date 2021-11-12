@@ -15,6 +15,8 @@ public class DrinkDTO {
     private Integer id;
     private String code;
 
+    private String name;
+
     private DrinkCategory category;
 
     private String allergens;

@@ -23,6 +23,7 @@ public class DrinkToDrinkDTO implements Converter<Drink, DrinkDTO> {
         dto.setPurchasePrice(source.getPurchasePrice());
         dto.setDescription(source.getDescription());
         dto.setImagePath(source.getImagePath());
+        dto.setName(source.getName());
 
         return dto;
     }

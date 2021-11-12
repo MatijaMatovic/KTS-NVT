@@ -14,6 +14,7 @@ public class DishDTOtoDish implements Converter<DishDTO, Dish> {
                 source.getId(),
                 source.getCategory(),
                 source.getCode(),
+                source.getName(),
                 source.getAllergens(),
                 source.getIngredients(),
                 source.getRecipe(),

@@ -3,9 +3,7 @@ package com.rokzasok.serveit.converters;
 import com.rokzasok.serveit.dto.DrinkMenuDTO;
 import com.rokzasok.serveit.dto.DrinkPriceDTO;
 import com.rokzasok.serveit.model.DrinkMenu;
-import com.rokzasok.serveit.model.DrinkPrice;
-import com.rokzasok.serveit.service.impl.DrinkPriceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rokzasok.serveit.service.IDrinkPriceService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +16,11 @@ import java.util.List;
  */
 @Component
 public class DrinkMenuDTOToDrinkMenu implements Converter<DrinkMenuDTO, DrinkMenu> {
-    @Autowired
-    DrinkPriceService drinkPriceService;
-    // TODO -- DA LI OVO RADITI?
+    private final IDrinkPriceService drinkPriceService;
+
+    public DrinkMenuDTOToDrinkMenu(IDrinkPriceService drinkPriceService) {
+        this.drinkPriceService = drinkPriceService;
+    }
 
     @Override
     public DrinkMenu convert(DrinkMenuDTO source) {

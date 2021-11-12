@@ -1,5 +1,6 @@
 package com.rokzasok.serveit.dto;
 
+import com.rokzasok.serveit.model.DrinkCategory;
 import lombok.*;
 import java.util.Date;
 
@@ -17,5 +18,10 @@ public class DrinkPriceDTO {
     private Double price;
     private Date priceDate;
 
-    private DrinkDTO drink;
+    //private DrinkDTO drink; // TODO previse referenciranja ako ovo
+
+    private Integer drinkId;
+    private String drinkCode;
+    private String drinkName;
+    private DrinkCategory drinkCategory;
 }

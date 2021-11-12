@@ -30,6 +30,8 @@ public class Drink {
     @Column(name = "code", unique = true)
     private String code;
 
+    private String name;
+
     @Enumerated(EnumType.STRING)
     private DrinkCategory category;
 
