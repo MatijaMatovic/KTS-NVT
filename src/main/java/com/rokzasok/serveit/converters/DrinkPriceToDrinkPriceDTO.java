@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.converters;
 
 import com.rokzasok.serveit.dto.DrinkPriceDTO;
+import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.model.DrinkPrice;
 import com.rokzasok.serveit.service.IDrinkService;
 import org.springframework.core.convert.converter.Converter;
