@@ -1,7 +1,9 @@
 package com.rokzasok.serveit.dto;
 
-import com.rokzasok.serveit.model.DrinkCategory;
+import com.rokzasok.serveit.model.DishCategory;
 import lombok.*;
+
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -10,16 +12,21 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DrinkDTO {
+public class DishDTO {
     @EqualsAndHashCode.Include
     private Integer id;
-    private String code;
 
-    private DrinkCategory category;
+    private DishCategory category;
+
+    private String code;
 
     private String allergens;
     private String ingredients;
-    private Double purchasePrice;
+    private String recipe;
+    private Double preparationPrice;
+
+
     private String description;
     private String imagePath;
+    private Integer preparationTime;
 }

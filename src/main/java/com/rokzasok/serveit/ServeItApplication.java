@@ -4,7 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
+/*
+ * TODO: izbrisati '(exclude = {SecurityAutoConfiguration.class })'
+ *   kad se implementira Spring security OBAVEZNO
+ */
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class }) //TODO: IZBRISATI kad se implementira security
 public class ServeItApplication {
 
     public static void main(String[] args) {
