@@ -41,4 +41,9 @@ public class DishOrderItemService implements IDishOrderItemService {
         dishOrderItemRepository.delete(dishOrderItem);
         return true;
     }
+
+    @Override
+    public List<DishOrderItem> findAllByOrderID(Integer orderID) {
+        return null;
+    }
 }

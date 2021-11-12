@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/orders")
 public class OrderController {
-    @Autowired
+    final
     IOrderService orderService;
+
+    public OrderController(IOrderService orderService) {
+        this.orderService = orderService;
+    }
+
 }
