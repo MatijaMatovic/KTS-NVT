@@ -33,6 +33,8 @@ public class Dish {
     @Column(name = "code", unique = true, nullable = false)
     private String code;
 
+    private String name;
+
     private String allergens;
     private String ingredients;
     private String recipe;

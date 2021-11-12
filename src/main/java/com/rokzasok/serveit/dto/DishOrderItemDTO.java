@@ -25,7 +25,7 @@ public class DishOrderItemDTO {
     private Integer amount;
     private Integer priority;
 
-    private Integer cook_id;
+    private Integer cookId;
 
-    private Integer dish_price_id;
+    private Integer dishPriceId;
 }
