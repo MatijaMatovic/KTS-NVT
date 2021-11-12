@@ -24,7 +24,6 @@ public class DishPrice {
     private Date priceDate;
     private Boolean isDeleted;
 
-    //TODO: Pitati da li se referencira ID ili Code kolona
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id", referencedColumnName = "id", nullable = false)
     private Dish dish;
