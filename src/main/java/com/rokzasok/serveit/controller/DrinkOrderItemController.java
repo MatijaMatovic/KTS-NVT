@@ -2,6 +2,7 @@ package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DrinkOrderItemToDrinkOrderItemDTO;
 import com.rokzasok.serveit.dto.DrinkOrderItemDTO;
+import com.rokzasok.serveit.dto.OrderItemStatusDTO;
 import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
@@ -30,4 +31,17 @@ public class DrinkOrderItemController {
 
         return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(drinkOrderItem), HttpStatus.OK);
     }
+
+    @PutMapping(value="/complete-drink-order/{id}", consumes = "application/json")
+    public ResponseEntity<Boolean> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+
+        Boolean isCompleted = drinkOrderItemService.changeStatusDrinkOrderItem(id, orderItemStatusDTO.getStatus());
+
+        if(isCompleted)
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+
 }
