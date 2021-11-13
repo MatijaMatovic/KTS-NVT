@@ -1,6 +1,9 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.model.DrinkOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.repository.DrinkOrderItemRepository;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,28 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
             return false;
         }
         drinkOrderItemRepository.delete(drinkOrderItem);
+        return true;
+    }
+
+    @Override
+    public Boolean changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) {
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null)
+            return false;
+
+        drinkOrderItemRepository.changeStatusDrinkOrderItem(id, itemStatus.name());
+        return true;
+    }
+
+    @Override
+    public Boolean acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId) {
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null)
+            return false;
+
+        drinkOrderItemRepository.acceptDrinkOrderItem(id, itemStatus.name(), bartenderId);
         return true;
     }
 }

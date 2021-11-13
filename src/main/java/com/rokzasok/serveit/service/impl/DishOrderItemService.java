@@ -2,6 +2,8 @@ package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.DrinkOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.repository.DishOrderItemRepository;
 import com.rokzasok.serveit.service.IDishOrderItemService;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,28 @@ public class DishOrderItemService implements IDishOrderItemService {
         return true;
     }
 
+    @Override
+    public Boolean changeStatusDishOrderItem(Integer id, ItemStatus itemStatus) {
+        DishOrderItem dishOrderItem = findOne(id);
+
+        if (dishOrderItem == null)
+            return false;
+
+        dishOrderItemRepository.changeStatusDishOrderItem(id, itemStatus.name());
+        return true;
+    }
+
+    @Override
+    public Boolean acceptDishOrderItem(Integer id, ItemStatus itemStatus, Integer cookId) {
+        DishOrderItem dishOrderItem = findOne(id);
+
+        if (dishOrderItem == null)
+            return false;
+
+        dishOrderItemRepository.acceptDishOrderItem(id, itemStatus.name(), cookId);
+        return true;
+    }
+  
     @Override
     public List<DishOrderItem> findAllByOrderID(Integer orderID) {
         return null;
