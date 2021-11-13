@@ -1,13 +1,19 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.repository.OrderRepository;
 import com.rokzasok.serveit.service.IOrderService;
 import com.rokzasok.serveit.model.Order;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class OrderService implements IOrderService {
+
+    @Autowired
+    OrderRepository orderRepository;
+
     @Override
     public List<Order> findAll() {
         return null;
