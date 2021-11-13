@@ -2,6 +2,7 @@ package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.repository.DishOrderItemRepository;
 import com.rokzasok.serveit.service.IDishOrderItemService;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,17 @@ public class DishOrderItemService implements IDishOrderItemService {
             return false;
         }
         dishOrderItemRepository.delete(dishOrderItem);
+        return true;
+    }
+
+    @Override
+    public Boolean changeStatusDishOrderItem(Integer id, ItemStatus itemStatus) {
+        DishOrderItem dishOrderItem = findOne(id);
+
+        if (dishOrderItem == null)
+            return false;
+
+        dishOrderItemRepository.changeStatusDishOrderItem(id, itemStatus.name());
         return true;
     }
 }
