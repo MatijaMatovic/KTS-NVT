@@ -43,5 +43,16 @@ public class DrinkOrderItemController {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping(value="/accept-drink-order/{id}", consumes = "application/json")
+    public ResponseEntity<Boolean> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+
+        Boolean isCompleted = drinkOrderItemService.changeStatusDrinkOrderItem(id, orderItemStatusDTO.getStatus());
+
+        if(isCompleted)
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
 
 }
