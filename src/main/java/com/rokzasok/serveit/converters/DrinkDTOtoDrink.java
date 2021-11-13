@@ -12,6 +12,7 @@ public class DrinkDTOtoDrink implements Converter<DrinkDTO, Drink> {
         return new Drink(
                 source.getId(),
                 source.getCode(),
+                source.getName(),
                 source.getCategory(),
                 source.getAllergens(),
                 source.getIngredients(),

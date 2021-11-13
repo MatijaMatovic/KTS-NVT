@@ -35,7 +35,7 @@ public class SittingTableController {
      * CREATE
      *
      * @param sittingTableDTO dto from frontend
-     * @return true if username is free, false otherwise
+     * @return true if successful, false otherwise
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
