@@ -65,4 +65,9 @@ public class DishOrderItemService implements IDishOrderItemService {
         dishOrderItemRepository.acceptDishOrderItem(id, itemStatus.name(), cookId);
         return true;
     }
+  
+    @Override
+    public List<DishOrderItem> findAllByOrderID(Integer orderID) {
+        return null;
+    }
 }
