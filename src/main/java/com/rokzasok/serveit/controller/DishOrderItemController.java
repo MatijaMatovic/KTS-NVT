@@ -42,4 +42,15 @@ public class DishOrderItemController {
         else
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
+
+    @PutMapping(value="/accept-dish-order/{id}", consumes = "application/json")
+    public ResponseEntity<Boolean> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+
+        Boolean isCompleted = dishOrderItemService.changeStatusDishOrderItem(id, orderItemStatusDTO.getStatus());
+
+        if(isCompleted)
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
 }
