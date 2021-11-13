@@ -1,5 +1,8 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.DrinkOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.repository.OrderRepository;
 import com.rokzasok.serveit.service.IOrderService;
 import com.rokzasok.serveit.model.Order;
@@ -35,10 +38,23 @@ public class OrderService implements IOrderService {
 
     @Override
     public Boolean deleteOne(Integer id) {
-        //TODO: Check if unfinished orders can be deleted
         Order toDelete = findOne(id);
+
         if (toDelete == null)
             throw new EntityNotFoundException("Order with given ID not found");
+
+        //TODO: Check if unfinished orders can be deleted
+        //TODO: Check if OrderItems have to be JOIN FETCH-ed
+        for (DishOrderItem dish : toDelete.getDishes()) {
+            if (dish.getStatus() != ItemStatus.CREATED) {
+                return false;
+            }
+        }
+        for (DrinkOrderItem drink : toDelete.getDrinks()) {
+            if (drink.getStatus() != ItemStatus.CREATED) {
+                return false;
+            }
+        }
         orderRepository.delete(toDelete);
         return true;
     }
