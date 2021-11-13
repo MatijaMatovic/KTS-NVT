@@ -241,4 +241,6 @@ public class DrinkMenuController {
         }
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
+
+    // TODO change price - napravi novu cenu, izbaci staru cenu iz menija i metne novu umesto nje je u meni
 }

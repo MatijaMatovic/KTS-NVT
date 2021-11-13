@@ -5,9 +5,8 @@ import com.rokzasok.serveit.dto.DrinkPriceDTO;
 import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.DrinkPrice;
 import com.rokzasok.serveit.repository.DrinkMenuRepository;
-import com.rokzasok.serveit.repository.DrinkPriceRepository;
 import com.rokzasok.serveit.service.IDrinkMenuService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.rokzasok.serveit.service.IDrinkPriceService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -19,11 +18,13 @@ import java.util.stream.Collectors;
 @Service
 public class DrinkMenuService implements IDrinkMenuService {
 
-    @Autowired
-    DrinkMenuRepository drinkMenuRepository;
+    private final DrinkMenuRepository drinkMenuRepository;
+    private final IDrinkPriceService drinkPriceService;
 
-    @Autowired
-    DrinkPriceRepository drinkPriceRepository;
+    public DrinkMenuService(DrinkMenuRepository drinkMenuRepository, IDrinkPriceService drinkPriceService) {
+        this.drinkMenuRepository = drinkMenuRepository;
+        this.drinkPriceService = drinkPriceService;
+    }
 
     @Override
     public List<DrinkMenu> findAll() {
@@ -61,7 +62,7 @@ public class DrinkMenuService implements IDrinkMenuService {
 
         Set<DrinkPrice> drinkPriceSet = new HashSet<>();
         for (DrinkPriceDTO dto : drinkMenuDTO.getDrinks()){
-            drinkPriceSet.add(drinkPriceRepository.findById(dto.getId()).orElse(null));
+            drinkPriceSet.add(drinkPriceService.findOne(dto.getId()));
         }
         toEdit.setDrinks(drinkPriceSet);
         return save(toEdit);
