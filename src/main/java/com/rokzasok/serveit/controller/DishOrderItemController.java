@@ -3,6 +3,7 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.dto.DishOrderItemDTO;
 import com.rokzasok.serveit.dto.OrderItemStatusDTO;
+import com.rokzasok.serveit.dto.OrderItemWorkerStatusDTO;
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDishOrderItemService;
@@ -44,9 +45,9 @@ public class DishOrderItemController {
     }
 
     @PutMapping(value="/accept-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+    public ResponseEntity<Boolean> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerStatusDTO orderItemWorkerStatusDTO){
 
-        Boolean isCompleted = dishOrderItemService.changeStatusDishOrderItem(id, orderItemStatusDTO.getStatus());
+        Boolean isCompleted = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerStatusDTO.getStatus(), orderItemWorkerStatusDTO.getWorkerId());
 
         if(isCompleted)
             return new ResponseEntity<>(true, HttpStatus.OK);

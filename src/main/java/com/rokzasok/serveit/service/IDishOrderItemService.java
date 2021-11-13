@@ -6,4 +6,5 @@ import com.rokzasok.serveit.model.ItemStatus;
 
 public interface IDishOrderItemService extends IGenericService<DishOrderItem>{
     public Boolean changeStatusDishOrderItem(Integer id, ItemStatus itemStatus);
+    public Boolean acceptDishOrderItem(Integer id, ItemStatus itemStatus, Integer cookId);
 }

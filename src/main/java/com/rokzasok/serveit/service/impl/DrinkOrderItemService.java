@@ -54,4 +54,15 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
         drinkOrderItemRepository.changeStatusDrinkOrderItem(id, itemStatus.name());
         return true;
     }
+
+    @Override
+    public Boolean acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId) {
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null)
+            return false;
+
+        drinkOrderItemRepository.acceptDrinkOrderItem(id, itemStatus.name(), bartenderId);
+        return true;
+    }
 }

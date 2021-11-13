@@ -14,4 +14,12 @@ public interface DrinkOrderItemRepository extends JpaRepository<DrinkOrderItem, 
             nativeQuery = true
     )
     public void changeStatusDrinkOrderItem(Integer id, String itemStatus);
+
+    @Modifying
+    @Transactional
+    @Query(
+            value="update drink_order_item set status = ?2, bartender_id = ?3 where id = ?1",
+            nativeQuery = true
+    )
+    public void acceptDrinkOrderItem(Integer id, String itemStatus, Integer bartenderId);
 }
