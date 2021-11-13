@@ -36,8 +36,10 @@ public class DrinkPriceService implements IDrinkPriceService {
     @Override
     public Boolean deleteOne(Integer id) {
         DrinkPrice toDelete = findOne(id);
+      
         if (toDelete == null)
             throw new EntityNotFoundException("Drink price with given ID not found");
+      
         drinkPriceRepository.delete(toDelete);
         return true;
     }

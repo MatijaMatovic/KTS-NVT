@@ -1,16 +1,19 @@
 package com.rokzasok.serveit.dto;
 
+import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.converters.DrinkOrderItemToDrinkOrderItemDTO;
-import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.DrinkOrderItem;
-import com.rokzasok.serveit.model.Order;
-import com.rokzasok.serveit.model.OrderStatus;
 import lombok.*;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+
+@SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
 @Setter
 @ToString
@@ -50,4 +53,14 @@ public class OrderDTO {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.creationDateTime = order.getCreationDateTime().format(formatter);
     }
+/*
+    private LocalDateTime creationDateTime;
+    private Integer tableId;
+
+    //todo: da li je ovo najbolje rešenje?
+    private List<DishPriceDTO> orderDishesId;
+    private List<DrinkPriceDTO> orderDrinksId;
+
+    private Integer waiterId;
+*/
 }

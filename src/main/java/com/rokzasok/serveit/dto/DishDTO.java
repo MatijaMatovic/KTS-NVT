@@ -20,6 +20,8 @@ public class DishDTO {
 
     private String code;
 
+    private String name;
+
     private String allergens;
     private String ingredients;
     private String recipe;
