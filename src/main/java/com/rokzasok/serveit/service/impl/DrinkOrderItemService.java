@@ -1,6 +1,10 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.model.DrinkOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
+import com.rokzasok.serveit.repository.DrinkOrderItemRepository;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
 import org.springframework.stereotype.Service;
 
@@ -8,23 +12,62 @@ import java.util.List;
 
 @Service
 public class DrinkOrderItemService implements IDrinkOrderItemService {
+    private final DrinkOrderItemRepository drinkOrderItemRepository;
+
+    public DrinkOrderItemService(DrinkOrderItemRepository drinkOrderItemRepository) {
+        this.drinkOrderItemRepository = drinkOrderItemRepository;
+    }
+
     @Override
     public List<DrinkOrderItem> findAll() {
-        return null;
+        return drinkOrderItemRepository.findAll();
     }
 
     @Override
     public DrinkOrderItem findOne(Integer id) {
-        return null;
+        return drinkOrderItemRepository.findById(id).orElse(null);
     }
 
     @Override
     public DrinkOrderItem save(DrinkOrderItem entity) {
-        return null;
+        return drinkOrderItemRepository.save(entity);
     }
 
     @Override
     public Boolean deleteOne(Integer id) {
-        return null;
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null) {
+            return false;
+        }
+        drinkOrderItemRepository.delete(drinkOrderItem);
+        return true;
+    }
+
+    @Override
+    public Boolean changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) {
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null)
+            return false;
+
+        drinkOrderItemRepository.changeStatusDrinkOrderItem(id, itemStatus.name());
+        return true;
+    }
+
+    @Override
+    public Boolean acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId) {
+        DrinkOrderItem drinkOrderItem = findOne(id);
+
+        if (drinkOrderItem == null)
+            return false;
+
+        drinkOrderItemRepository.acceptDrinkOrderItem(id, itemStatus.name(), bartenderId);
+        return true;
+    }
+
+    @Override
+    public List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID) {
+        return drinkOrderItemRepository.findAllByBartenderID(bartenderID);
     }
 }
