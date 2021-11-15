@@ -59,4 +59,9 @@ public class OrderService implements IOrderService {
         orderRepository.delete(toDelete);
         return true;
     }
+
+    @Override
+    public List<Order> getNotFinishedOrders() {
+        return orderRepository.getNotFinishedOrders();
+    }
 }
