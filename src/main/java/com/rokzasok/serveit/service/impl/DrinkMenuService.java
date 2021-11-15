@@ -67,4 +67,9 @@ public class DrinkMenuService implements IDrinkMenuService {
         toEdit.setDrinks(drinkPriceSet);
         return save(toEdit);
     }
+
+    @Override
+    public DrinkMenu last() {
+        return drinkMenuRepository.findTopByOrderByDateDesc();
+    }
 }

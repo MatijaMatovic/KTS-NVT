@@ -68,4 +68,9 @@ public class FoodMenuService implements IFoodMenuService {
         toEdit.setDishes(dishPriceSet);
         return save(toEdit);
     }
+
+    @Override
+    public FoodMenu last() {
+        return foodMenuRepository.findTopByOrderByDateDesc();
+    }
 }

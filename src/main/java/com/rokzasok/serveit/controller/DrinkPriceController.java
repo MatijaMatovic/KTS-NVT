@@ -5,7 +5,6 @@ import com.rokzasok.serveit.converters.DrinkPriceToDrinkPriceDTO;
 import com.rokzasok.serveit.dto.DrinkPriceDTO;
 import com.rokzasok.serveit.model.DrinkPrice;
 import com.rokzasok.serveit.service.IDrinkPriceService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +17,16 @@ import java.util.List;
 @RestController
 @RequestMapping("api/drink-prices")
 public class DrinkPriceController {
-    @Autowired
-    IDrinkPriceService drinkPriceService;
+    private final IDrinkPriceService drinkPriceService;
 
+    private final DrinkPriceDTOToDrinkPrice drinkPriceDTOToDrinkPrice;
+    private final DrinkPriceToDrinkPriceDTO drinkPriceToDrinkPriceDTO;
 
-    @Autowired
-    DrinkPriceDTOToDrinkPrice drinkPriceDTOToDrinkPrice;
-    @Autowired
-    DrinkPriceToDrinkPriceDTO drinkPriceToDrinkPriceDTO;
+    public DrinkPriceController(IDrinkPriceService drinkPriceService, DrinkPriceDTOToDrinkPrice drinkPriceDTOToDrinkPrice, DrinkPriceToDrinkPriceDTO drinkPriceToDrinkPriceDTO) {
+        this.drinkPriceService = drinkPriceService;
+        this.drinkPriceDTOToDrinkPrice = drinkPriceDTOToDrinkPrice;
+        this.drinkPriceToDrinkPriceDTO = drinkPriceToDrinkPriceDTO;
+    }
 
     /***
      * Creates new drink price
@@ -54,7 +55,7 @@ public class DrinkPriceController {
      * READ (ONE)
      *
      * @param id id of table
-     * @return drinkPriceDTO if found, null otherwise
+     * @return drinkPriceDTO if found //todo , null otherwise
      */
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkPriceDTO> one(@PathVariable Integer id) {
@@ -62,13 +63,9 @@ public class DrinkPriceController {
 
         if (drinkPrice == null){
             System.out.println("Drink menu je null");
-            return new ResponseEntity<>(null, HttpStatus.OK); // TODO NOT_FOUND?
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         DrinkPriceDTO drinkPriceDTO = drinkPriceToDrinkPriceDTO.convert(drinkPrice);
-        if (drinkPriceDTO == null) {
-            System.out.println("Drink menu DTO je null");
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        }
         return new ResponseEntity<>(drinkPriceDTO, HttpStatus.OK);
     }
 
@@ -129,6 +126,4 @@ public class DrinkPriceController {
         }
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
-
-
 }

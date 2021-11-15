@@ -1,13 +1,15 @@
 package com.rokzasok.serveit.controller;
 
-import com.rokzasok.serveit.converters.DishDTOtoDish;
 import com.rokzasok.serveit.converters.FoodMenuDTOToFoodMenu;
 import com.rokzasok.serveit.converters.FoodMenuToFoodMenuDTO;
 import com.rokzasok.serveit.converters.DishPriceDTOToDishPrice;
+import com.rokzasok.serveit.dto.DrinkMenuDTO;
 import com.rokzasok.serveit.dto.FoodMenuDTO;
 import com.rokzasok.serveit.dto.DishPriceDTO;
+import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.model.DishPrice;
+import com.rokzasok.serveit.service.IDishPriceService;
 import com.rokzasok.serveit.service.IDishService;
 import com.rokzasok.serveit.service.IFoodMenuService;
 import org.springframework.http.HttpStatus;
@@ -34,16 +36,19 @@ public class FoodMenuController {
 
     private final DishPriceDTOToDishPrice dishPriceDTOToDishPrice;
 
+    private final IDishPriceService dishPriceService;
+
     public FoodMenuController(IFoodMenuService foodMenuService,
                               FoodMenuDTOToFoodMenu foodMenuDTOToFoodMenu,
                               FoodMenuToFoodMenuDTO foodMenuToFoodMenuDTO,
                               IDishService dishService,
-                              DishPriceDTOToDishPrice dishPriceDTOToDishPrice) {
+                              DishPriceDTOToDishPrice dishPriceDTOToDishPrice, IDishPriceService dishPriceService) {
         this.foodMenuService = foodMenuService;
         this.foodMenuDTOToFoodMenu = foodMenuDTOToFoodMenu;
         this.foodMenuToFoodMenuDTO = foodMenuToFoodMenuDTO;
         this.dishService = dishService;
         this.dishPriceDTOToDishPrice = dishPriceDTOToDishPrice;
+        this.dishPriceService = dishPriceService;
     }
 
     /***
@@ -73,15 +78,15 @@ public class FoodMenuController {
      * READ (ONE)
      *
      * @param id id of drink menu
-     * @return FoodMenuDTO if found, null otherwise
+     * @return FoodMenuDTO if found //todo , null otherwise
      */
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> one(@PathVariable Integer id) {
         FoodMenu foodMenu = foodMenuService.findOne(id);
 
         if (foodMenu == null){
-            System.out.println("Drink menu je null");
-            return new ResponseEntity<>(null, HttpStatus.OK); // TODO NOT_FOUND?
+            System.out.println("Food menu je null");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         FoodMenuDTO foodMenuDTO = foodMenuToFoodMenuDTO.convert(foodMenu);
         if (foodMenuDTO == null) {
@@ -107,7 +112,25 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTOs, HttpStatus.OK);
     }
 
-    // TODO: GET LATEST FOOD MENU ____ WAITER
+    /***
+     * Gets last food menu
+     * author: isidora-stanic
+     * authorized: MANAGER, WAITER
+     * READ (LAST)
+     *
+     * @return foodMenuDTO if found, null otherwise
+     */
+    @GetMapping(value = "/last", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<FoodMenuDTO> last() {
+        FoodMenu foodMenu = foodMenuService.last();
+
+        if (foodMenu == null){
+            System.out.println("Nema jelovnika");
+            return new ResponseEntity<>(null, HttpStatus.OK); // todo NOT_FOUND?
+        }
+        FoodMenuDTO foodMenuDTO = foodMenuToFoodMenuDTO.convert(foodMenu);
+        return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
+    }
 
     /***
      * Edits one food menu
@@ -242,5 +265,33 @@ public class FoodMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // TODO change price - napravi novu cenu, izbaci staru cenu iz menija i metne novu umesto nje je u meni
+    /***
+     * Edits price of a dish from menu
+     * 1 Makes new price
+     * 2 Deletes old price from menu and logically
+     * 3 Adds new price to the menu
+     * author: isidora-stanic
+     * authorized: MANAGER
+     *
+     * @param menuId id of a menu
+     * @param newPriceDTO dto for a new price
+     * @return dto for changed menu
+     */
+    @PostMapping("/{menuId}/edit-dish-price")
+    public ResponseEntity<FoodMenuDTO> editDrinkPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) {
+        FoodMenu menu = foodMenuService.findOne(menuId);
+        if (menu == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        DishPrice newPrice = dishPriceDTOToDishPrice.convert(newPriceDTO);
+        DishPrice oldPrice = menu.getDishes()
+                .stream()
+                .filter(dPrice -> dPrice.getDish().getId().equals(newPriceDTO.getDishId()))
+                .collect(Collectors.toList()).get(0);
+        dishPriceService.deleteOne(oldPrice.getId());
+        menu.getDishes().remove(oldPrice);
+        menu.getDishes().add(newPrice);
+        foodMenuService.save(menu);
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(menu), HttpStatus.OK);
+    }
 }

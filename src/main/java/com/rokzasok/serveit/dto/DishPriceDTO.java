@@ -18,8 +18,6 @@ public class DishPriceDTO {
     private Double price;
     private Date priceDate;
 
-    //private Dish dish; // TODO previse referenciranja ako ovo
-
     private Integer dishId;
     private String dishCode;
     private String dishName;
