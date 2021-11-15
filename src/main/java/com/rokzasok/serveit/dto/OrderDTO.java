@@ -33,6 +33,7 @@ public class OrderDTO {
     private List<DishOrderItemDTO> dishes;
     private List<DrinkOrderItemDTO> drinks;
 
+    // TODO ovo mora u converter
     public OrderDTO(Order order) {
         this.id = order.getId();
         this.status = order.getStatus();

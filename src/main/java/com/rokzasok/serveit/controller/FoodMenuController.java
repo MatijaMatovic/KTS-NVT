@@ -219,7 +219,7 @@ public class FoodMenuController {
      * @return new food menu or null if unsuccessful
      */
     @PostMapping("/copy-create")
-    public ResponseEntity<FoodMenuDTO> addDrink(@RequestBody FoodMenuDTO currentMenuDTO) {
+    public ResponseEntity<FoodMenuDTO> copyCreate(@RequestBody FoodMenuDTO currentMenuDTO) {
         FoodMenu currentFoodMenu = foodMenuService.findOne(currentMenuDTO.getId());
 
         FoodMenu newFoodMenu = FoodMenu.builder()
@@ -249,7 +249,7 @@ public class FoodMenuController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/{menuId}/delete-drink/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer menuId, @PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) {
         FoodMenu menu = foodMenuService.findOne(menuId);
 
         Boolean success;
@@ -278,7 +278,7 @@ public class FoodMenuController {
      * @return dto for changed menu
      */
     @PostMapping("/{menuId}/edit-dish-price")
-    public ResponseEntity<FoodMenuDTO> editDrinkPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) {
+    public ResponseEntity<FoodMenuDTO> editDishPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) {
         FoodMenu menu = foodMenuService.findOne(menuId);
         if (menu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
