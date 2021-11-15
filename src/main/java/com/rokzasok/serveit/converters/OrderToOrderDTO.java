@@ -18,14 +18,7 @@ public class OrderToOrderDTO implements Converter<Order, OrderDTO> {
     @Override
     public OrderDTO convert(Order source) {
         return new OrderDTO(
-                source.getId(),
-                source.getStatus(),
-                source.getCreationDateTime(),
-                source.getNote(),
-                source.getSittingTable().getId(),
-                dishPriceToDishPriceDTO.convert(source.getDishes()),
-                drinkPriceToDrinkPriceDTO.convert(source.getDrinks()),
-                source.getWaiter().getId()
+                source
         );
     }
 }

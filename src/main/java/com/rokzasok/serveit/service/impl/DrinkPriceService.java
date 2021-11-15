@@ -3,14 +3,16 @@ package com.rokzasok.serveit.service.impl;
 import com.rokzasok.serveit.model.DrinkPrice;
 import com.rokzasok.serveit.repository.DrinkPriceRepository;
 import com.rokzasok.serveit.service.IDrinkPriceService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
 public class DrinkPriceService implements IDrinkPriceService {
-
-    private final DrinkPriceRepository drinkPriceRepository;
+    final
+    DrinkPriceRepository drinkPriceRepository;
 
     public DrinkPriceService(DrinkPriceRepository drinkPriceRepository) {
         this.drinkPriceRepository = drinkPriceRepository;
@@ -33,13 +35,12 @@ public class DrinkPriceService implements IDrinkPriceService {
 
     @Override
     public Boolean deleteOne(Integer id) {
-        DrinkPrice drink = findOne(id);
-
-        if (drink == null) {
-            return false;
-        }
-
-        drinkPriceRepository.delete(drink);
+        DrinkPrice toDelete = findOne(id);
+      
+        if (toDelete == null)
+            throw new EntityNotFoundException("Drink price with given ID not found");
+      
+        drinkPriceRepository.delete(toDelete);
         return true;
     }
 }
