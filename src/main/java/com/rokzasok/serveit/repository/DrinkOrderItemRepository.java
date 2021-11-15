@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface DrinkOrderItemRepository extends JpaRepository<DrinkOrderItem, Integer> {
     @Modifying
     @Transactional
@@ -22,4 +24,10 @@ public interface DrinkOrderItemRepository extends JpaRepository<DrinkOrderItem, 
             nativeQuery = true
     )
     public void acceptDrinkOrderItem(Integer id, String itemStatus, Integer bartenderId);
+
+    @Query(
+            value="select * from drink_order_item o where o.bartender_id = ?1",
+            nativeQuery = true
+    )
+    List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID);
 }

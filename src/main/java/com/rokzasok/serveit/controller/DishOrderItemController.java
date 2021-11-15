@@ -1,15 +1,22 @@
 package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
+import com.rokzasok.serveit.converters.DrinkDTOtoDrink;
 import com.rokzasok.serveit.dto.DishOrderItemDTO;
+import com.rokzasok.serveit.dto.OrderDTO;
 import com.rokzasok.serveit.dto.OrderItemStatusDTO;
 import com.rokzasok.serveit.dto.OrderItemWorkerStatusDTO;
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDishOrderItemService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/dish-order-items")
@@ -17,9 +24,10 @@ public class DishOrderItemController {
     final IDishOrderItemService dishOrderItemService;
     final DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO;
 
-    public DishOrderItemController(IDishOrderItemService dishOrderItemService, DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO) {
+    public DishOrderItemController(IDishOrderItemService dishOrderItemService, DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO, DrinkDTOtoDrink drinkDTOtoDrink) {
         this.dishOrderItemService = dishOrderItemService;
         this.dishOrderItemToDishOrderItemDTO = dishOrderItemToDishOrderItemDTO;
+
     }
 
 
@@ -53,5 +61,16 @@ public class DishOrderItemController {
             return new ResponseEntity<>(true, HttpStatus.OK);
         else
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/cook-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DishOrderItemDTO>> getWaiterOrders(@PathVariable Integer id) {
+        List<DishOrderItem> orders = dishOrderItemService.findAllByCookID(id);
+        List<DishOrderItemDTO> ordersDTO = new ArrayList<>();
+        for (DishOrderItem dishOrderItem : orders)
+        {
+            ordersDTO.add(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem));
+        }
+        return new ResponseEntity<>(ordersDTO, HttpStatus.OK);
     }
 }

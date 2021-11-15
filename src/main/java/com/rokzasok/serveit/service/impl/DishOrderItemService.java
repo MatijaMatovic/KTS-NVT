@@ -70,4 +70,9 @@ public class DishOrderItemService implements IDishOrderItemService {
     public List<DishOrderItem> findAllByOrderID(Integer orderID) {
         return null;
     }
+
+    @Override
+    public List<DishOrderItem> findAllByCookID(Integer cookId) {
+        return dishOrderItemRepository.findAllByCookID(cookId);
+    }
 }
