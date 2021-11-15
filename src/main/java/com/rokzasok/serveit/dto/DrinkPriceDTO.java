@@ -18,8 +18,6 @@ public class DrinkPriceDTO {
     private Double price;
     private Date priceDate;
 
-    //private DrinkDTO drink; // TODO previse referenciranja ako ovo
-
     private Integer drinkId;
     private String drinkCode;
     private String drinkName;

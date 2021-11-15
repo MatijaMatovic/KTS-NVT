@@ -1,8 +1,10 @@
 package com.rokzasok.serveit.dto;
 
-import com.rokzasok.serveit.model.DishCategory;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,14 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 
-public class DishPriceDTO {
+public class FoodMenuDTO {
     @EqualsAndHashCode.Include
     private Integer id;
-    private Double price;
-    private Date priceDate;
+    private Date date;
 
-    private Integer dishId;
-    private String dishCode;
-    private String dishName;
-    private DishCategory dishCategory;
+    @ToString.Exclude
+    private List<DishPriceDTO> dishes = new ArrayList<>();
 }
