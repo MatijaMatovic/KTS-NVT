@@ -5,29 +5,30 @@ import com.rokzasok.serveit.converters.SittingTableToSittingTableDTO;
 import com.rokzasok.serveit.dto.SittingTableDTO;
 import com.rokzasok.serveit.model.SittingTable;
 import com.rokzasok.serveit.service.ISittingTableService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
 @RequestMapping("api/sitting-tables")
 public class SittingTableController {
-    @Autowired
-    ISittingTableService sittingTableService;
+    private final ISittingTableService sittingTableService;
 
-    @Autowired
-    SittingTableDTOToSittingTable sittingTableDTOToSittingTableConverter;
-    @Autowired
-    SittingTableToSittingTableDTO sittingTableToSittingTableDTOConverter;
+    private final SittingTableDTOToSittingTable sittingTableDTOToSittingTableConverter;
+    private final SittingTableToSittingTableDTO sittingTableToSittingTableDTOConverter;
 
+    public SittingTableController(ISittingTableService sittingTableService, SittingTableDTOToSittingTable sittingTableDTOToSittingTableConverter, SittingTableToSittingTableDTO sittingTableToSittingTableDTOConverter) {
+        this.sittingTableService = sittingTableService;
+        this.sittingTableDTOToSittingTableConverter = sittingTableDTOToSittingTableConverter;
+        this.sittingTableToSittingTableDTOConverter = sittingTableToSittingTableDTOConverter;
+    }
+
+    // TODO RADI
     /***
      * Creates new table
      * author: isidora-stanic
@@ -42,12 +43,14 @@ public class SittingTableController {
     public ResponseEntity<Boolean> create(@RequestBody SittingTableDTO sittingTableDTO) {
         SittingTable sittingTable = sittingTableDTOToSittingTableConverter.convert(sittingTableDTO);
         SittingTable sittingTableSaved = sittingTableService.save(sittingTable);
+
         if (sittingTableSaved == null) {
             return new ResponseEntity<>(false, HttpStatus.OK);
         }
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Gets one table by id
      * author: isidora-stanic
@@ -68,6 +71,7 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableDTO, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Gets all tables
      * author: isidora-stanic
@@ -84,6 +88,7 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableDTOs, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Edits one table
      * author: isidora-stanic
@@ -104,6 +109,7 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableToSittingTableDTOConverter.convert(table), HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Deletes one table
      * author: isidora-stanic

@@ -17,10 +17,10 @@ import javax.persistence.*;
 
 @Entity
 @SQLDelete(sql
-        = "UPDATE sitting_table"
-        + "SET deleted = true "
+        = "UPDATE sitting_table "
+        + "SET is_deleted = true "
         + "WHERE id = ?")
-@Where(clause = "isDeleted = false")
+@Where(clause = "is_deleted = false")
 public class SittingTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

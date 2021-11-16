@@ -1,6 +1,8 @@
 package com.rokzasok.serveit.model;
 
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -15,6 +17,11 @@ import java.util.Date;
 @Builder
 
 @Entity
+@SQLDelete(sql
+        = "UPDATE drink "
+        + "SET is_deleted = true "
+        + "WHERE id = ?")
+@Where(clause = "is_deleted = false")
 public class DrinkPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

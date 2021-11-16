@@ -49,8 +49,13 @@ public class DrinkMenuService implements IDrinkMenuService {
         DrinkMenu toDelete = findOne(id);
         if (toDelete == null)
             throw new EntityNotFoundException("Drink Menu with given ID not found");
-        drinkMenuRepository.delete(toDelete);
-        return true;
+        drinkMenuRepository.deleteById(toDelete.getId());
+        System.out.println("-----------------------------Deleted: " + toDelete.getIsDeleted());
+        if (!toDelete.getIsDeleted()) {
+            toDelete.setIsDeleted(true);
+            drinkMenuRepository.save(toDelete);
+        }
+        return toDelete.getIsDeleted();
     }
 
     @Override

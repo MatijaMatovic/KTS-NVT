@@ -28,6 +28,7 @@ public class FoodMenuDTOToFoodMenu implements Converter<FoodMenuDTO, FoodMenu> {
                 .id(source.getId())
                 .date(source.getDate())
                 .dishes(new HashSet<>())
+                .isDeleted(false)
                 .build();
         for (DishPriceDTO dp : source.getDishes()){
             foodMenu.getDishes().add(dishPriceService.findOne(dp.getId()));
