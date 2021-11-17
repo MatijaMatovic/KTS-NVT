@@ -6,6 +6,7 @@ import com.rokzasok.serveit.converters.DishPriceDTOToDishPrice;
 import com.rokzasok.serveit.dto.DrinkMenuDTO;
 import com.rokzasok.serveit.dto.FoodMenuDTO;
 import com.rokzasok.serveit.dto.DishPriceDTO;
+import com.rokzasok.serveit.model.Dish;
 import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.model.DishPrice;
@@ -51,6 +52,7 @@ public class FoodMenuController {
         this.dishPriceService = dishPriceService;
     }
 
+    // TODO RADI
     /***
      * Creates new food menu
      * author: isidora-stanic
@@ -71,6 +73,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Gets one food menu by id
      * author: isidora-stanic
@@ -96,6 +99,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Gets all food menus
      * author: isidora-stanic
@@ -112,6 +116,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTOs, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Gets last food menu
      * author: isidora-stanic
@@ -132,6 +137,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Edits one food menu
      * author: isidora-stanic
@@ -143,14 +149,6 @@ public class FoodMenuController {
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> edit(@PathVariable Integer id, @RequestBody FoodMenuDTO foodMenuDTO) {
-        /*
-        FoodMenu FoodMenu;
-        try {
-            FoodMenu = FoodMenuService.edit(id, FoodMenuDTO);
-        } catch (EntityNotFoundException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(FoodMenuToFoodMenuDTO.convert(FoodMenu), HttpStatus.OK);*/
         FoodMenu foodMenu = foodMenuService.findOne(foodMenuDTO.getId());
 
         if (foodMenu == null) {
@@ -163,6 +161,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
     }
 
+    // TODO spageti is_deleted problem
     /***
      * Deletes one food menu
      * author: isidora-stanic
@@ -182,6 +181,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Adds new dish to food menu
      * author: isidora-stanic
@@ -197,30 +197,34 @@ public class FoodMenuController {
         if (foodMenu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Dish dish = dishService.findOne(dishPriceDTO.getDishId());
 
-        foodMenu.getDishes().add(DishPrice.builder()
+        DishPrice newPrice = DishPrice.builder()
                 .isDeleted(false)
                 .price(dishPriceDTO.getPrice())
                 .priceDate(dishPriceDTO.getPriceDate())
-                .dish(dishService.findOne(dishPriceDTO.getDishId()))
-                .build());
+                .dish(dish)
+                .build();
+        DishPrice newPriceS = dishPriceService.save(newPrice);
 
+        foodMenu.getDishes().add(newPriceS);
         foodMenuService.save(foodMenu);
 
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Creates new food menu based on current one
      * author: isidora-stanic
      * authorized: MANAGER
      *
-     * @param currentMenuDTO dto of the current food menu
+     * @param oldMenuId id of the current food menu
      * @return new food menu or null if unsuccessful
      */
-    @PostMapping("/copy-create")
-    public ResponseEntity<FoodMenuDTO> copyCreate(@RequestBody FoodMenuDTO currentMenuDTO) {
-        FoodMenu currentFoodMenu = foodMenuService.findOne(currentMenuDTO.getId());
+    @PostMapping("/{oldMenuId}/copy-create")
+    public ResponseEntity<FoodMenuDTO> copyCreate(@PathVariable Integer oldMenuId) {
+        FoodMenu currentFoodMenu = foodMenuService.findOne(oldMenuId);
 
         FoodMenu newFoodMenu = FoodMenu.builder()
                 .isDeleted(false)
@@ -228,8 +232,7 @@ public class FoodMenuController {
                 .dishes(new HashSet<>())
                 .build();
 
-        for (DishPriceDTO priceDTO : currentMenuDTO.getDishes()){
-            DishPrice price = dishPriceDTOToDishPrice.convert(priceDTO);
+        for (DishPrice price : currentFoodMenu.getDishes()){
             newFoodMenu.getDishes().add(price);
         }
 
@@ -241,6 +244,7 @@ public class FoodMenuController {
         return new ResponseEntity<>(newFoodMenuDTO, HttpStatus.OK);
     }
 
+    // TODO RADI kao, ne menja is_deleted staroj ceni...
     /***
      * Deletes one dish price from menu
      * author: isidora-stanic
@@ -248,23 +252,25 @@ public class FoodMenuController {
      *
      * @return true if successful, false otherwise
      */
-    @DeleteMapping("/{menuId}/delete-drink/{id}")
+    @DeleteMapping("/{menuId}/delete-dish/{id}")
     public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) {
         FoodMenu menu = foodMenuService.findOne(menuId);
 
         Boolean success;
-        if (menuId == null){
+        if (menu == null){
             success = false;
         } else {
-            menu.setDishes(menu.getDishes()
-                    .stream()
-                    .filter(dishPrice -> !dishPrice.getId().equals(id))
-                    .collect(Collectors.toSet()));
+            DishPrice oldPrice = dishPriceService.findOne(id);
+            dishPriceService.deleteOne(oldPrice.getId()); // todo
+
+            menu.getDishes().remove(oldPrice);
+            foodMenuService.save(menu);
             success = true;
         }
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
+    // TODO RADI
     /***
      * Edits price of a dish from menu
      * 1 Makes new price
@@ -284,14 +290,18 @@ public class FoodMenuController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         DishPrice newPrice = dishPriceDTOToDishPrice.convert(newPriceDTO);
+        DishPrice newPriceS = dishPriceService.save(newPrice);
+
         DishPrice oldPrice = menu.getDishes()
                 .stream()
                 .filter(dPrice -> dPrice.getDish().getId().equals(newPriceDTO.getDishId()))
                 .collect(Collectors.toList()).get(0);
-        dishPriceService.deleteOne(oldPrice.getId());
+        dishPriceService.deleteOne(oldPrice.getId()); // todo
+
         menu.getDishes().remove(oldPrice);
-        menu.getDishes().add(newPrice);
+        menu.getDishes().add(newPriceS);
         foodMenuService.save(menu);
+
         return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(menu), HttpStatus.OK);
     }
 }

@@ -28,10 +28,11 @@ public class DrinkMenuDTOToDrinkMenu implements Converter<DrinkMenuDTO, DrinkMen
                 .id(source.getId())
                 .date(source.getDate())
                 .drinks(new HashSet<>())
+                .isDeleted(false)
                 .build();
-        for (DrinkPriceDTO dp : source.getDrinks()){
+        /*for (DrinkPriceDTO dp : source.getDrinks()){
             drinkMenu.getDrinks().add(drinkPriceService.findOne(dp.getId()));
-        }
+        }*/
         return drinkMenu;
     }
 

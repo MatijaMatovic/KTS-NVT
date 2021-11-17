@@ -24,6 +24,7 @@ public class DishPriceDTOToDishPrice implements Converter<DishPriceDTO, DishPric
     public DishPrice convert(DishPriceDTO source) {
         return DishPrice.builder()
                 .id(source.getId())
+                .price(source.getPrice())
                 .priceDate(source.getPriceDate())
                 .isDeleted(false)
                 .dish(dishService.findOne(source.getDishId()))
