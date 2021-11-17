@@ -48,8 +48,10 @@ public class FoodMenuService implements IFoodMenuService {
     @Override
     public Boolean deleteOne(Integer id) throws EntityNotFoundException {
         FoodMenu toDelete = findOne(id);
+
         if (toDelete == null)
             throw new EntityNotFoundException("Food Menu with given ID not found");
+
         foodMenuRepository.delete(toDelete);
         return true;
     }

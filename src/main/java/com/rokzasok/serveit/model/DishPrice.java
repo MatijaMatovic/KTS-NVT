@@ -18,7 +18,7 @@ import java.util.Date;
 
 @Entity
 @SQLDelete(sql
-        = "UPDATE drink "
+        = "UPDATE dish_price "
         + "SET is_deleted = true "
         + "WHERE id = ?")
 @Where(clause = "is_deleted = false")

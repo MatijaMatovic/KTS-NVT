@@ -19,7 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users") //Mora jer je "user" keyword
 @SQLDelete(sql
-        = "UPDATE drink "
+        = "UPDATE users "
         + "SET is_deleted = true "
         + "WHERE id = ?")
 @Where(clause = "is_deleted = false")

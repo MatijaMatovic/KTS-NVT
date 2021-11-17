@@ -20,7 +20,7 @@ import java.util.Set;
 @Entity
 @Table(name = "orders") //mora jer je "order" keyword
 @SQLDelete(sql
-        = "UPDATE drink "
+        = "UPDATE orders "
         + "SET is_deleted = true "
         + "WHERE id = ?")
 @Where(clause = "is_deleted = false")
