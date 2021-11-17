@@ -24,7 +24,7 @@ public class DrinkPriceDTOToDrinkPrice implements Converter<DrinkPriceDTO, Drink
     public DrinkPrice convert(DrinkPriceDTO source) {
         return DrinkPrice.builder()
                 .id(source.getId())
-                .price(source.getPrice()) // TODO u FOOD
+                .price(source.getPrice())
                 .priceDate(source.getPriceDate())
                 .isDeleted(false)
                 .drink(drinkService.findOne(source.getDrinkId()))

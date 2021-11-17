@@ -28,7 +28,6 @@ public class SittingTableController {
         this.sittingTableToSittingTableDTOConverter = sittingTableToSittingTableDTOConverter;
     }
 
-    // TODO RADI
     /***
      * Creates new table
      * author: isidora-stanic
@@ -50,7 +49,6 @@ public class SittingTableController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Gets one table by id
      * author: isidora-stanic
@@ -71,7 +69,6 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableDTO, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Gets all tables
      * author: isidora-stanic
@@ -88,7 +85,6 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableDTOs, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Edits one table
      * author: isidora-stanic
@@ -109,7 +105,6 @@ public class SittingTableController {
         return new ResponseEntity<>(sittingTableToSittingTableDTOConverter.convert(table), HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Deletes one table
      * author: isidora-stanic
@@ -128,6 +123,5 @@ public class SittingTableController {
         }
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
-
 
 }

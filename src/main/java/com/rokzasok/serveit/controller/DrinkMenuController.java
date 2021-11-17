@@ -57,7 +57,6 @@ public class DrinkMenuController {
         this.drinkService = drinkService;
     }
 
-    // TODO: RADI
     /***
      * Creates new drink menu
      * author: isidora-stanic
@@ -78,7 +77,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Gets one drink menu by id
      * author: isidora-stanic
@@ -100,7 +98,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(drinkMenuDTO, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Gets all drink menus
      * author: isidora-stanic
@@ -117,7 +114,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(drinkMenuDTOs, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Gets last drink menu
      * author: isidora-stanic
@@ -138,7 +134,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(drinkMenuDTO, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Edits one drink menu
      * author: isidora-stanic
@@ -148,7 +143,7 @@ public class DrinkMenuController {
      * @return true if successful, false otherwise
      */
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE) // TODO: RADI ALI VISAK METODA, NIGDE SE NECE KORISTITI
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkMenuDTO> edit(@PathVariable Integer id, @RequestBody DrinkMenuDTO drinkMenuDTO) {
         DrinkMenu drinkMenu = drinkMenuService.findOne(drinkMenuDTO.getId());
 
@@ -162,7 +157,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(drinkMenu), HttpStatus.OK);
     }
 
-    // TODO: RADI sa spageti kodom
     /***
      * Deletes one drink menu
      * author: isidora-stanic
@@ -182,7 +176,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Adds NEW drink to drink menu
      * Drink MUST BE NEW
@@ -201,9 +194,7 @@ public class DrinkMenuController {
         }
 
         Drink newDrink = drinkDTOtoDrink.convert(newDrinkInMenuDTO.getDrink());
-        Drink newDrinkS = drinkService.save(newDrink); // todo
-
-        System.out.println(newDrinkS);
+        Drink newDrinkS = drinkService.save(newDrink);
 
         DrinkPrice newDrinkPrice = DrinkPrice.builder()
                 .isDeleted(false)
@@ -211,7 +202,7 @@ public class DrinkMenuController {
                 .priceDate(newDrinkInMenuDTO.getPriceDate())
                 .drink(newDrinkS)
                 .build();
-        DrinkPrice newDrinkPriceS = drinkPriceService.save(newDrinkPrice); // todo
+        DrinkPrice newDrinkPriceS = drinkPriceService.save(newDrinkPrice);
 
         System.out.println(newDrinkPriceS);
 
@@ -221,7 +212,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    // TODO: RADI
     /***
      * Creates new drink menu based on current one
      * author: isidora-stanic
@@ -252,7 +242,6 @@ public class DrinkMenuController {
         return new ResponseEntity<>(newDrinkMenuDTO, HttpStatus.OK);
     }
 
-    // TODO: RADI kao - is deleted se ne azurira ali se na frontu ne vidi
     /***
      * Deletes one drink price from menu
      * author: isidora-stanic
@@ -264,12 +253,12 @@ public class DrinkMenuController {
     public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer menuId, @PathVariable Integer id) {
         DrinkMenu menu = drinkMenuService.findOne(menuId);
 
-        Boolean success;
+        boolean success;
         if (menu == null){
             success = false;
         } else {
             DrinkPrice oldPrice = drinkPriceService.findOne(id);
-            drinkPriceService.deleteOne(oldPrice.getId()); // TODO
+            drinkPriceService.deleteOne(oldPrice.getId());
 
             menu.getDrinks().remove(oldPrice);
             drinkMenuService.save(menu);
@@ -278,11 +267,10 @@ public class DrinkMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Edits price of a drink from menu
      * 1 Makes new price
-     * // todo - da li treba? - 2 Deletes old price from menu and logically
+     * 2 Deletes old price from menu and logically
      * 3 Adds new price to the menu
      * author: isidora-stanic
      * authorized: MANAGER
@@ -304,7 +292,7 @@ public class DrinkMenuController {
                 .stream()
                 .filter(dPrice -> dPrice.getDrink().getId().equals(newPriceDTO.getDrinkId()))
                 .collect(Collectors.toList()).get(0);
-        drinkPriceService.deleteOne(oldPrice.getId()); // TODO
+        drinkPriceService.deleteOne(oldPrice.getId());
 
         menu.getDrinks().remove(oldPrice);
         menu.getDrinks().add(newPriceS);

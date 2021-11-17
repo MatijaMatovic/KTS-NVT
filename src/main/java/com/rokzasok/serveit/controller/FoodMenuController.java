@@ -52,7 +52,6 @@ public class FoodMenuController {
         this.dishPriceService = dishPriceService;
     }
 
-    // TODO RADI
     /***
      * Creates new food menu
      * author: isidora-stanic
@@ -73,7 +72,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Gets one food menu by id
      * author: isidora-stanic
@@ -99,7 +97,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Gets all food menus
      * author: isidora-stanic
@@ -116,7 +113,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTOs, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Gets last food menu
      * author: isidora-stanic
@@ -137,7 +133,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Edits one food menu
      * author: isidora-stanic
@@ -161,7 +156,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
     }
 
-    // TODO spageti is_deleted problem
     /***
      * Deletes one food menu
      * author: isidora-stanic
@@ -181,7 +175,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Adds new dish to food menu
      * author: isidora-stanic
@@ -213,7 +206,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Creates new food menu based on current one
      * author: isidora-stanic
@@ -244,7 +236,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(newFoodMenuDTO, HttpStatus.OK);
     }
 
-    // TODO RADI kao, ne menja is_deleted staroj ceni...
     /***
      * Deletes one dish price from menu
      * author: isidora-stanic
@@ -256,12 +247,12 @@ public class FoodMenuController {
     public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) {
         FoodMenu menu = foodMenuService.findOne(menuId);
 
-        Boolean success;
+        boolean success;
         if (menu == null){
             success = false;
         } else {
             DishPrice oldPrice = dishPriceService.findOne(id);
-            dishPriceService.deleteOne(oldPrice.getId()); // todo
+            dishPriceService.deleteOne(oldPrice.getId());
 
             menu.getDishes().remove(oldPrice);
             foodMenuService.save(menu);
@@ -270,7 +261,6 @@ public class FoodMenuController {
         return new ResponseEntity<>(success, HttpStatus.OK);
     }
 
-    // TODO RADI
     /***
      * Edits price of a dish from menu
      * 1 Makes new price
@@ -283,7 +273,7 @@ public class FoodMenuController {
      * @param newPriceDTO dto for a new price
      * @return dto for changed menu
      */
-    @PostMapping("/{menuId}/edit-dish-price")
+    @PutMapping("/{menuId}/edit-dish-price")
     public ResponseEntity<FoodMenuDTO> editDishPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) {
         FoodMenu menu = foodMenuService.findOne(menuId);
         if (menu == null){
@@ -296,7 +286,7 @@ public class FoodMenuController {
                 .stream()
                 .filter(dPrice -> dPrice.getDish().getId().equals(newPriceDTO.getDishId()))
                 .collect(Collectors.toList()).get(0);
-        dishPriceService.deleteOne(oldPrice.getId()); // todo
+        dishPriceService.deleteOne(oldPrice.getId());
 
         menu.getDishes().remove(oldPrice);
         menu.getDishes().add(newPriceS);
