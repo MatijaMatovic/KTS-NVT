@@ -68,6 +68,6 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
     @Override
     public List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID) {
-        return drinkOrderItemRepository.findAllByBartenderID(bartenderID);
+        return drinkOrderItemRepository.findByBartenderId(bartenderID);
     }
 }

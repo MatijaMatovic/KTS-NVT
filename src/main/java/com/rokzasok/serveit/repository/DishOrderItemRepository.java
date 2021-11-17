@@ -26,9 +26,5 @@ public interface DishOrderItemRepository extends JpaRepository<DishOrderItem, In
     )
     public void acceptDishOrderItem(Integer id, String itemStatus, Integer cookId);
 
-    @Query(
-            value="select * from dish_order_item o where o.cook_id = ?1",
-            nativeQuery = true
-    )
-    List<DishOrderItem> findAllByCookID(Integer cookId);
+    List<DishOrderItem> findByCookId(Integer cookId);
 }

@@ -25,9 +25,5 @@ public interface DrinkOrderItemRepository extends JpaRepository<DrinkOrderItem, 
     )
     public void acceptDrinkOrderItem(Integer id, String itemStatus, Integer bartenderId);
 
-    @Query(
-            value="select * from drink_order_item o where o.bartender_id = ?1",
-            nativeQuery = true
-    )
-    List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID);
+    List<DrinkOrderItem> findByBartenderId(Integer bartenderID);
 }
