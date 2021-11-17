@@ -132,4 +132,13 @@ public class OrderController {
 
         return new ResponseEntity<>(orderToOrderDTO.convert(order), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/not-finished-orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<OrderDTO>> getNotFinishedOrders() {
+        List<Order> orders = orderService.getNotFinishedOrders();
+        return new ResponseEntity<>(
+                orders.stream().map(OrderDTO::new).collect(Collectors.toList()),
+                HttpStatus.OK
+        );
+    }
 }

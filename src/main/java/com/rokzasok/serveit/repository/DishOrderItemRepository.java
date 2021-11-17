@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface DishOrderItemRepository extends JpaRepository<DishOrderItem, Integer> {
     @Modifying
     @Transactional
@@ -23,4 +25,6 @@ public interface DishOrderItemRepository extends JpaRepository<DishOrderItem, In
             nativeQuery = true
     )
     public void acceptDishOrderItem(Integer id, String itemStatus, Integer cookId);
+
+    List<DishOrderItem> findByCookId(Integer cookId);
 }

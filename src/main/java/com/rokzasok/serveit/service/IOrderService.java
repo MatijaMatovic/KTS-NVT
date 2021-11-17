@@ -5,4 +5,5 @@ import com.rokzasok.serveit.model.Order;
 import java.util.List;
 
 public interface IOrderService extends IGenericService<Order>{
+    public List<Order> getNotFinishedOrders();
 }

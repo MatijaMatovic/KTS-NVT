@@ -1,15 +1,21 @@
 package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DrinkOrderItemToDrinkOrderItemDTO;
+import com.rokzasok.serveit.dto.DishOrderItemDTO;
 import com.rokzasok.serveit.dto.DrinkOrderItemDTO;
 import com.rokzasok.serveit.dto.OrderItemStatusDTO;
 import com.rokzasok.serveit.dto.OrderItemWorkerStatusDTO;
+import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/drink-order-items")
@@ -55,5 +61,15 @@ public class DrinkOrderItemController {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping(value = "/bartender-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<DrinkOrderItemDTO>> getCookOrders(@PathVariable Integer id) {
+        List<DrinkOrderItem> orders = drinkOrderItemService.findAllByBartenderID(id);
+        List<DrinkOrderItemDTO> ordersDTO = new ArrayList<>();
+        for (DrinkOrderItem drinkOrderItem : orders)
+        {
+            ordersDTO.add(drinkOrderItemToDrinkOrderItemDTO.convert(drinkOrderItem));
+        }
+        return new ResponseEntity<>(ordersDTO, HttpStatus.OK);
+    }
 
 }
