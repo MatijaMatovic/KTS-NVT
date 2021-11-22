@@ -3,7 +3,7 @@ package com.rokzasok.serveit.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
@@ -21,7 +21,7 @@ public class UserSalary {
     @EqualsAndHashCode.Include
     private Integer id;
     private Double salary;
-    private Date salaryDate;
+    private LocalDate salaryDate;
     private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.EAGER)
