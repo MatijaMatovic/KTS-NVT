@@ -163,6 +163,9 @@ public class OrderController {
     @PostMapping(value = "/{orderId}/add-order-item")
     public ResponseEntity<OrderDTO> addOrderItem(@PathVariable Integer orderId, @RequestBody OrderItemDTO orderItemDTO) {
         Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         OrderItemDTO.OrderItemType type = orderItemDTO.getItemType();
 
@@ -192,6 +195,9 @@ public class OrderController {
     @PostMapping(value = "/{orderId}/add-order-items")
     public ResponseEntity<OrderDTO> addOrderItems(@PathVariable Integer orderId, @RequestBody List<OrderItemDTO> orderItemDTOs) {
         Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         for (OrderItemDTO orderItemDTO : orderItemDTOs){
             OrderItemDTO.OrderItemType type = orderItemDTO.getItemType();
@@ -225,10 +231,15 @@ public class OrderController {
     @DeleteMapping(value = "/{orderId}/delete-drink-order-item/{orderItemId}")
     public ResponseEntity<OrderDTO> deleteDrinkOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
         Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         DrinkOrderItem ditem = drinkOrderItemService.findOne(orderItemId);
         o.getDrinks().remove(ditem);
         orderService.save(o);
         drinkOrderItemService.deleteOne(orderItemId);
+
         return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
     }
 
@@ -244,10 +255,15 @@ public class OrderController {
     @DeleteMapping(value = "/{orderId}/delete-dish-order-item/{orderItemId}")
     public ResponseEntity<OrderDTO> deleteDishOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
         Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         DishOrderItem ditem = dishOrderItemService.findOne(orderItemId);
         o.getDishes().remove(ditem);
         orderService.save(o);
         dishOrderItemService.deleteOne(orderItemId);
+
         return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
     }
 }
