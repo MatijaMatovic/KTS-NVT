@@ -1,12 +1,14 @@
 package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.OrderDTOToOrderConverter;
+import com.rokzasok.serveit.converters.OrderItemDTOToDishOrDrinkItem;
 import com.rokzasok.serveit.dto.OrderDTO;
-import com.rokzasok.serveit.model.Order;
+import com.rokzasok.serveit.dto.OrderItemDTO;
+import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.service.IOrderService;
 import com.rokzasok.serveit.converters.OrderToOrderDTO;
-import com.rokzasok.serveit.model.OrderStatus;
 
+import com.rokzasok.serveit.service.impl.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -36,10 +38,17 @@ public class OrderController {
     final 
     OrderToOrderDTO orderToOrderDTO;
 
-    public OrderController(IOrderService orderService, OrderDTOToOrderConverter orderConverter, OrderToOrderDTO orderToOrderDTO) {
+    final DrinkOrderItemService drinkOrderItemService;
+    final DishOrderItemService dishOrderItemService;
+    final OrderItemDTOToDishOrDrinkItem converter;
+
+    public OrderController(IOrderService orderService, OrderDTOToOrderConverter orderConverter, OrderToOrderDTO orderToOrderDTO, UserService userService, DrinkOrderItemService drinkOrderItemService, DishOrderItemService dishOrderItemService, OrderItemDTOToDishOrDrinkItem converter) {
         this.orderService = orderService;
         this.orderConverter = orderConverter;
         this.orderToOrderDTO = orderToOrderDTO;
+        this.drinkOrderItemService = drinkOrderItemService;
+        this.dishOrderItemService = dishOrderItemService;
+        this.converter = converter;
     }
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -140,5 +149,121 @@ public class OrderController {
                 orders.stream().map(OrderDTO::new).collect(Collectors.toList()),
                 HttpStatus.OK
         );
+    }
+
+    /***
+     * Adds one OrderItem to existing unfinished Order
+     * author: isidora-stanic
+     * authorized: WAITER
+     *
+     * @param orderId id of the order
+     * @param orderItemDTO dto of new ordered item
+     * @return changed order dto
+     */
+    @PostMapping(value = "/{orderId}/add-order-item")
+    public ResponseEntity<OrderDTO> addOrderItem(@PathVariable Integer orderId, @RequestBody OrderItemDTO orderItemDTO) {
+        Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        OrderItemDTO.OrderItemType type = orderItemDTO.getItemType();
+
+        if (type.equals(OrderItemDTO.OrderItemType.DRINK)){
+            DrinkOrderItem drinkOrderItem = converter.convertToDrinkItem(orderItemDTO);
+            DrinkOrderItem drinkOrderItemS = drinkOrderItemService.save(drinkOrderItem);
+            o.getDrinks().add(drinkOrderItemS);
+        } else {
+            DishOrderItem dishOrderItem = converter.convertToDishItem(orderItemDTO);
+            DishOrderItem dishOrderItemS = dishOrderItemService.save(dishOrderItem);
+            o.getDishes().add(dishOrderItemS);
+        }
+        orderService.save(o);
+
+        return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
+    }
+
+    /***
+     * Adds list of OrderItems to existing unfinished Order
+     * author: isidora-stanic
+     * authorized: WAITER
+     *
+     * @param orderId id of the order
+     * @param orderItemDTOs list of dtos of new ordered items
+     * @return changed order dto
+     */
+    @PostMapping(value = "/{orderId}/add-order-items")
+    public ResponseEntity<OrderDTO> addOrderItems(@PathVariable Integer orderId, @RequestBody List<OrderItemDTO> orderItemDTOs) {
+        Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for (OrderItemDTO orderItemDTO : orderItemDTOs){
+            OrderItemDTO.OrderItemType type = orderItemDTO.getItemType();
+
+            if (type.equals(OrderItemDTO.OrderItemType.DRINK)){
+                DrinkOrderItem drinkOrderItem = converter.convertToDrinkItem(orderItemDTO);
+                DrinkOrderItem drinkOrderItemS = drinkOrderItemService.save(drinkOrderItem);
+                o.getDrinks().add(drinkOrderItemS);
+            } else {
+                DishOrderItem dishOrderItem = converter.convertToDishItem(orderItemDTO);
+                DishOrderItem dishOrderItemS = dishOrderItemService.save(dishOrderItem);
+                o.getDishes().add(dishOrderItemS);
+            }
+        }
+        orderService.save(o);
+
+        return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
+    }
+
+
+
+    /***
+     * Removes drink order item from order
+     * author: isidora-stanic
+     * authorized: WAITER
+     *
+     * @param orderId id of order
+     * @param orderItemId id of drink order item which is being deleted
+     * @return dto of changed order
+     */
+    @DeleteMapping(value = "/{orderId}/delete-drink-order-item/{orderItemId}")
+    public ResponseEntity<OrderDTO> deleteDrinkOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
+        Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        DrinkOrderItem ditem = drinkOrderItemService.findOne(orderItemId);
+        o.getDrinks().remove(ditem);
+        orderService.save(o);
+        drinkOrderItemService.deleteOne(orderItemId);
+
+        return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
+    }
+
+    /***
+     * Removes dish order item from order
+     * author: isidora-stanic
+     * authorized: WAITER
+     *
+     * @param orderId id of order
+     * @param orderItemId id of drink order item which is being deleted
+     * @return dto of changed order
+     */
+    @DeleteMapping(value = "/{orderId}/delete-dish-order-item/{orderItemId}")
+    public ResponseEntity<OrderDTO> deleteDishOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
+        Order o = orderService.findOne(orderId);
+        if (o.getStatus().equals(OrderStatus.FINISHED)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        DishOrderItem ditem = dishOrderItemService.findOne(orderItemId);
+        o.getDishes().remove(ditem);
+        orderService.save(o);
+        dishOrderItemService.deleteOne(orderItemId);
+
+        return new ResponseEntity<>(orderToOrderDTO.convert(o), HttpStatus.OK);
     }
 }
