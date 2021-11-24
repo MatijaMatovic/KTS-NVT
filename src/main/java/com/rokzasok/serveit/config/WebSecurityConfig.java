@@ -85,9 +85,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
                 // samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
                 // .antMatchers("/admin").hasRole("ADMIN") ili .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/dish-order-items/**").hasRole("COOK")
-                .antMatchers("/drink-order-items/**").authenticated()
 
+                .antMatchers("/api/dish-order-items").hasAuthority("ROLE_COOK")
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().permitAll().and()
                 //.anyRequest().authenticated().and()

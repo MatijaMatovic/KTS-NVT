@@ -28,6 +28,9 @@ import java.util.List;
         + "WHERE id = ?")
 @Where(clause = "is_deleted = false")
 public class User implements UserDetails {
+
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
@@ -35,6 +38,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     private UserType type;

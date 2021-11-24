@@ -12,6 +12,7 @@ import com.rokzasok.serveit.service.IDishOrderItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class DishOrderItemController {
             return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 
+    @PreAuthorize("hasRole('ROLE_COOK')")
     @GetMapping(value = "/cook-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DishOrderItemDTO>> getWaiterOrders(@PathVariable Integer id) {
         List<DishOrderItem> orders = dishOrderItemService.findAllByCookID(id);
