@@ -4,14 +4,15 @@ import com.rokzasok.serveit.converters.UserToUserDTO;
 import com.rokzasok.serveit.dto.UserDTO;
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserType;
+import com.rokzasok.serveit.service.IEmailService;
 import com.rokzasok.serveit.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +24,11 @@ public class UserController {
     final
     IUserService userService;
 
-    public UserController(IUserService userService) {
+    final IEmailService emailService;
+
+    public UserController(IUserService userService, IEmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping(value = "/director/create",
@@ -102,5 +106,15 @@ public class UserController {
         if (theOne == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with given ID not found");
         return new ResponseEntity<>(new UserDTO(theOne), HttpStatus.OK);
+    }
+
+    //todo: Samo za testiranje, skloniti posle
+    @GetMapping(value="/send-email", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void sendEmail(){
+        try {
+            emailService.sendPasswordChangedEmail("nekiUser@serveit.com", "nekiUser");
+        } catch (InterruptedException | MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }
