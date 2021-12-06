@@ -7,7 +7,6 @@ import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserSalary;
 import com.rokzasok.serveit.service.IUserSalaryService;
 import com.rokzasok.serveit.service.IUserService;
-import com.rokzasok.serveit.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -162,6 +161,14 @@ public class UserSalaryController {
     }
 
     // TODO: ukloniti ukoliko se ne koristi
+    /***
+     * Creates new salary for the user
+     * author: isidora-stanic
+     * authorized: MANAGER
+     * CREATE (for user)
+     *
+     * @return dto of a new salary
+     */
     @PostMapping(value = "/new-salary-for-user/{userId}")
     public ResponseEntity<UserSalaryDTO> newSalaryForUser(@PathVariable Integer userId, @RequestBody UserSalaryDTO userSalaryDTO){
         User u = userService.findOne(userId);

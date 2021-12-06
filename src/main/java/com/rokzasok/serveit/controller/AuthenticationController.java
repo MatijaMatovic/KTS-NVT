@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:8081","http://localhost:8080"})
+@CrossOrigin(origins = {"http://localhost:8081","http://localhost:8080", "http://localhost:4200"})
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthenticationController {
 
