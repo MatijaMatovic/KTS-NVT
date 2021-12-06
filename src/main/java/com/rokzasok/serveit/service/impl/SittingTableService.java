@@ -4,7 +4,6 @@ import com.rokzasok.serveit.dto.SittingTableDTO;
 import com.rokzasok.serveit.model.SittingTable;
 import com.rokzasok.serveit.repository.SittingTableRepository;
 import com.rokzasok.serveit.service.ISittingTableService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,8 +12,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class SittingTableService implements ISittingTableService {
-    @Autowired
-    SittingTableRepository sittingTableRepository;
+    private final SittingTableRepository sittingTableRepository;
+
+    public SittingTableService(SittingTableRepository sittingTableRepository) {
+        this.sittingTableRepository = sittingTableRepository;
+    }
 
     @Override
     public List<SittingTable> findAll() {

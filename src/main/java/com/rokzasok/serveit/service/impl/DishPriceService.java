@@ -16,6 +16,7 @@ public class DishPriceService implements IDishPriceService {
     public DishPriceService(DishPriceRepository dishPriceRepository) {
         this.dishPriceRepository = dishPriceRepository;
     }
+
     @Override
     public List<DishPrice> findAll() {
         return dishPriceRepository.findAll();
@@ -34,8 +35,10 @@ public class DishPriceService implements IDishPriceService {
     @Override
     public Boolean deleteOne(Integer id) throws EntityNotFoundException {
         DishPrice toDelete = findOne(id);
+
         if (toDelete == null)
             throw new EntityNotFoundException("Dish price with given ID not found");
+
         dishPriceRepository.delete(toDelete);
         return true;
     }

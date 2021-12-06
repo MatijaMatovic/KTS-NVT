@@ -2,16 +2,18 @@ package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.UserToUserDTO;
 import com.rokzasok.serveit.dto.UserDTO;
+import com.rokzasok.serveit.model.Role;
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserType;
+import com.rokzasok.serveit.service.IEmailService;
 import com.rokzasok.serveit.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
@@ -23,14 +25,23 @@ public class UserController {
     final
     IUserService userService;
 
-    public UserController(IUserService userService) {
+    final IEmailService emailService;
+
+    public UserController(IUserService userService, IEmailService emailService) {
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @PostMapping(value = "/director/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createCompanyDirector(@RequestBody User director) {
+    public ResponseEntity<UserDTO> createCompanyDirector(@RequestBody UserDTO directorDTO) {
+        User director = new UserToUserDTO().convert(directorDTO);
+
         director.setType(UserType.DIRECTOR);
+        List<Role> roles = director.getRoles();
+        roles.add(new Role("ROLE_DIRECTOR"));
+        director.setRoles(roles);
+
         User saved = userService.save(director);
         if (saved == null)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Save failed");
@@ -39,8 +50,14 @@ public class UserController {
 
     @PostMapping(value = "/manager/create",
         consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createManager(@RequestBody User manager) {
+    public ResponseEntity<UserDTO> createManager(@RequestBody UserDTO managerDTO) {
+        User manager = new UserToUserDTO().convert(managerDTO);
+
         manager.setType(UserType.MANAGER);
+        List<Role> roles = manager.getRoles();
+        roles.add(new Role("ROLE_MANAGER"));
+        manager.setRoles(roles);
+
         User saved = userService.save(manager);
         if (saved == null)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Save failed");
@@ -49,10 +66,13 @@ public class UserController {
 
     @PostMapping(value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@RequestBody User newUser) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO newUserDTO) {
         UserType[] administrativeTypes = {
                 UserType.MANAGER, UserType.ADMINISTRATOR, UserType.DIRECTOR
         };
+
+        User newUser = new UserToUserDTO().convert(newUserDTO);
+
         if (Arrays.asList(administrativeTypes).contains(newUser.getType()))
             throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,
                     "You do not have the permission to create a user with administrative role");
@@ -102,5 +122,15 @@ public class UserController {
         if (theOne == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with given ID not found");
         return new ResponseEntity<>(new UserDTO(theOne), HttpStatus.OK);
+    }
+
+    //todo: Samo za testiranje, skloniti posle
+    @GetMapping(value="/send-email", produces = MediaType.APPLICATION_JSON_VALUE)
+    public void sendEmail(){
+        try {
+            emailService.sendPasswordChangedEmail("nekiUser@serveit.com", "nekiUser");
+        } catch (InterruptedException | MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

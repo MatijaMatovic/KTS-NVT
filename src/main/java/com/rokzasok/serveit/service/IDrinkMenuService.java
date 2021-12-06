@@ -6,4 +6,6 @@ import com.rokzasok.serveit.model.FoodMenu;
 
 public interface IDrinkMenuService extends IGenericService<DrinkMenu>{
     DrinkMenu edit(Integer id, DrinkMenuDTO drinkMenuDTO);
+
+    DrinkMenu last();
 }

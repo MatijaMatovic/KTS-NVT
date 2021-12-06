@@ -24,6 +24,7 @@ public class DrinkPriceDTOToDrinkPrice implements Converter<DrinkPriceDTO, Drink
     public DrinkPrice convert(DrinkPriceDTO source) {
         return DrinkPrice.builder()
                 .id(source.getId())
+                .price(source.getPrice())
                 .priceDate(source.getPriceDate())
                 .isDeleted(false)
                 .drink(drinkService.findOne(source.getDrinkId()))
@@ -32,8 +33,8 @@ public class DrinkPriceDTOToDrinkPrice implements Converter<DrinkPriceDTO, Drink
 
     public List<DrinkPrice> convert(List<DrinkPriceDTO> source) {
         List<DrinkPrice> result = new ArrayList<>();
-        for (DrinkPriceDTO drinkPriceDTO : source) {
-            result.add(convert(drinkPriceDTO));
+        for (DrinkPriceDTO dto : source) {
+            result.add(convert(dto));
         }
         return result;
     }

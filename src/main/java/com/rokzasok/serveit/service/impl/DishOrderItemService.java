@@ -73,6 +73,6 @@ public class DishOrderItemService implements IDishOrderItemService {
 
     @Override
     public List<DishOrderItem> findAllByCookID(Integer cookId) {
-        return dishOrderItemRepository.findAllByCookID(cookId);
+        return dishOrderItemRepository.findByCookId(cookId);
     }
 }

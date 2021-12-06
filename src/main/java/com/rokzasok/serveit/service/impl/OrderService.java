@@ -1,12 +1,9 @@
 package com.rokzasok.serveit.service.impl;
 
 
-import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.DrinkOrderItem;
-import com.rokzasok.serveit.model.ItemStatus;
+import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.repository.OrderRepository;
 import com.rokzasok.serveit.service.IOrderService;
-import com.rokzasok.serveit.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +59,6 @@ public class OrderService implements IOrderService {
 
     @Override
     public List<Order> getNotFinishedOrders() {
-        return orderRepository.getNotFinishedOrders();
+        return orderRepository.findByIsDeletedAndStatus(false, OrderStatus.NOT_FINISHED);
     }
 }
