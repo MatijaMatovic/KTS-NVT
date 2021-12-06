@@ -2,6 +2,7 @@ package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.UserToUserDTO;
 import com.rokzasok.serveit.dto.UserDTO;
+import com.rokzasok.serveit.model.Role;
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserType;
 import com.rokzasok.serveit.service.IEmailService;
@@ -33,8 +34,14 @@ public class UserController {
 
     @PostMapping(value = "/director/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createCompanyDirector(@RequestBody User director) {
+    public ResponseEntity<UserDTO> createCompanyDirector(@RequestBody UserDTO directorDTO) {
+        User director = new UserToUserDTO().convert(directorDTO);
+
         director.setType(UserType.DIRECTOR);
+        List<Role> roles = director.getRoles();
+        roles.add(new Role("ROLE_DIRECTOR"));
+        director.setRoles(roles);
+
         User saved = userService.save(director);
         if (saved == null)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Save failed");
@@ -43,8 +50,14 @@ public class UserController {
 
     @PostMapping(value = "/manager/create",
         consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createManager(@RequestBody User manager) {
+    public ResponseEntity<UserDTO> createManager(@RequestBody UserDTO managerDTO) {
+        User manager = new UserToUserDTO().convert(managerDTO);
+
         manager.setType(UserType.MANAGER);
+        List<Role> roles = manager.getRoles();
+        roles.add(new Role("ROLE_MANAGER"));
+        manager.setRoles(roles);
+
         User saved = userService.save(manager);
         if (saved == null)
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Save failed");
@@ -53,10 +66,13 @@ public class UserController {
 
     @PostMapping(value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> createUser(@RequestBody User newUser) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO newUserDTO) {
         UserType[] administrativeTypes = {
                 UserType.MANAGER, UserType.ADMINISTRATOR, UserType.DIRECTOR
         };
+
+        User newUser = new UserToUserDTO().convert(newUserDTO);
+
         if (Arrays.asList(administrativeTypes).contains(newUser.getType()))
             throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,
                     "You do not have the permission to create a user with administrative role");

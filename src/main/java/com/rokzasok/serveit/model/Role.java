@@ -1,10 +1,17 @@
 package com.rokzasok.serveit.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 
+
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name="ROLE")
 public class Role implements GrantedAuthority {
@@ -16,8 +23,13 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @EqualsAndHashCode.Include
     @Column(name="name")
     String name;
+
+    public Role(String name) {
+        this.name = name;
+    }
 
     @JsonIgnore
     @Override
