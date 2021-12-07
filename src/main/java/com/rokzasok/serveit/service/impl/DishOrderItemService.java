@@ -1,11 +1,10 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.DrinkOrderItem;
-import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.repository.DishOrderItemRepository;
 import com.rokzasok.serveit.service.IDishOrderItemService;
+import com.rokzasok.serveit.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -45,25 +44,31 @@ public class DishOrderItemService implements IDishOrderItemService {
     }
 
     @Override
-    public Boolean changeStatusDishOrderItem(Integer id, ItemStatus itemStatus) {
+    public DishOrderItem changeStatusDishOrderItem(Integer id, ItemStatus itemStatus) throws Exception{
         DishOrderItem dishOrderItem = findOne(id);
 
         if (dishOrderItem == null)
-            return false;
+            throw new Exception("Dish order item with given id doesn't exist");
 
-        dishOrderItemRepository.changeStatusDishOrderItem(id, itemStatus.name());
-        return true;
+        dishOrderItem.setStatus(itemStatus);
+        return dishOrderItemRepository.save(dishOrderItem);
     }
 
     @Override
-    public Boolean acceptDishOrderItem(Integer id, ItemStatus itemStatus, Integer cookId) {
+    public DishOrderItem acceptDishOrderItem(Integer id, ItemStatus itemStatus, Integer cookId, IUserService userService) throws Exception{
         DishOrderItem dishOrderItem = findOne(id);
 
         if (dishOrderItem == null)
-            return false;
+            throw new Exception("Dish order item with given id doesn't exist");
 
-        dishOrderItemRepository.acceptDishOrderItem(id, itemStatus.name(), cookId);
-        return true;
+        User user = userService.findOne(cookId);
+        if (user == null)
+            throw new Exception("Cook with given id doesn't exist");
+
+        dishOrderItem.setStatus(itemStatus);
+        dishOrderItem.setCook(user);
+
+        return dishOrderItemRepository.save(dishOrderItem);
     }
   
     @Override
