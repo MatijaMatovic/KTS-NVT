@@ -1,7 +1,9 @@
-package com.rokzasok.serveit.repository;
+package com.rokzasok.serveit.repository.isidora;
 
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserSalary;
+import com.rokzasok.serveit.repository.UserRepository;
+import com.rokzasok.serveit.repository.UserSalaryRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

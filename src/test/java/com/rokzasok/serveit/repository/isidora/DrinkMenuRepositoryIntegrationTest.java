@@ -1,6 +1,7 @@
-package com.rokzasok.serveit.repository;
+package com.rokzasok.serveit.repository.isidora;
 
 import com.rokzasok.serveit.model.DrinkMenu;
+import com.rokzasok.serveit.repository.DrinkMenuRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
