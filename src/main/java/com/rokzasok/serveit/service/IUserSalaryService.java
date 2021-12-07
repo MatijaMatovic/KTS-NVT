@@ -6,4 +6,5 @@ import com.rokzasok.serveit.model.UserSalary;
 
 public interface IUserSalaryService extends IGenericService<UserSalary>{
     UserSalary current(User user);
+    UserSalary edit(UserSalary userSalary);
 }

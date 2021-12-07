@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.constatns;
+package com.rokzasok.serveit.constants;
 
 import java.time.LocalDate;
 

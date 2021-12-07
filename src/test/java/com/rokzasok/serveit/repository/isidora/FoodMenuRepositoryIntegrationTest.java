@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 
-import static com.rokzasok.serveit.constatns.MenuConstants.*;
+import static com.rokzasok.serveit.constants.MenuConstants.*;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)

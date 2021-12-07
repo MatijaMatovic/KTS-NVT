@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static com.rokzasok.serveit.constatns.UserSalaryConstants.*;
+import static com.rokzasok.serveit.constants.UserSalaryConstants.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
@@ -31,10 +31,10 @@ public class UserSalaryRepositoryIntegrationTest {
     @Before
     public void setUp() {
         User user = userRepository.findById(1).orElse(null);
-        UserSalary salary1 = UserSalary.builder().id(ID1).salaryDate(DATE1).isDeleted(IS_DELETED1).user(user).salary(30000.00).build();
+        UserSalary salary1 = UserSalary.builder().id(USER_ID1).salaryDate(DATE1).isDeleted(IS_DELETED1).user(user).salary(30000.00).build();
         userSalaryRepository.save(salary1);
 
-        UserSalary salary2 = UserSalary.builder().id(ID2).salaryDate(DATE2).isDeleted(IS_DELETED2).user(user).salary(40000.00).build();
+        UserSalary salary2 = UserSalary.builder().id(USER_ID2).salaryDate(DATE2).isDeleted(IS_DELETED2).user(user).salary(40000.00).build();
         userSalaryRepository.save(salary2);
     }
 

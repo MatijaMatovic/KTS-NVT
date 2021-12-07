@@ -5,7 +5,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @SuppressWarnings("LombokEqualsAndHashCodeInspection")
 @Getter
@@ -28,7 +28,7 @@ public class DishPrice {
     @EqualsAndHashCode.Include
     private Integer id;
     private Double price;
-    private Date priceDate;
+    private LocalDate priceDate;
     private Boolean isDeleted;
 
     @ManyToOne(fetch = FetchType.EAGER)

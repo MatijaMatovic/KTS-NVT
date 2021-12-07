@@ -7,7 +7,6 @@ import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserSalary;
 import com.rokzasok.serveit.service.IUserSalaryService;
 import com.rokzasok.serveit.service.IUserService;
-import com.rokzasok.serveit.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -136,8 +135,7 @@ public class UserSalaryController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        UserSalary newUs = new UserSalary(null, us.getSalary(), us.getSalaryDate(), false, us.getUser());
-        userSalaryService.deleteOne(id);
+        UserSalary newUs = userSalaryService.edit(us);
 
         return new ResponseEntity<>(userSalaryToUserSalaryDTO.convert(newUs), HttpStatus.OK);
     }
