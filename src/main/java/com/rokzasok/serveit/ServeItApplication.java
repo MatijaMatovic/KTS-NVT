@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
  * TODO: izbrisati '(exclude = {SecurityAutoConfiguration.class })'
  *   kad se implementira Spring security OBAVEZNO
  */
-@SpringBootApplication//TODO: IZBRISATI kad se implementira security
+@SpringBootApplication
 public class ServeItApplication {
 
     public static void main(String[] args) {

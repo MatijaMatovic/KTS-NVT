@@ -4,8 +4,10 @@ import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.converters.DrinkOrderItemToDrinkOrderItemDTO;
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -30,8 +32,8 @@ public class OrderDTO {
     private String note;
     private Integer sittingTableID;
     private Integer waiterID;
-    private List<DishOrderItemDTO> dishes;
-    private List<DrinkOrderItemDTO> drinks;
+    private List<DishOrderItemDTO> dishes = new ArrayList<>();
+    private List<DrinkOrderItemDTO> drinks = new ArrayList<>();
 
     // TODO ovo mora u converter
     public OrderDTO(Order order) {
