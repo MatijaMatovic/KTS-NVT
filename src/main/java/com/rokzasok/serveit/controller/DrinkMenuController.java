@@ -1,6 +1,5 @@
 package com.rokzasok.serveit.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.rokzasok.serveit.converters.DrinkDTOtoDrink;
 import com.rokzasok.serveit.converters.DrinkMenuDTOToDrinkMenu;
 import com.rokzasok.serveit.converters.DrinkMenuToDrinkMenuDTO;
@@ -21,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -226,7 +225,7 @@ public class DrinkMenuController {
 
         DrinkMenu newDrinkMenu = DrinkMenu.builder()
                 .isDeleted(false)
-                .date(new Date())
+                .date(LocalDate.now())
                 .drinks(new HashSet<>())
                 .build();
 
