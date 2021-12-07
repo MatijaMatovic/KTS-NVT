@@ -1,17 +1,16 @@
 package com.rokzasok.serveit;
 
-import com.rokzasok.serveit.repository.DrinkMenuRepositoryUnitTest;
-import com.rokzasok.serveit.repository.FoodMenuRepositoryUnitTest;
-import com.rokzasok.serveit.repository.UserSalaryRepositoryUnitTest;
+import com.rokzasok.serveit.repository.DrinkMenuRepositoryIntegrationTest;
+import com.rokzasok.serveit.repository.FoodMenuRepositoryIntegrationTest;
+import com.rokzasok.serveit.repository.UserSalaryRepositoryIntegrationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 import org.springframework.test.context.TestPropertySource;
 
 @RunWith(Suite.class)
-@SuiteClasses({FoodMenuRepositoryUnitTest.class, DrinkMenuRepositoryUnitTest.class, UserSalaryRepositoryUnitTest.class})
+@SuiteClasses({FoodMenuRepositoryIntegrationTest.class, DrinkMenuRepositoryIntegrationTest.class, UserSalaryRepositoryIntegrationTest.class})
 @TestPropertySource("classpath:test.properties")
 public class SuiteAll {
-
 
 }

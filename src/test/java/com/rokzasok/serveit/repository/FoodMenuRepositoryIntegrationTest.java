@@ -1,6 +1,6 @@
 package com.rokzasok.serveit.repository;
 
-import com.rokzasok.serveit.model.DrinkMenu;
+import com.rokzasok.serveit.model.FoodMenu;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,23 +17,23 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ActiveProfiles("test")
-public class DrinkMenuRepositoryUnitTest {
+public class FoodMenuRepositoryIntegrationTest {
 
     @Autowired
-    private DrinkMenuRepository drinkMenuRepository;
+    private FoodMenuRepository foodMenuRepository;
 
     @Before
     public void setUp() {
-        DrinkMenu drinkMenu1 = DrinkMenu.builder().id(ID1).date(DATE1).isDeleted(IS_DELETED1).drinks(new HashSet<>()).build();
-        drinkMenuRepository.save(drinkMenu1);
+        FoodMenu foodMenu1 = FoodMenu.builder().id(ID1).date(DATE1).isDeleted(IS_DELETED1).dishes(new HashSet<>()).build();
+        foodMenuRepository.save(foodMenu1);
 
-        DrinkMenu drinkMenu2 = DrinkMenu.builder().id(ID2).date(DATE2).isDeleted(IS_DELETED2).drinks(new HashSet<>()).build();
-        drinkMenuRepository.save(drinkMenu2);
+        FoodMenu foodMenu2 = FoodMenu.builder().id(ID2).date(DATE2).isDeleted(IS_DELETED2).dishes(new HashSet<>()).build();
+        foodMenuRepository.save(foodMenu2);
     }
 
     @Test
     public void testFindTopByOrderByDateDesc() {
-        DrinkMenu found = drinkMenuRepository.findTopByOrderByDateDesc();
+        FoodMenu found = foodMenuRepository.findTopByOrderByDateDesc();
         assertTrue(found.getDate().isAfter(DATE1));
     }
 
