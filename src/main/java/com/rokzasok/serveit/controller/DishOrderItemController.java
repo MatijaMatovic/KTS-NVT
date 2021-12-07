@@ -2,13 +2,12 @@ package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.converters.DrinkDTOtoDrink;
-import com.rokzasok.serveit.dto.DishOrderItemDTO;
-import com.rokzasok.serveit.dto.OrderDTO;
-import com.rokzasok.serveit.dto.OrderItemStatusDTO;
-import com.rokzasok.serveit.dto.OrderItemWorkerStatusDTO;
+import com.rokzasok.serveit.dto.*;
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDishOrderItemService;
+import com.rokzasok.serveit.service.IUserService;
+import com.rokzasok.serveit.service.impl.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +23,12 @@ import java.util.stream.Collectors;
 public class DishOrderItemController {
     final IDishOrderItemService dishOrderItemService;
     final DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO;
+    final IUserService userService;
 
-    public DishOrderItemController(IDishOrderItemService dishOrderItemService, DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO, DrinkDTOtoDrink drinkDTOtoDrink) {
+    public DishOrderItemController(IDishOrderItemService dishOrderItemService, DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO, DrinkDTOtoDrink drinkDTOtoDrink, IUserService userService) {
         this.dishOrderItemService = dishOrderItemService;
         this.dishOrderItemToDishOrderItemDTO = dishOrderItemToDishOrderItemDTO;
-
+        this.userService = userService;
     }
 
 
@@ -42,26 +42,32 @@ public class DishOrderItemController {
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem), HttpStatus.OK);
     }
 
+    //TODO:jos malo pogledati koju poruku vraca u slucaju greske
     @PutMapping(value="/complete-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+    public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+        DishOrderItem dishOrderItem;
+        try {
+        dishOrderItem = dishOrderItemService.changeStatusDishOrderItem(id, orderItemStatusDTO.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Boolean isCompleted = dishOrderItemService.changeStatusDishOrderItem(id, orderItemStatusDTO.getStatus());
+        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem), HttpStatus.OK);
 
-        if(isCompleted)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 
+    //TODO:jos malo pogledati koju poruku vraca u slucaju greske
     @PutMapping(value="/accept-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerStatusDTO orderItemWorkerStatusDTO){
+    public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerStatusDTO orderItemWorkerStatusDTO){
 
-        Boolean isCompleted = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerStatusDTO.getStatus(), orderItemWorkerStatusDTO.getWorkerId());
+        DishOrderItem dishOrderItem;
+        try {
+        dishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerStatusDTO.getStatus(), orderItemWorkerStatusDTO.getWorkerId(), userService);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        if(isCompleted)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem), HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ROLE_COOK')")

@@ -1,11 +1,9 @@
 package com.rokzasok.serveit.service.impl;
 
-import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.Drink;
-import com.rokzasok.serveit.model.DrinkOrderItem;
-import com.rokzasok.serveit.model.ItemStatus;
+import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.repository.DrinkOrderItemRepository;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
+import com.rokzasok.serveit.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +11,7 @@ import java.util.List;
 @Service
 public class DrinkOrderItemService implements IDrinkOrderItemService {
     private final DrinkOrderItemRepository drinkOrderItemRepository;
+
 
     public DrinkOrderItemService(DrinkOrderItemRepository drinkOrderItemRepository) {
         this.drinkOrderItemRepository = drinkOrderItemRepository;
@@ -45,25 +44,30 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
     }
 
     @Override
-    public Boolean changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) {
+    public DrinkOrderItem changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) throws Exception {
         DrinkOrderItem drinkOrderItem = findOne(id);
 
         if (drinkOrderItem == null)
-            return false;
+            throw new Exception("Drink order item with given id doesn't exist");
 
-        drinkOrderItemRepository.changeStatusDrinkOrderItem(id, itemStatus.name());
-        return true;
+        drinkOrderItem.setStatus(itemStatus);
+        return drinkOrderItemRepository.save(drinkOrderItem);
     }
 
     @Override
-    public Boolean acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId) {
+    public DrinkOrderItem acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId, IUserService userService) throws Exception {
         DrinkOrderItem drinkOrderItem = findOne(id);
-
         if (drinkOrderItem == null)
-            return false;
+            throw new Exception("Drink order item with given id doesn't exist");
 
-        drinkOrderItemRepository.acceptDrinkOrderItem(id, itemStatus.name(), bartenderId);
-        return true;
+        User user = userService.findOne(bartenderId);
+        if (user == null)
+            throw new Exception("Bartender with given id doesn't exist");
+
+        drinkOrderItem.setStatus(itemStatus);
+        drinkOrderItem.setBartender(user);
+
+        return drinkOrderItemRepository.save(drinkOrderItem);
     }
 
     @Override

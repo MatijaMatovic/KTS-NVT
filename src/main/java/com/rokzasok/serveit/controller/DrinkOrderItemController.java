@@ -9,6 +9,8 @@ import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
+import com.rokzasok.serveit.service.IUserService;
+import com.rokzasok.serveit.service.impl.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +24,13 @@ import java.util.List;
 public class DrinkOrderItemController {
     final IDrinkOrderItemService drinkOrderItemService;
     final DrinkOrderItemToDrinkOrderItemDTO drinkOrderItemToDrinkOrderItemDTO;
+    final IUserService userService;
 
 
-    public DrinkOrderItemController(IDrinkOrderItemService drinkOrderItemService, DrinkOrderItemToDrinkOrderItemDTO drinkOrderItemToDrinkOrderItemDTO) {
+    public DrinkOrderItemController(IDrinkOrderItemService drinkOrderItemService, DrinkOrderItemToDrinkOrderItemDTO drinkOrderItemToDrinkOrderItemDTO, IUserService userService) {
         this.drinkOrderItemService = drinkOrderItemService;
         this.drinkOrderItemToDrinkOrderItemDTO = drinkOrderItemToDrinkOrderItemDTO;
+        this.userService = userService;
     }
 
     //todo: Da li treba raditi proveru da li je prethodni status pića READY? Ili to radimo na frontendu?
@@ -39,26 +43,32 @@ public class DrinkOrderItemController {
         return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(drinkOrderItem), HttpStatus.OK);
     }
 
+    //TODO:jos malo pogledati koju poruku vraca u slucaju greske
     @PutMapping(value="/complete-drink-order/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+    public ResponseEntity<DrinkOrderItemDTO> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemStatusDTO orderItemStatusDTO){
+        DrinkOrderItem drinkOrderItem;
+        try {
+            drinkOrderItem = drinkOrderItemService.changeStatusDrinkOrderItem(id, orderItemStatusDTO.getStatus());
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Boolean isCompleted = drinkOrderItemService.changeStatusDrinkOrderItem(id, orderItemStatusDTO.getStatus());
-
-        if(isCompleted)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(drinkOrderItem), HttpStatus.OK);
     }
 
+    //TODO:jos malo pogledati koju poruku vraca u slucaju greske
     @PutMapping(value="/accept-drink-order/{id}", consumes = "application/json")
-    public ResponseEntity<Boolean> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerStatusDTO orderItemWorkerStatusDTO){
+    public ResponseEntity<DrinkOrderItemDTO> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerStatusDTO orderItemWorkerStatusDTO){
+        DrinkOrderItem drinkOrderItem;
+        try {
+            drinkOrderItem = drinkOrderItemService.acceptDrinkOrderItem(id, orderItemWorkerStatusDTO.getStatus(),
+                    orderItemWorkerStatusDTO.getWorkerId(), userService);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Boolean isCompleted = drinkOrderItemService.acceptDrinkOrderItem(id, orderItemWorkerStatusDTO.getStatus(), orderItemWorkerStatusDTO.getWorkerId());
+        return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(drinkOrderItem), HttpStatus.OK);
 
-        if(isCompleted)
-            return new ResponseEntity<>(true, HttpStatus.OK);
-        else
-            return new ResponseEntity<>(false, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(value = "/bartender-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
