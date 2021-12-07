@@ -1,15 +1,13 @@
 package com.rokzasok.serveit.controller;
 
+import com.rokzasok.serveit.converters.DishPriceDTOToDishPrice;
 import com.rokzasok.serveit.converters.FoodMenuDTOToFoodMenu;
 import com.rokzasok.serveit.converters.FoodMenuToFoodMenuDTO;
-import com.rokzasok.serveit.converters.DishPriceDTOToDishPrice;
-import com.rokzasok.serveit.dto.DrinkMenuDTO;
-import com.rokzasok.serveit.dto.FoodMenuDTO;
 import com.rokzasok.serveit.dto.DishPriceDTO;
+import com.rokzasok.serveit.dto.FoodMenuDTO;
 import com.rokzasok.serveit.model.Dish;
-import com.rokzasok.serveit.model.DrinkMenu;
-import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.model.DishPrice;
+import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.service.IDishPriceService;
 import com.rokzasok.serveit.service.IDishService;
 import com.rokzasok.serveit.service.IFoodMenuService;
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -220,7 +218,7 @@ public class FoodMenuController {
 
         FoodMenu newFoodMenu = FoodMenu.builder()
                 .isDeleted(false)
-                .date(new Date())
+                .date(LocalDate.now())
                 .dishes(new HashSet<>())
                 .build();
 

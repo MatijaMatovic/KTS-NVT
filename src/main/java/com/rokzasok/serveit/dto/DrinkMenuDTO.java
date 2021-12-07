@@ -1,6 +1,8 @@
 package com.rokzasok.serveit.dto;
 
 import lombok.*;
+
+import java.time.LocalDate;
 import java.util.*;
 
 @Getter
@@ -14,7 +16,7 @@ import java.util.*;
 public class DrinkMenuDTO {
     @EqualsAndHashCode.Include
     private Integer id;
-    private Date date;
+    private LocalDate date;
 
     @ToString.Exclude
     private List<DrinkPriceDTO> drinks = new ArrayList<>();
