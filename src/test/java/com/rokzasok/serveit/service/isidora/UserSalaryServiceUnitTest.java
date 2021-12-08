@@ -121,10 +121,12 @@ public class UserSalaryServiceUnitTest {
         // testEdit
         given(userSalaryRepository.findById(ID2)).willReturn(Optional.ofNullable(salary2));
         given(userSalaryRepository.save(any())).willReturn(salary3);
-        salaries.add(salary3);
+        //salaries.add(salary3);
 
         // testCurrent
-        given(userSalaryRepository.findByUser(user)).willReturn(salaries);
+        List<UserSalary> salaries2 = new ArrayList<>(salaries);
+        salaries2.add(salary3);
+        given(userSalaryRepository.findByUser(user)).willReturn(salaries2);
 
         // testCurrent_UserDoesNotHaveSalary
         given(userSalaryRepository.findByUser(userNoSalary)).willReturn(new ArrayList<>());

@@ -35,7 +35,7 @@ public class FoodMenuRepositoryIntegrationTest {
     @Test
     public void testFindTopByOrderByDateDesc() {
         FoodMenu found = foodMenuRepository.findTopByOrderByDateDesc();
-        assertTrue(found.getDate().isAfter(DATE1));
+        assertTrue("Last menu should be after all other menus", found.getDate().isAfter(DATE1));
     }
 
 }
