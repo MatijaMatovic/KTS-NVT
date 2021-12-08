@@ -5,6 +5,7 @@ import com.rokzasok.serveit.model.DishPrice;
 import com.rokzasok.serveit.model.FoodMenu;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class FoodMenuToFoodMenuDTO implements Converter<FoodMenu, FoodMenuDTO> {
     }
 
     @Override
+    @Transactional
     public FoodMenuDTO convert(FoodMenu source) {
         FoodMenuDTO dto = FoodMenuDTO.builder()
                 .id(source.getId())
@@ -28,6 +30,8 @@ public class FoodMenuToFoodMenuDTO implements Converter<FoodMenu, FoodMenuDTO> {
                 .dishes(new ArrayList<>())
                 .build();
         if (source.getDishes() == null) return dto;
+        int sizeOfSet = source.getDishes().size();
+        if (sizeOfSet == 0) return dto;
         for (DishPrice dp : source.getDishes()){
             dto.getDishes().add(dishPriceToDishPriceDTO.convert(dp));
         }

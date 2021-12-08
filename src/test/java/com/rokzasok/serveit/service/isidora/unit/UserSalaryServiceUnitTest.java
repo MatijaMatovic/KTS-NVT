@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.isidora;
+package com.rokzasok.serveit.service.isidora.unit;
 
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserSalary;

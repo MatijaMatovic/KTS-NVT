@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.isidora;
+package com.rokzasok.serveit.service.isidora.unit;
 
 import com.rokzasok.serveit.converters.FoodMenuToFoodMenuDTO;
 import com.rokzasok.serveit.model.FoodMenu;
