@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.isidora.integration;
+package com.rokzasok.serveit.service.klimenta.integration;
 
 import com.rokzasok.serveit.converters.SittingTableToSittingTableDTO;
 import com.rokzasok.serveit.model.SittingTable;

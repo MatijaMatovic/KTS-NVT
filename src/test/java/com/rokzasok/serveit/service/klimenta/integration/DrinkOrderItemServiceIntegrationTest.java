@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.klimentaintegration;
+package com.rokzasok.serveit.service.klimenta.integration;
 
 import com.rokzasok.serveit.service.impl.DrinkOrderItemService;
 import com.rokzasok.serveit.service.impl.UserService;

@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.klimenta;
+package com.rokzasok.serveit.service.klimenta.unit;
 
 import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.repository.DishOrderItemRepository;
