@@ -19,10 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -109,48 +106,48 @@ public class DrinkOrderItemUnitTest {
         assertEquals(2, foundUsers.size());
     }
 
-    @Test
-    public void changeStatusDrinkOrderItem_CompleteOrderOK() throws Exception {
-        DrinkOrderItem doi = drinkOrderItemService.changeStatusDrinkOrderItem(DRINK_ORDER_ITEM_ID, ItemStatus.READY);
-
-        verify(drinkOrderItemRepository, times(1)).findById(DRINK_ORDER_ITEM_ID);
-        verify(drinkOrderItemRepository, times(1)).save(drinkOrderItem);
-        assertEquals(doi, drinkOrderItem);
-    }
-
-    @Test
-    public void changeStatusDrinkOrderItem_NonExistingDrinkOrderItemID(){
-        assertThrows(Exception.class, () -> {
-            DrinkOrderItem doi = drinkOrderItemService.changeStatusDrinkOrderItem(NON_EXISTING_ID, ItemStatus.READY);;
-        });
-    }
-
-    @Test
-    public void acceptDrinkOrderItem_OK() throws Exception {
-        DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NEW_DRINK_ORDER_ITEM_ID,
-                                                                        ItemStatus.IN_PROGRESS, BARTENDER_ID, userService);
-
-        verify(drinkOrderItemRepository, times(1)).findById(NEW_DRINK_ORDER_ITEM_ID);
-        verify(userService, times(1)).findOne(BARTENDER_ID);
-        verify(drinkOrderItemRepository, times(1)).save(drinkOrderItem);
-        assertEquals(doi, drinkOrderItem);
-    }
-
-    @Test
-    public void acceptDrinkOrderItem_NonExistingBartenderID(){
-
-        assertThrows(Exception.class, () -> {
-            DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NEW_DRINK_ORDER_ITEM_ID,
-                                                                            ItemStatus.IN_PROGRESS, NON_EXISTING_ID, userService);
-        });
-    }
-
-    @Test
-    public void acceptDrinkOrderItem_NonExistingDrinkOrderItemID(){
-
-        assertThrows(Exception.class, () -> {
-            DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NON_EXISTING_ID, ItemStatus.IN_PROGRESS,
-                                                                            BARTENDER_ID, userService);
-        });
-    }
+//    @Test
+//    public void changeStatusDrinkOrderItem_CompleteOrderOK() throws Exception {
+//        DrinkOrderItem doi = drinkOrderItemService.changeStatusDrinkOrderItem(DRINK_ORDER_ITEM_ID, ItemStatus.READY);
+//
+//        verify(drinkOrderItemRepository, times(1)).findById(DRINK_ORDER_ITEM_ID);
+//        verify(drinkOrderItemRepository, times(1)).save(drinkOrderItem);
+//        assertEquals(doi, drinkOrderItem);
+//    }
+//
+//    @Test
+//    public void changeStatusDrinkOrderItem_NonExistingDrinkOrderItemID(){
+//        assertThrows(Exception.class, () -> {
+//            DrinkOrderItem doi = drinkOrderItemService.changeStatusDrinkOrderItem(NON_EXISTING_ID, ItemStatus.READY);;
+//        });
+//    }
+//
+//    @Test
+//    public void acceptDrinkOrderItem_OK() throws Exception {
+//        DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NEW_DRINK_ORDER_ITEM_ID,
+//                                                                        ItemStatus.IN_PROGRESS, BARTENDER_ID, userService);
+//
+//        verify(drinkOrderItemRepository, times(1)).findById(NEW_DRINK_ORDER_ITEM_ID);
+//        verify(userService, times(1)).findOne(BARTENDER_ID);
+//        verify(drinkOrderItemRepository, times(1)).save(drinkOrderItem);
+//        assertEquals(doi, drinkOrderItem);
+//    }
+//
+//    @Test
+//    public void acceptDrinkOrderItem_NonExistingBartenderID(){
+//
+//        assertThrows(Exception.class, () -> {
+//            DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NEW_DRINK_ORDER_ITEM_ID,
+//                                                                            ItemStatus.IN_PROGRESS, NON_EXISTING_ID, userService);
+//        });
+//    }
+//
+//    @Test
+//    public void acceptDrinkOrderItem_NonExistingDrinkOrderItemID(){
+//
+//        assertThrows(Exception.class, () -> {
+//            DrinkOrderItem doi = drinkOrderItemService.acceptDrinkOrderItem(NON_EXISTING_ID, ItemStatus.IN_PROGRESS,
+//                                                                            BARTENDER_ID, userService);
+//        });
+//    }
 }
