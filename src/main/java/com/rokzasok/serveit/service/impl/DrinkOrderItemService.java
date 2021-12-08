@@ -1,9 +1,8 @@
 package com.rokzasok.serveit.service.impl;
 
-import com.rokzasok.serveit.model.*;
+import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.repository.DrinkOrderItemRepository;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
-import com.rokzasok.serveit.service.IUserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,33 +40,6 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
         }
         drinkOrderItemRepository.delete(drinkOrderItem);
         return true;
-    }
-
-    @Override
-    public DrinkOrderItem changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) throws Exception {
-        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id).orElse(null);
-
-        if (drinkOrderItem == null)
-            throw new Exception("Drink order item with given id doesn't exist");
-
-        drinkOrderItem.setStatus(itemStatus);
-        return drinkOrderItemRepository.save(drinkOrderItem);
-    }
-
-    @Override
-    public DrinkOrderItem acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId, IUserService userService) throws Exception {
-        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id).orElse(null);
-        if (drinkOrderItem == null)
-            throw new Exception("Drink order item with given id doesn't exist");
-
-        User user = userService.findOne(bartenderId);
-        if (user == null)
-            throw new Exception("Bartender with given id doesn't exist");
-
-        drinkOrderItem.setStatus(itemStatus);
-        drinkOrderItem.setBartender(user);
-
-        return drinkOrderItemRepository.save(drinkOrderItem);
     }
 
     @Override
