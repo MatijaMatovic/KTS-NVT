@@ -86,7 +86,7 @@ public class FoodMenuServiceUnitTest {
         given(foodMenuRepository.findById(ID2)).willReturn(Optional.ofNullable(menu2));
         given(foodMenuRepository.save(any())).willReturn(menu3);
 
-        // testCurrent
+        // testLast
         List<FoodMenu> menus2 = new ArrayList<>(menus);
         menus2.add(menu3);
         given(foodMenuRepository.findTopByOrderByDateDesc()).willReturn(menu3);

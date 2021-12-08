@@ -86,7 +86,7 @@ public class DrinkMenuServiceUnitTest {
         given(drinkMenuRepository.findById(ID2)).willReturn(Optional.ofNullable(menu2));
         given(drinkMenuRepository.save(any())).willReturn(menu3);
 
-        // testCurrent
+        // testLast
         List<DrinkMenu> menus2 = new ArrayList<>(menus);
         menus2.add(menu3);
         given(drinkMenuRepository.findTopByOrderByDateDesc()).willReturn(menu3);
@@ -137,6 +137,5 @@ public class DrinkMenuServiceUnitTest {
         DrinkMenu menu = drinkMenuService.last();
         assertEquals(ID3, menu.getId());
     }
-
 
 }

@@ -17,7 +17,8 @@ import org.springframework.test.context.TestPropertySource;
         DishPriceServiceUnitTest.class,
         DrinkPriceServiceUnitTest.class,
         FoodMenuServiceUnitTest.class,
-        DrinkMenuServiceUnitTest.class})
+        DrinkMenuServiceUnitTest.class,
+        SittingTableServiceUnitTest.class})
 @TestPropertySource("classpath:test.properties")
 public class SuiteAll {
 
