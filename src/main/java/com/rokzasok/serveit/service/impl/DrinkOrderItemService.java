@@ -44,33 +44,6 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
     }
 
     @Override
-    public DrinkOrderItem changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) throws Exception {
-        DrinkOrderItem drinkOrderItem = findOne(id);
-
-        if (drinkOrderItem == null)
-            throw new Exception("Drink order item with given id doesn't exist");
-
-        drinkOrderItem.setStatus(itemStatus);
-        return drinkOrderItemRepository.save(drinkOrderItem);
-    }
-
-    @Override
-    public DrinkOrderItem acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId, IUserService userService) throws Exception {
-        DrinkOrderItem drinkOrderItem = findOne(id);
-        if (drinkOrderItem == null)
-            throw new Exception("Drink order item with given id doesn't exist");
-
-        User user = userService.findOne(bartenderId);
-        if (user == null)
-            throw new Exception("Bartender with given id doesn't exist");
-
-        drinkOrderItem.setStatus(itemStatus);
-        drinkOrderItem.setBartender(user);
-
-        return drinkOrderItemRepository.save(drinkOrderItem);
-    }
-
-    @Override
     public List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID) {
         return drinkOrderItemRepository.findByBartenderId(bartenderID);
     }
