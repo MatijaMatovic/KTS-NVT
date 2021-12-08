@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.HashSet;
 
-import static com.rokzasok.serveit.constatns.MenuConstants.*;
+import static com.rokzasok.serveit.constants.MenuConstants.*;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -35,7 +35,7 @@ public class FoodMenuRepositoryIntegrationTest {
     @Test
     public void testFindTopByOrderByDateDesc() {
         FoodMenu found = foodMenuRepository.findTopByOrderByDateDesc();
-        assertTrue(found.getDate().isAfter(DATE1));
+        assertTrue("Last menu should be after all other menus", found.getDate().isAfter(DATE1));
     }
 
 }

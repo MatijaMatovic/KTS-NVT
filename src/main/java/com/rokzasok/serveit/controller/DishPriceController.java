@@ -105,6 +105,7 @@ public class DishPriceController {
         DishPrice newDishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
 
         dishPrice = dishPriceService.save(newDishPrice);
+        dishPriceService.deleteOne(id);
         return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
     }
 

@@ -27,6 +27,7 @@ public class FoodMenuToFoodMenuDTO implements Converter<FoodMenu, FoodMenuDTO> {
                 .date(source.getDate())
                 .dishes(new ArrayList<>())
                 .build();
+        if (source.getDishes() == null) return dto;
         for (DishPrice dp : source.getDishes()){
             dto.getDishes().add(dishPriceToDishPriceDTO.convert(dp));
         }

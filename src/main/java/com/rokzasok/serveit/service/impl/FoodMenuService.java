@@ -3,7 +3,6 @@ package com.rokzasok.serveit.service.impl;
 import com.rokzasok.serveit.dto.DishPriceDTO;
 import com.rokzasok.serveit.dto.FoodMenuDTO;
 import com.rokzasok.serveit.model.DishPrice;
-import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.repository.FoodMenuRepository;
 import com.rokzasok.serveit.service.IDishPriceService;
@@ -57,7 +56,7 @@ public class FoodMenuService implements IFoodMenuService {
     }
 
     @Override
-    public FoodMenu edit(Integer id, FoodMenuDTO foodMenuDTO) {
+    public FoodMenu edit(Integer id, FoodMenuDTO foodMenuDTO) throws EntityNotFoundException {
         FoodMenu toEdit = findOne(id);
         if (toEdit == null)
             throw new EntityNotFoundException("Food Menu with given ID not found");
