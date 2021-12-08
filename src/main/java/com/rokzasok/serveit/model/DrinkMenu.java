@@ -32,7 +32,7 @@ public class DrinkMenu {
     private LocalDate date;
     private Boolean isDeleted;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "drink_menu_prices",
                 joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
                 inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id"))
