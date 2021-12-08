@@ -247,7 +247,7 @@ values
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
 values
-    ('IN_PROGRESS', 'Nek bude zapeceno', 2, 1, 3, 3, false);
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 3, 3, false);
 
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
