@@ -1,5 +1,6 @@
 package com.rokzasok.serveit.service.jovan;
 
+import com.rokzasok.serveit.constants.DishOrderItemConstants;
 import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.service.impl.DishOrderItemService;
 import com.rokzasok.serveit.service.impl.DishPriceService;
@@ -22,21 +23,6 @@ import static org.junit.Assert.*;
 @TestPropertySource("classpath:application-test.properties")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class DishOrderItemServiceIntegrationTest {
-
-    private static final Integer correctId = 1;
-    private static final Integer wrongId = -1;
-
-    private static final DishOrderItem newIdDishOrderItem = new DishOrderItem(7, ItemStatus.CREATED, "Pozuriti", 1, 1, false, null, null);
-    private static final DishOrderItem existingIdDishOrderItem = new DishOrderItem(1, ItemStatus.CREATED, "Pozuriti", 1, 1, false, null, null);
-    private static final DishOrderItem noIdDishOrderItem = new DishOrderItem(null, ItemStatus.CREATED, "Pozuriti", 1, 1, false, null, null);
-
-
-    private static final int numberOfInstances = 6;
-
-    private static final Integer testCookID = 3;
-    private static final Integer wrongTestCookID = -1;
-    private static final int numberOfItemOrdersForTestCookID = 3;
-
     @Autowired
     private DishOrderItemService dishOrderItemService;
     @Autowired
@@ -48,18 +34,18 @@ public class DishOrderItemServiceIntegrationTest {
     @Test
     public void testFindAll() {
         List<DishOrderItem> found = dishOrderItemService.findAll();
-        assertEquals(numberOfInstances, found.size());
+        assertEquals(DishOrderItemConstants.NUMBER_OF_INSTANCES, found.size());
     }
 
     @Test
     public void testFindOne_CorrectId() {
-        DishOrderItem found = dishOrderItemService.findOne(correctId);
-        assertEquals(correctId, found.getId());
+        DishOrderItem found = dishOrderItemService.findOne(DishOrderItemConstants.CORRECT_ID);
+        assertEquals(DishOrderItemConstants.CORRECT_ID, found.getId());
     }
 
     @Test
     public void testFindOne_WrongId() {
-        DishOrderItem found = dishOrderItemService.findOne(wrongId);
+        DishOrderItem found = dishOrderItemService.findOne(DishOrderItemConstants.WRONG_ID);
         assertNull(found);
     }
 
@@ -68,12 +54,12 @@ public class DishOrderItemServiceIntegrationTest {
         User cook = userService.findOne(1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        newIdDishOrderItem.setCook(cook);
-        newIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(newIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM);
 
-        assertEquals(newIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -82,12 +68,12 @@ public class DishOrderItemServiceIntegrationTest {
         cook.setId(-1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        newIdDishOrderItem.setCook(cook);
-        newIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(newIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM);
 
-        assertEquals(newIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -96,12 +82,12 @@ public class DishOrderItemServiceIntegrationTest {
         DishPrice dishPrice = new DishPrice();
         dishPrice.setId(-1);
 
-        newIdDishOrderItem.setCook(cook);
-        newIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(newIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM);
 
-        assertEquals(newIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NEW_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test
@@ -109,12 +95,12 @@ public class DishOrderItemServiceIntegrationTest {
         User cook = userService.findOne(1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        existingIdDishOrderItem.setCook(cook);
-        existingIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(existingIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM);
 
-        assertEquals(existingIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -123,12 +109,12 @@ public class DishOrderItemServiceIntegrationTest {
         cook.setId(-1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        existingIdDishOrderItem.setCook(cook);
-        existingIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(existingIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM);
 
-        assertEquals(existingIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -137,12 +123,12 @@ public class DishOrderItemServiceIntegrationTest {
         DishPrice dishPrice = new DishPrice();
         dishPrice.setId(-1);
 
-        existingIdDishOrderItem.setCook(cook);
-        existingIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(existingIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM);
 
-        assertEquals(existingIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.EXISTING_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test
@@ -150,12 +136,12 @@ public class DishOrderItemServiceIntegrationTest {
         User cook = userService.findOne(1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        noIdDishOrderItem.setCook(cook);
-        noIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(noIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM);
 
-        assertEquals(noIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -164,12 +150,12 @@ public class DishOrderItemServiceIntegrationTest {
         cook.setId(-1);
         DishPrice dishPrice = dishPriceService.findOne(1);
 
-        noIdDishOrderItem.setCook(cook);
-        noIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(noIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM);
 
-        assertEquals(noIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test(expected = JpaObjectRetrievalFailureException.class)
@@ -178,35 +164,35 @@ public class DishOrderItemServiceIntegrationTest {
         DishPrice dishPrice = new DishPrice();
         dishPrice.setId(-1);
 
-        noIdDishOrderItem.setCook(cook);
-        noIdDishOrderItem.setDish(dishPrice);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setCook(cook);
+        DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM.setDish(dishPrice);
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(noIdDishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.save(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM);
 
-        assertEquals(noIdDishOrderItem, savedDishOrderItem);
+        assertEquals(DishOrderItemConstants.NO_ID_DISH_ORDER_ITEM, savedDishOrderItem);
     }
 
     @Test
     public void testDeleteOne_CorrectId() {
-        Boolean isDeletedSuccessfully = dishOrderItemService.deleteOne(correctId);
+        Boolean isDeletedSuccessfully = dishOrderItemService.deleteOne(DishOrderItemConstants.CORRECT_ID);
         assertEquals(true, isDeletedSuccessfully);
     }
 
     @Test
     public void testDeleteOne_WrongId() {
-        Boolean isDeletedSuccessfully = dishOrderItemService.deleteOne(wrongId);
+        Boolean isDeletedSuccessfully = dishOrderItemService.deleteOne(DishOrderItemConstants.WRONG_ID);
         assertEquals(false, isDeletedSuccessfully);
     }
 
     @Test
     public void findAllByCookID_CorrectCookID() {
-        List<DishOrderItem> allOrderItemsForCookID = dishOrderItemService.findAllByCookID(testCookID);
-        assertEquals(numberOfItemOrdersForTestCookID, allOrderItemsForCookID.size());
+        List<DishOrderItem> allOrderItemsForCookID = dishOrderItemService.findAllByCookID(DishOrderItemConstants.TEST_COOK_ID);
+        assertEquals(DishOrderItemConstants.NUMBER_OF_ITEM_ORDERS_FOR_TEST_COOK_ID, allOrderItemsForCookID.size());
     }
 
     @Test
     public void findAllByCookID_WrongCookID() {
-        List<DishOrderItem> allOrderItemsForCookID = dishOrderItemService.findAllByCookID(wrongTestCookID);
+        List<DishOrderItem> allOrderItemsForCookID = dishOrderItemService.findAllByCookID(DishOrderItemConstants.WRONG_TEST_COOK_ID);
         assertEquals(0, allOrderItemsForCookID.size());
     }
 }
