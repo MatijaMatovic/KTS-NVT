@@ -7,6 +7,7 @@ import com.rokzasok.serveit.service.IDishOrderItemService;
 import com.rokzasok.serveit.service.IUserService;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
