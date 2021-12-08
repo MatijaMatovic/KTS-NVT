@@ -338,3 +338,16 @@ values(2, 2);
 insert into order_drinks
 (order_id, item_id)
 values(2, 3);
+
+
+
+--salaries--> for everyone except admins
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, false, 80000.00, '2021-11-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (4, false, 84000.00, '2021-12-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (5, false, 40000.00, '2021-12-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (6, false, 50000.00, '2021-12-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (7, false, 60000.00, '2021-12-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (8, false, 35000.00, '2021-12-06');
+-- for current salary test
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, false, 80000.00, '2021-12-06');
+insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, false, 80000.00, '2022-01-06');

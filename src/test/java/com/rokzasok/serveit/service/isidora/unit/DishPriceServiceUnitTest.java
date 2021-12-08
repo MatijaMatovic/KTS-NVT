@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.isidora;
+package com.rokzasok.serveit.service.isidora.unit;
 
 import com.rokzasok.serveit.model.DishPrice;
 import com.rokzasok.serveit.repository.DishPriceRepository;
