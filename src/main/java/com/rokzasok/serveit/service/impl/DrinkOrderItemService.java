@@ -45,7 +45,7 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
     @Override
     public DrinkOrderItem changeStatusDrinkOrderItem(Integer id, ItemStatus itemStatus) throws Exception {
-        DrinkOrderItem drinkOrderItem = findOne(id);
+        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id).orElse(null);
 
         if (drinkOrderItem == null)
             throw new Exception("Drink order item with given id doesn't exist");
@@ -56,7 +56,7 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
     @Override
     public DrinkOrderItem acceptDrinkOrderItem(Integer id, ItemStatus itemStatus, Integer bartenderId, IUserService userService) throws Exception {
-        DrinkOrderItem drinkOrderItem = findOne(id);
+        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id).orElse(null);
         if (drinkOrderItem == null)
             throw new Exception("Drink order item with given id doesn't exist");
 

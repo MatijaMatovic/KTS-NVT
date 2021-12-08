@@ -45,7 +45,7 @@ public class DishOrderItemService implements IDishOrderItemService {
 
     @Override
     public DishOrderItem changeStatusDishOrderItem(Integer id, ItemStatus itemStatus) throws Exception{
-        DishOrderItem dishOrderItem = findOne(id);
+        DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElse(null);
 
         if (dishOrderItem == null)
             throw new Exception("Dish order item with given id doesn't exist");
@@ -56,7 +56,7 @@ public class DishOrderItemService implements IDishOrderItemService {
 
     @Override
     public DishOrderItem acceptDishOrderItem(Integer id, ItemStatus itemStatus, Integer cookId, IUserService userService) throws Exception{
-        DishOrderItem dishOrderItem = findOne(id);
+        DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElse(null);
 
         if (dishOrderItem == null)
             throw new Exception("Dish order item with given id doesn't exist");
