@@ -11,19 +11,43 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Dish controller.
+ */
 @RestController
 @RequestMapping("api/dishes")
 public class DishController {
+    /**
+     * The Dish service.
+     */
     final IDishService dishService;
+    /**
+     * The Dish to dish dto.
+     */
     final DishToDishDTO dishToDishDTO;
+    /**
+     * The Dish dto to dish.
+     */
     final DishDTOtoDish dishDTOtoDish;
 
+    /**
+     * Instantiates a new Dish controller.
+     *
+     * @param dishService   the dish service
+     * @param dishToDishDTO the dish to dish dto
+     * @param dishDTOtoDish the dish dt oto dish
+     */
     public DishController(IDishService dishService, DishToDishDTO dishToDishDTO, DishDTOtoDish dishDTOtoDish) {
         this.dishService = dishService;
         this.dishToDishDTO = dishToDishDTO;
         this.dishDTOtoDish = dishDTOtoDish;
     }
 
+    /**
+     * Gets dishes.
+     *
+     * @return the dishes
+     */
     @GetMapping
     public ResponseEntity<List<DishDTO>> getDishes() {
         List<Dish> dishes = dishService.findAll();
@@ -34,6 +58,12 @@ public class DishController {
 
     }
 
+    /**
+     * Gets dish.
+     *
+     * @param id the id
+     * @return the dish
+     */
     @GetMapping(value = "/{id}")
     public ResponseEntity<DishDTO> getDish(@PathVariable Integer id) {
         Dish dish = dishService.findOne(id);
@@ -45,14 +75,36 @@ public class DishController {
         return new ResponseEntity<>(dishToDishDTO.convert(dish), HttpStatus.OK);
     }
 
+    /**
+     * Add new dish response entity.
+     *
+     * @param dishDTO the dish dto
+     * @return the response entity
+     */
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<DishDTO> saveDish(@RequestBody DishDTO dishDTO) {
+    public ResponseEntity<DishDTO> addNewDish(@RequestBody DishDTO dishDTO) {
         Dish dish = dishDTOtoDish.convert(dishDTO);
+        boolean exists = false;
+
+        if (dishDTO.getId() != null) {
+            exists = dishService.findOne(dishDTO.getId()) != null;
+        }
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         dish = dishService.save(dish);
 
         return new ResponseEntity<>(dishToDishDTO.convert(dish), HttpStatus.OK);
     }
 
+    /**
+     * Update dish response entity.
+     *
+     * @param dishDTO the dish dto
+     * @return the response entity
+     */
     @PutMapping(consumes = "application/json")
     public ResponseEntity<DishDTO> updateDish(@RequestBody DishDTO dishDTO) {
         Dish dish = dishService.findOne(dishDTO.getId());
@@ -67,9 +119,16 @@ public class DishController {
         return new ResponseEntity<>(dishToDishDTO.convert(dish), HttpStatus.OK);
     }
 
+    /**
+     * Delete dish response entity.
+     *
+     * @param id the id
+     * @return the response entity
+     */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDish(@PathVariable Integer id) {
-        return new ResponseEntity<>(dishService.deleteOne(id), HttpStatus.OK);
+        boolean success = dishService.deleteOne(id);
+        return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
 }

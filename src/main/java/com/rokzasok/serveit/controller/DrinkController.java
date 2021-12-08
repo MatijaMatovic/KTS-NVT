@@ -3,6 +3,7 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DrinkDTOtoDrink;
 import com.rokzasok.serveit.converters.DrinkToDrinkDTO;
 import com.rokzasok.serveit.dto.DrinkDTO;
+import com.rokzasok.serveit.model.Dish;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.service.IDrinkService;
 import org.hibernate.annotations.SQLDelete;
@@ -85,8 +86,18 @@ public class DrinkController {
      * @return the response entity
      */
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<DrinkDTO> saveDrink(@RequestBody DrinkDTO drinkDTO) {
+    public ResponseEntity<DrinkDTO> addNewDrink(@RequestBody DrinkDTO drinkDTO) {
         Drink drink = drinkDTOtoDrink.convert(drinkDTO);
+        boolean exists = false;
+
+        if (drinkDTO.getId() != null) {
+            exists = drinkService.findOne(drinkDTO.getId()) != null;
+        }
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         drink = drinkService.save(drink);
 
         return new ResponseEntity<>(drinkToDrinkDTO.convert(drink), HttpStatus.OK);
@@ -120,7 +131,8 @@ public class DrinkController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) {
-        return new ResponseEntity<>(drinkService.deleteOne(id), HttpStatus.OK);
+        boolean success = drinkService.deleteOne(id);
+        return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
 
