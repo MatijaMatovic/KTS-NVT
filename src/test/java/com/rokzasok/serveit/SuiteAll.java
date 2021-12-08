@@ -3,8 +3,7 @@ package com.rokzasok.serveit;
 import com.rokzasok.serveit.repository.isidora.DrinkMenuRepositoryIntegrationTest;
 import com.rokzasok.serveit.repository.isidora.FoodMenuRepositoryIntegrationTest;
 import com.rokzasok.serveit.repository.isidora.UserSalaryRepositoryIntegrationTest;
-import com.rokzasok.serveit.service.isidora.integration.DrinkPriceServiceIntegrationTest;
-import com.rokzasok.serveit.service.isidora.integration.UserSalaryServiceIntegrationTest;
+import com.rokzasok.serveit.service.isidora.integration.*;
 import com.rokzasok.serveit.service.isidora.unit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -22,7 +21,10 @@ import org.springframework.test.context.TestPropertySource;
         DrinkMenuServiceUnitTest.class,
         SittingTableServiceUnitTest.class,
         UserSalaryServiceIntegrationTest.class,
-        DrinkPriceServiceIntegrationTest.class})
+        DrinkPriceServiceIntegrationTest.class,
+        DishPriceServiceIntegrationTest.class,
+        FoodMenuServiceIntegrationTest.class,
+        DrinkMenuServiceIntegrationTest.class})
 @TestPropertySource("classpath:test.properties")
 public class SuiteAll {
 

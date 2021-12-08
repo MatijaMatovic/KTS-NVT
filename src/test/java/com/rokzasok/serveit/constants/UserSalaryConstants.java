@@ -23,7 +23,7 @@ public class UserSalaryConstants {
 
     public static final Integer USER_ID2 = 2;
 
-    public static final int FIND_ALL_NUMBER_OF_ITEMS = 6;
+    public static final int FIND_ALL_NUMBER_OF_ITEMS = 8;
 
     public static final Integer ID_TO_DELETE = 1;
     public static final Integer ID_TO_EDIT = 2;

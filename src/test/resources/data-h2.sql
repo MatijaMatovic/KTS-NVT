@@ -351,3 +351,21 @@ insert into user_salary (user_id, is_deleted, salary, salary_date) values (8, fa
 -- for current salary test
 insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, false, 80000.00, '2021-12-06');
 insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, false, 80000.00, '2022-01-06');
+
+
+
+--food menus
+insert into food_menu (date, is_deleted) values ('2021-11-06', false);
+insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+
+insert into food_menu_prices (menu_id, price_id) values (1, 4);
+insert into food_menu_prices (menu_id, price_id) values (1, 5);
+insert into food_menu_prices (menu_id, price_id) values (1, 6);
+
+
+--drink menus
+insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
+insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
+
+insert into drink_menu_prices (menu_id, price_id) values (1, 1);
+insert into drink_menu_prices (menu_id, price_id) values (1, 2);
