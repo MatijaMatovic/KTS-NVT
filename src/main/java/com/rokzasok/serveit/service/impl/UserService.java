@@ -42,8 +42,8 @@ public class UserService implements IUserService {
         User toDelete = findOne(id);
         if (toDelete == null)
             throw new EntityNotFoundException("User with given ID not found");
-        //else if (toDelete.getType() == UserType.ADMINISTRATOR)
-         //   return false;
+        else if (toDelete.getType() == UserType.ADMINISTRATOR)
+            return false;
         userRepository.delete(toDelete);
         return true;
     }
