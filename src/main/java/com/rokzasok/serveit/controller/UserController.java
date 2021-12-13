@@ -10,6 +10,7 @@ import com.rokzasok.serveit.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -83,6 +84,7 @@ public class UserController {
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
         User edited, user = new UserToUserDTO().convert(userDTO);
         try {
