@@ -3,9 +3,10 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DrinkOrderItemToDrinkOrderItemDTO;
 import com.rokzasok.serveit.dto.DrinkOrderItemDTO;
 import com.rokzasok.serveit.dto.OrderItemWorkerDTO;
+import com.rokzasok.serveit.exceptions.DrinkOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DrinkOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
-import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
 import com.rokzasok.serveit.service.IUserService;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/drink-order-items")
@@ -26,7 +26,9 @@ public class DrinkOrderItemController {
     final IUserService userService;
 
 
-    public DrinkOrderItemController(IDrinkOrderItemService drinkOrderItemService, DrinkOrderItemToDrinkOrderItemDTO drinkOrderItemToDrinkOrderItemDTO, IUserService userService) {
+    public DrinkOrderItemController(IDrinkOrderItemService drinkOrderItemService,
+                                    DrinkOrderItemToDrinkOrderItemDTO drinkOrderItemToDrinkOrderItemDTO,
+                                    IUserService userService) {
         this.drinkOrderItemService = drinkOrderItemService;
         this.drinkOrderItemToDrinkOrderItemDTO = drinkOrderItemToDrinkOrderItemDTO;
         this.userService = userService;
@@ -48,48 +50,50 @@ public class DrinkOrderItemController {
 
     }
 
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: BARTENDER
+     * PUT
+     *
+     * @param orderItemWorkerDTO dto from frontend
+     * @return DrinkOrderItemDTO if successful
+     */
     @PreAuthorize("hasRole('ROLE_BARTENDER')")
     @PutMapping(value = "/complete-drink-order/{id}", consumes = "application/json")
-    public ResponseEntity<DrinkOrderItemDTO> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO) {
-        DrinkOrderItem drinkOrderItem = drinkOrderItemService.findOne(id);
-        if (drinkOrderItem == null || !Objects.equals(id, orderItemWorkerDTO.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User bartender = userService.findOne(orderItemWorkerDTO.getWorkerId());
-        if (bartender == null || !Objects.equals(bartender.getId(), drinkOrderItem.getBartender().getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-
-        drinkOrderItem.setStatus(ItemStatus.READY);
-        DrinkOrderItem savedDrinkOrderItem = drinkOrderItemService.save(drinkOrderItem);
+    public ResponseEntity<DrinkOrderItemDTO> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
+            throws DrinkOrderItemNotFoundException, UserNotFoundException {
+        DrinkOrderItem savedDrinkOrderItem = drinkOrderItemService.completeDrinkOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
         return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(savedDrinkOrderItem), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ROLE_BARTENDER')")
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: BARTENDER
+     * PUT
+     *
+     * @param orderItemWorkerDTO dto from frontend
+     * @return DrinkOrderItemDTO if successful
+     */
+    //@PreAuthorize("hasRole('ROLE_BARTENDER')")
     @PutMapping(value = "/accept-drink-order/{id}", consumes = "application/json")
-    public ResponseEntity<DrinkOrderItemDTO> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO) {
-
-        DrinkOrderItem drinkOrderItem = drinkOrderItemService.findOne(orderItemWorkerDTO.getId());
-        if (drinkOrderItem == null || !Objects.equals(id, orderItemWorkerDTO.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User bartender = userService.findOne(orderItemWorkerDTO.getWorkerId());
-        if (bartender == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        drinkOrderItem.setBartender(bartender);
-        drinkOrderItem.setStatus(ItemStatus.IN_PROGRESS);
-
-        DrinkOrderItem savedDrinkOrderItem = drinkOrderItemService.save(drinkOrderItem);
+    public ResponseEntity<DrinkOrderItemDTO> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
+            throws DrinkOrderItemNotFoundException, UserNotFoundException{
+        DrinkOrderItem savedDrinkOrderItem = drinkOrderItemService.acceptDrinkOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
         return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(savedDrinkOrderItem), HttpStatus.OK);
     }
 
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: BARTENDER
+     * GET
+     *
+     * @return list of DrinkOrderItemDTO
+     */
     @PreAuthorize("hasRole('ROLE_BARTENDER')")
     @GetMapping(value = "/bartender-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DrinkOrderItemDTO>> getBartenderOrders(@PathVariable Integer id) {
@@ -101,4 +105,10 @@ public class DrinkOrderItemController {
         return new ResponseEntity<>(ordersDTO, HttpStatus.OK);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler({ DrinkOrderItemNotFoundException.class, UserNotFoundException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Entity not found")
+    public void handleNotFoundException() {
+
+    }
 }

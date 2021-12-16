@@ -89,7 +89,7 @@ public class DishOrderItemController {
      * dodaj opis
      * author: jovana-klimenta
      * authorized: COOK
-     * PUT
+     * GET
      *
      * @return list of DishOrderItemDTO
      */
