@@ -31,12 +31,12 @@ public class DishOrderItemController {
     }
 
 
-    @PreAuthorize("hasRole('ROLE_WAITER')")
+    // @PreAuthorize("hasRole('ROLE_WAITER')")
     @PutMapping(value = "/deliver-item/{id}")
     public ResponseEntity<DishOrderItemDTO> deliverOrderItem(@PathVariable Integer id) {
         DishOrderItem dishOrderItem = dishOrderItemService.findOne(id);
 
-        if (dishOrderItem.getStatus() != ItemStatus.READY){
+        if (dishOrderItem.getStatus() != ItemStatus.READY) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
