@@ -237,12 +237,12 @@ values
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
 values
-    ('CREATED', 'Nek bude zapeceno', 2, 1, 1, 3, false);
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 1, null, false);
 
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
 values
-    ('CREATED', 'Nek bude zapeceno', 2, 1, 2, 3, false);
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 2, null, false);
 
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
