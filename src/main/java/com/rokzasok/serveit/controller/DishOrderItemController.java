@@ -2,9 +2,10 @@ package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.dto.*;
+import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
-import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.service.IDishOrderItemService;
 import com.rokzasok.serveit.service.IUserService;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("api/dish-order-items")
@@ -46,49 +46,53 @@ public class DishOrderItemController {
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem), HttpStatus.OK);
     }
 
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: COOK
+     * PUT
+     *
+     * @param orderItemWorkerDTO dto from frontend
+     * @return DishOrderItemDTO if successful
+     */
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/complete-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO) {
-        DishOrderItem dishOrderItem = dishOrderItemService.findOne(id);
-        if (dishOrderItem == null || !Objects.equals(id, orderItemWorkerDTO.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
+            throws DishOrderItemNotFoundException, UserNotFoundException {
 
-        User cook = userService.findOne(orderItemWorkerDTO.getWorkerId());
-        if (cook == null || !Objects.equals(cook.getId(), dishOrderItem.getCook().getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-
-        dishOrderItem.setStatus(ItemStatus.READY);
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(dishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
 
     }
 
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: COOK
+     * PUT
+     *
+     * @param orderItemWorkerDTO dto from frontend
+     * @return DishOrderItemDTO if successful
+     */
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/accept-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO) {
+    public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
+            throws DishOrderItemNotFoundException, UserNotFoundException{
 
-        DishOrderItem dishOrderItem = dishOrderItemService.findOne(orderItemWorkerDTO.getId());
-        if (dishOrderItem == null || !Objects.equals(id, orderItemWorkerDTO.getId())) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User cook = userService.findOne(orderItemWorkerDTO.getWorkerId());
-        if (cook == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        dishOrderItem.setCook(cook);
-        dishOrderItem.setStatus(ItemStatus.IN_PROGRESS);
-
-        DishOrderItem savedDishOrderItem = dishOrderItemService.save(dishOrderItem);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
     }
 
+    /***
+     * dodaj opis
+     * author: jovana-klimenta
+     * authorized: COOK
+     * GET
+     *
+     * @return list of DishOrderItemDTO
+     */
     @PreAuthorize("hasRole('ROLE_COOK')")
     @GetMapping(value = "/cook-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DishOrderItemDTO>> getCookOrders(@PathVariable Integer id) {
@@ -98,5 +102,12 @@ public class DishOrderItemController {
             ordersDTO.add(dishOrderItemToDishOrderItemDTO.convert(dishOrderItem));
         }
         return new ResponseEntity<>(ordersDTO, HttpStatus.OK);
+    }
+
+    //------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler({ DishOrderItemNotFoundException.class, UserNotFoundException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Entity not found")
+    public void handleNotFoundException() {
+
     }
 }
