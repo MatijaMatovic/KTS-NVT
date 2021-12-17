@@ -4,6 +4,8 @@ import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
+import com.rokzasok.serveit.model.ItemStatus;
+import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.service.impl.DishOrderItemService;
 import com.rokzasok.serveit.service.impl.UserService;
 import org.junit.Test;
@@ -26,6 +28,8 @@ public class DishOrderItemServiceIntegrationTest {
 
     private static final Integer READY_DISH_ORDER_ITEM_ID = 5;
     private static final Integer CREATED_DISH_ORDER_ITEM_ID = 1;
+    private static final Integer IN_PROGRESS_DISH_ORDER_ITEM_ID = 4;
+
     private static final Integer COOK_ID = 4;
     private static final Integer DISH_ORDER_ITEM_ID = 1;
     private static final Integer NON_EXISTING_ID = 111;
@@ -56,6 +60,35 @@ public class DishOrderItemServiceIntegrationTest {
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
 
         DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(CREATED_DISH_ORDER_ITEM_ID, COOK_ID, userService);
+        assertNotNull(savedDishOrderItem);
+    }
+
+    @Test(expected = DishOrderItemNotFoundException.class)
+    public void testCompleteDishOrderItem_NonExistingDishOrderItem()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        dishOrderItemService.completeDishOrderItem(NON_EXISTING_ID, COOK_ID, userService);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testCompleteDishOrderItem_NonExistingCook()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        dishOrderItemService.completeDishOrderItem(DISH_ORDER_ITEM_ID, NON_EXISTING_ID, userService);
+    }
+
+    @Test(expected = ItemStatusSetException.class)
+    public void testCompleteDishOrderItem_WrongItemStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        dishOrderItemService.completeDishOrderItem(READY_DISH_ORDER_ITEM_ID, COOK_ID, userService);
+    }
+
+    @Test
+    public void testCompleteDishOrderItem_CorrectDishOrderItem_CorrectCook_CorrectItemStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(IN_PROGRESS_DISH_ORDER_ITEM_ID, COOK_ID, userService);
         assertNotNull(savedDishOrderItem);
     }
 }
