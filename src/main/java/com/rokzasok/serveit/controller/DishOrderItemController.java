@@ -3,6 +3,7 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.dto.*;
 import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
 import com.rokzasok.serveit.model.ItemStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/dish-order-items")
@@ -78,11 +80,11 @@ public class DishOrderItemController {
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/accept-dish-order/{id}", consumes = "application/json")
     public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
-            throws DishOrderItemNotFoundException, UserNotFoundException{
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
+        Optional<DishOrderItem> savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
-        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
+        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem.get()), HttpStatus.OK);
     }
 
     /***
