@@ -60,7 +60,7 @@ public class DishOrderItemController {
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/complete-dish-order/{id}", consumes = "application/json")
     public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
-            throws DishOrderItemNotFoundException, UserNotFoundException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
 
         DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
@@ -82,9 +82,9 @@ public class DishOrderItemController {
     public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
 
-        Optional<DishOrderItem> savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
 
-        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem.get()), HttpStatus.OK);
+        return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
     }
 
     /***

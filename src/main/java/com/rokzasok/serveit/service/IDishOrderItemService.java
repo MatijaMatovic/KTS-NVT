@@ -10,7 +10,8 @@ import java.util.Optional;
 
 public interface IDishOrderItemService extends IGenericService<DishOrderItem> {
     List<DishOrderItem> findAllByCookID(Integer cookId);
-    Optional<DishOrderItem> acceptDishOrderItem(Integer id, Integer cookId, IUserService userService)
+    DishOrderItem acceptDishOrderItem(Integer id, Integer cookId, IUserService userService)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
-    DishOrderItem completeDishOrderItem(Integer id, Integer cookId, IUserService userService) throws DishOrderItemNotFoundException, UserNotFoundException;
+    DishOrderItem completeDishOrderItem(Integer id, Integer cookId, IUserService userService)
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
 }

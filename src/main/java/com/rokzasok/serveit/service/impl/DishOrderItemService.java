@@ -54,7 +54,7 @@ public class DishOrderItemService implements IDishOrderItemService {
     }
 
     @Override
-    public Optional<DishOrderItem> acceptDishOrderItem(Integer id, Integer cookId, IUserService userService)
+    public DishOrderItem acceptDishOrderItem(Integer id, Integer cookId, IUserService userService)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
         DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElseThrow(
                                                     ()-> new DishOrderItemNotFoundException("DishOrderItem Not Found"));
@@ -69,17 +69,20 @@ public class DishOrderItemService implements IDishOrderItemService {
         dishOrderItem.setCook(cook);
         dishOrderItem.setStatus(ItemStatus.IN_PROGRESS);
         DishOrderItem savedDishOrderItem = save(dishOrderItem);
-        return Optional.of(savedDishOrderItem);
+        return savedDishOrderItem;
     }
 
     @Override
     public DishOrderItem completeDishOrderItem(Integer id, Integer cookId, IUserService userService)
-            throws DishOrderItemNotFoundException, UserNotFoundException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
         DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElseThrow(()-> new DishOrderItemNotFoundException("DishOrderItem Not Found"));
 
         User cook = userService.findOne(cookId);
         if (cook == null)
             throw new UserNotFoundException("Cook Not Found");
+
+        if(dishOrderItem.getStatus() != ItemStatus.IN_PROGRESS)
+            throw new ItemStatusSetException("Can not change item status from" + dishOrderItem.getStatus().name() + "to READY");
 
         dishOrderItem.setStatus(ItemStatus.READY);
         return save(dishOrderItem);

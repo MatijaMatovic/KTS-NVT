@@ -16,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Optional;
 
 
@@ -86,7 +88,60 @@ public class DishOrderItemUnitTest {
         Mockito.when(userService.findOne(COOK_ID)).thenReturn(cook);
         Mockito.when(dishOrderItemRepository.save(dishOrderItem)).thenReturn(dishOrderItem);
 
-        Optional<DishOrderItem> savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(DISH_ORDER_ITEM_ID, COOK_ID, userService);
-        assertNotEquals(savedDishOrderItem, Optional.empty());
+        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(DISH_ORDER_ITEM_ID, COOK_ID, userService);
+        assertNotNull(savedDishOrderItem);
+    }
+
+    @Test(expected = DishOrderItemNotFoundException.class)
+    public void testCompleteDishOrderItem_NonExistingDishOrderItem()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        Mockito.when(dishOrderItemRepository.findById(NON_EXISTING_ID)).thenReturn(Optional.empty());
+
+        dishOrderItemService.completeDishOrderItem(NON_EXISTING_ID, COOK_ID, userService);
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testCompleteDishOrderItem_NonExistingCook()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        Mockito.when(dishOrderItemRepository.findById(DISH_ORDER_ITEM_ID)).thenReturn(Optional.of(new DishOrderItem()));
+        Mockito.when(userService.findOne(NON_EXISTING_ID)).thenReturn(null);
+
+        dishOrderItemService.completeDishOrderItem(DISH_ORDER_ITEM_ID, NON_EXISTING_ID, userService);
+    }
+
+    @Test(expected = ItemStatusSetException.class)
+    public void testCompleteDishOrderItem_WrongItemStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        DishOrderItem doi = new DishOrderItem();
+        doi.setStatus(ItemStatus.CREATED);
+        User cook = new User();
+
+        Mockito.when(dishOrderItemRepository.findById(DISH_ORDER_ITEM_ID)).thenReturn(Optional.of(doi));
+        Mockito.when(userService.findOne(COOK_ID)).thenReturn(cook);
+
+        dishOrderItemService.completeDishOrderItem(DISH_ORDER_ITEM_ID, COOK_ID, userService);
+    }
+
+    @Test
+    public void testCompleteDishOrderItem_CorrectDishOrderItem_CorrectCook_CorrectItemStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+
+        DishOrderItem dishOrderItem = new DishOrderItem();
+        dishOrderItem.setId(DISH_ORDER_ITEM_ID);
+        dishOrderItem.setIsDeleted(false);
+        dishOrderItem.setStatus(ItemStatus.IN_PROGRESS);
+
+        User cook = new User();
+        cook.setId(COOK_ID);
+
+        Mockito.when(dishOrderItemRepository.findById(DISH_ORDER_ITEM_ID)).thenReturn(Optional.of(dishOrderItem));
+        Mockito.when(userService.findOne(COOK_ID)).thenReturn(cook);
+        Mockito.when(dishOrderItemRepository.save(dishOrderItem)).thenReturn(dishOrderItem);
+
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(DISH_ORDER_ITEM_ID, COOK_ID, userService);
+        assertNotNull(savedDishOrderItem);
     }
 }
