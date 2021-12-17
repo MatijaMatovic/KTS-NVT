@@ -33,12 +33,6 @@ public class DishOrderItemControllerIntegrationTest {
     private static final String URL_PREFIX = "/api/dish-order-items";
 
     @Autowired
-    private DishOrderItemService dishOrderItemService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
     TestRestTemplate dispatcher;
 
     private static final Integer READY_DISH_ORDER_ITEM_ID = 5;
@@ -103,4 +97,59 @@ public class DishOrderItemControllerIntegrationTest {
         assertNotNull(response.getBody());
     }
 
+    @Test
+    public void testCompleteDishOrderItem_NonExistingDishOrderItem(){
+
+        OrderItemWorkerDTO dto = new OrderItemWorkerDTO();
+        dto.setId(NON_EXISTING_ID);
+        dto.setWorkerId(COOK_ID);
+        HttpEntity<OrderItemWorkerDTO> request = new HttpEntity<>(dto);
+        ResponseEntity<Object> response = dispatcher.exchange(
+                URL_PREFIX + "/accept-dish-order/" + NON_EXISTING_ID, HttpMethod.PUT, request, Object.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testCompleteDishOrderItem_NonExistingCook(){
+
+        OrderItemWorkerDTO dto = new OrderItemWorkerDTO();
+        dto.setId(DISH_ORDER_ITEM_ID);
+        dto.setWorkerId(NON_EXISTING_ID);
+        HttpEntity<OrderItemWorkerDTO> request = new HttpEntity<>(dto);
+        ResponseEntity<Object> response = dispatcher.exchange(
+                URL_PREFIX + "/accept-dish-order/" + DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testCompleteDishOrderItem_WrongItemStatus(){
+
+        OrderItemWorkerDTO dto = new OrderItemWorkerDTO();
+        dto.setId(READY_DISH_ORDER_ITEM_ID);
+        dto.setWorkerId(COOK_ID);
+        HttpEntity<OrderItemWorkerDTO> request = new HttpEntity<>(dto);
+        ResponseEntity<Object> response = dispatcher.exchange(
+                URL_PREFIX + "/accept-dish-order/" + READY_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testCompleteDishOrderItem_CorrectDishOrderItem_CorrectCook_CorrectItemStatus(){
+
+        OrderItemWorkerDTO dto = new OrderItemWorkerDTO();
+        dto.setId(IN_PROGRESS_DISH_ORDER_ITEM_ID);
+        dto.setWorkerId(COOK_ID);
+        HttpEntity<OrderItemWorkerDTO> request = new HttpEntity<>(dto);
+        ResponseEntity<Object> response = dispatcher.exchange(
+                URL_PREFIX + "/accept-dish-order/" + IN_PROGRESS_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
+        );
+
+        assertNotNull(response.getBody());
+    }
 }
