@@ -179,6 +179,11 @@ insert into drink
 values
     ('DR3', 'Rakija', 'ALCOHOLIC', 'None', 'SLJIVA', 55, 'UDRI', 'None', false);
 
+insert into drink
+(code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
+values
+    ('DR4', 'Kafa', 'NON_ALCOHOLIC', 'None', 'Kafa', 55, 'UDRI', 'None', false);
+
 
 
 
@@ -231,6 +236,11 @@ insert into drink_price
 values
     (130, '2021-12-06', 3, false);
 
+insert into drink_price
+(price, price_date, drink_id, is_deleted)
+values
+    (130, '2021-12-06', 4, false);
+
 
 
 --DISH ORDER ITEMS
@@ -281,6 +291,11 @@ insert into drink_order_item
 (status, note, amount, drink_price_id, bartender_id, is_deleted)
 values
     ('READY', 'Nista', 3, 3, 8, false);
+
+insert into drink_order_item
+(status, note, amount, drink_price_id, bartender_id, is_deleted)
+values
+    ('IN_PROGRESS', 'Nista', 3, 4, 8, false);
 
 
 --ORDERS
