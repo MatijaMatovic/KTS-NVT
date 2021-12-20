@@ -1,6 +1,8 @@
 package com.rokzasok.serveit.service.isidora.unit;
 
 import com.rokzasok.serveit.converters.SittingTableToSittingTableDTO;
+import com.rokzasok.serveit.dto.SittingTableDTO;
+import com.rokzasok.serveit.exceptions.SittingTableNotFoundException;
 import com.rokzasok.serveit.model.SittingTable;
 import com.rokzasok.serveit.repository.SittingTableRepository;
 import com.rokzasok.serveit.service.impl.SittingTableService;
@@ -12,17 +14,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static com.rokzasok.serveit.constants.TableConstants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -39,14 +37,10 @@ public class SittingTableServiceUnitTest {
     @Autowired
     SittingTableToSittingTableDTO converter;
 
-    SittingTable table1;
-    SittingTable table2;
-    SittingTable table3;
-    SittingTable empty;
 
-    @PostConstruct
-    public void setup() {
-        table1 = SittingTable.builder()
+    @Test
+    public void testFindOne_IdExisting_ShouldReturn_Table() {
+        SittingTable table1 = SittingTable.builder()
                 .id(ID1)
                 .name(NAME1)
                 .x(X1)
@@ -54,7 +48,38 @@ public class SittingTableServiceUnitTest {
                 .isDeleted(IS_DELETED1)
                 .build();
 
-        table2 = SittingTable.builder()
+        when(sittingTableRepository.findById(ID1)).thenReturn(Optional.ofNullable(table1));
+
+        SittingTable found = sittingTableService.findOne(ID1);
+
+        assertNotNull(found);
+        assertEquals(ID1, found.getId());
+        assertEquals(NAME1, found.getName());
+        assertEquals(X1, found.getX());
+        assertEquals(Y1, found.getY());
+    }
+
+    @Test
+    public void testFindOne_IdNotExisting_ShouldReturn_Null() {
+        when(sittingTableRepository.findById(ID1)).thenReturn(Optional.empty());
+
+        SittingTable found = sittingTableService.findOne(ID1);
+
+        assertNull(found);
+    }
+
+    // TODO maybe unnecessary everywhere
+    @Test
+    public void testFindAll_ShouldReturn_List() {
+        SittingTable table1 = SittingTable.builder()
+                .id(ID1)
+                .name(NAME1)
+                .x(X1)
+                .y(Y1)
+                .isDeleted(IS_DELETED1)
+                .build();
+
+        SittingTable table2 = SittingTable.builder()
                 .id(ID2)
                 .name(NAME2)
                 .x(X2)
@@ -62,77 +87,88 @@ public class SittingTableServiceUnitTest {
                 .isDeleted(IS_DELETED2)
                 .build();
 
-        table3 = SittingTable.builder()
-                .id(ID3)
-                .name(NAME3)
-                .x(X3)
-                .y(Y3)
-                .isDeleted(IS_DELETED3)
-                .build();
-
-        empty = SittingTable.builder()
-                .id(NON_EXISTING_ID)
-                .build();
-
         List<SittingTable> tables = new ArrayList<>();
         tables.add(table1);
         tables.add(table2);
 
-        // testFindAll
-        given(sittingTableRepository.findAll()).willReturn(tables);
+        when(sittingTableRepository.findAll()).thenReturn(tables);
 
-        // testFindOne
-        given(sittingTableRepository.findById(ID1)).willReturn(Optional.ofNullable(table1));
-        // testFindOne
-        given(sittingTableRepository.findById(ID2)).willReturn(Optional.ofNullable(table2));
-
-        // testFindOne_NonExistingID
-        Optional<SittingTable> sittingTableNull = Optional.empty(); //Da bi orElse mogao da vrati Null
-        given(sittingTableRepository.findById(NON_EXISTING_ID)).willReturn(sittingTableNull);
-        doNothing().when(sittingTableRepository).delete(table1);
-
-        // testEdit
-        given(sittingTableRepository.findById(ID2)).willReturn(Optional.ofNullable(table2));
-        given(sittingTableRepository.save(any())).willReturn(table3);
-    }
-
-    @Test
-    public void testFindAll() {
         List<SittingTable> found = sittingTableService.findAll();
 
         verify(sittingTableRepository, times(1)).findAll();
         assertEquals(2, found.size());
     }
 
+    // TODO unnecessary, ima smisla samo kao integracioni test
     @Test
-    public void testDelete() throws Exception {
+    public void testDelete_IdExisting_ShouldReturn_True() throws Exception {
+        SittingTable table1 = SittingTable.builder()
+                .id(ID1)
+                .name(NAME1)
+                .x(X1)
+                .y(Y1)
+                .isDeleted(IS_DELETED1)
+                .build();
+
+        when(sittingTableRepository.findById(ID1)).thenReturn(Optional.ofNullable(table1));
+
         Boolean deleted = sittingTableService.deleteOne(ID1);
 
-        verify(sittingTableRepository, times(1)).findById(ID1);
         assertEquals(true, deleted);
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void testDelete_NonExistingID() throws Exception {
-        Boolean deleted = sittingTableService.deleteOne(NON_EXISTING_ID);
+    @Test(expected = SittingTableNotFoundException.class)
+    public void testDelete_IdNotExisting_ShouldThrow_TableNotFound() throws Exception {
+        when(sittingTableRepository.findById(NON_EXISTING_ID)).thenReturn(Optional.empty());
 
-        assertEquals(false, deleted);
+        sittingTableService.deleteOne(NON_EXISTING_ID);
     }
 
     @Test
-    public void testEdit() throws Exception {
-        SittingTable editedSittingTable = sittingTableService.edit(table2.getId(), converter.convert(table2));
+    public void testEdit_IdExisting_ShouldReturnChanged() throws Exception {
+        SittingTable table2 = SittingTable.builder()
+                .id(ID2)
+                .name(NAME2)
+                .x(X2)
+                .y(Y2)
+                .isDeleted(IS_DELETED2)
+                .build();
+
+        when(sittingTableRepository.findById(ID2)).thenReturn(Optional.ofNullable(table2));
+
+        SittingTableDTO table2ChangedDTO = SittingTableDTO.builder()
+                .id(ID2)
+                .name(NAME2 + " changed")
+                .x(X2)
+                .y(Y2)
+                .build();
+
+        SittingTable table2Changed = SittingTable.builder()
+                .id(ID2)
+                .name(NAME2 + " changed")
+                .x(X2)
+                .y(Y2)
+                .isDeleted(IS_DELETED2)
+                .build();
+
+        when(sittingTableRepository.save(any(SittingTable.class))).thenReturn(table2Changed);
+
+        SittingTable editedSittingTable = sittingTableService.edit(ID2, table2ChangedDTO);
 
         verify(sittingTableRepository, times(1)).findById(ID2);
-        assertNotEquals(editedSittingTable.getId(), table2.getId());
+        assertEquals(table2.getId(), editedSittingTable.getId());
+        assertEquals(table2Changed.getName(), editedSittingTable.getName());
     }
 
-    @Test(expected = EntityNotFoundException.class)
-    public void testEdit_NonExistingID() throws Exception {
-        SittingTable editedSittingTable = sittingTableService.edit(empty.getId(), converter.convert(empty));
+    @Test(expected = SittingTableNotFoundException.class)
+    public void testEdit_IdNotExisting_ShouldThrow_TableNotFound() throws Exception {
+        when(sittingTableRepository.findById(NON_EXISTING_ID)).thenReturn(Optional.empty());
 
-        verify(sittingTableRepository, times(1)).findById(ID2);
-        assertEquals(editedSittingTable.getId(), table2.getId());
+        SittingTableDTO empty = SittingTableDTO.builder()
+                .id(NON_EXISTING_ID)
+                .build();
+
+        sittingTableService.edit(NON_EXISTING_ID, empty);
     }
 
 }
