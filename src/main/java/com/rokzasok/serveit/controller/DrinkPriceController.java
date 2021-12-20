@@ -117,7 +117,7 @@ public class DrinkPriceController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
         try {
             success = drinkPriceService.deleteOne(id);

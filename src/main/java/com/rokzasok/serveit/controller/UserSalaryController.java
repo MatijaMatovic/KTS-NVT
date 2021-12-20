@@ -149,7 +149,7 @@ public class UserSalaryController {
      * @return true if successful, otherwise false
      */
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         UserSalary us = userSalaryService.findOne(id);
         if (us == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

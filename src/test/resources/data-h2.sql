@@ -119,13 +119,19 @@ values (8, 6);
 --SITTING TABLES
 insert into sitting_table
 (name, x, y, is_deleted)
-values
-    ('Sto 1', 1, 1, false);
+values ('Sto 1', 1, 1, false);
 
 insert into sitting_table
 (name, x, y, is_deleted)
-values
-    ('Sto 2', 1, 2, false);
+values ('Sto 2', 1, 2, false);
+
+insert into sitting_table
+(name, x, y, is_deleted)
+values ('Sto 3', 1, 3, false);
+
+insert into sitting_table
+(name, x, y, is_deleted)
+values ('Sto 4', 1, 4, false);
 
 
 

@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.springframework.test.context.TestPropertySource;
 
 @RunWith(Suite.class)
-//@SuiteClasses({FoodMenuRepositoryIntegrationTest.class,
+//@Suite.SuiteClasses({FoodMenuRepositoryIntegrationTest.class,
 //        DrinkMenuRepositoryIntegrationTest.class,
 //        UserSalaryRepositoryIntegrationTest.class,
 //        UserSalaryServiceUnitTest.class,

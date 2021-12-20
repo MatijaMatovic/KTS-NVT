@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteUser(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = userService.deleteOne(id);
             if (!deleted)

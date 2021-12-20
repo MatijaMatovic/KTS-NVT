@@ -9,5 +9,5 @@ public interface IGenericService<T> {
 
     T save(T entity);
 
-    Boolean deleteOne(Integer id);
+    Boolean deleteOne(Integer id) throws Exception;
 }

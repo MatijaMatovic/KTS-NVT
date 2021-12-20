@@ -95,7 +95,7 @@ public class DishPriceController {
      */
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DishPriceDTO> edit(@PathVariable Integer id, @RequestBody DishPriceDTO dishPriceDTO) {
+    public ResponseEntity<DishPriceDTO> edit(@PathVariable Integer id, @RequestBody DishPriceDTO dishPriceDTO) throws Exception {
         DishPrice dishPrice = dishPriceService.findOne(dishPriceDTO.getId());
 
         if (dishPrice == null) {
@@ -118,7 +118,7 @@ public class DishPriceController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
         try {
             success = dishPriceService.deleteOne(id);
