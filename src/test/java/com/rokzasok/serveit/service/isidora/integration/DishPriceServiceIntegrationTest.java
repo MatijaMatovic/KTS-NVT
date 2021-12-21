@@ -60,7 +60,7 @@ public class DishPriceServiceIntegrationTest {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() throws Exception {
         dishPriceService.deleteOne(ID_TO_DELETE);
         DishPrice dishPrice = dishPriceService.findOne(ID_TO_DELETE);
         assertNull(dishPrice);

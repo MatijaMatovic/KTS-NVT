@@ -96,7 +96,7 @@ public class DrinkPriceServiceUnitTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws Exception {
         Boolean deleted = drinkPriceService.deleteOne(ID1);
 
         verify(drinkPriceRepository, times(1)).findById(ID1);
@@ -104,7 +104,7 @@ public class DrinkPriceServiceUnitTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testDelete_NonExistingID() {
+    public void testDelete_NonExistingID() throws Exception {
         Boolean deleted = drinkPriceService.deleteOne(NON_EXISTING_ID);
 
         assertEquals(false, deleted);

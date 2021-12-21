@@ -59,7 +59,7 @@ public class DrinkPriceServiceIntegrationTest {
     }
 
     @Test
-    public void testDelete(){
+    public void testDelete() throws Exception {
         drinkPriceService.deleteOne(ID_TO_DELETE);
         DrinkPrice drinkPrice = drinkPriceService.findOne(ID_TO_DELETE);
         assertNull(drinkPrice);

@@ -39,13 +39,22 @@ public class DrinkPriceController {
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> create(@RequestBody DrinkPriceDTO drinkPriceDTO) {
+    public ResponseEntity<DrinkPriceDTO> create(@RequestBody DrinkPriceDTO drinkPriceDTO) {
         DrinkPrice drinkPrice = drinkPriceDTOToDrinkPrice.convert(drinkPriceDTO);
-        DrinkPrice drinkPriceSaved = drinkPriceService.save(drinkPrice);
-        if (drinkPriceSaved == null) {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        boolean exists = false;
+
+        if (drinkPriceDTO.getId() != null) {
+            exists = drinkPriceService.findOne(drinkPriceDTO.getId()) != null;
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        drinkPrice = drinkPriceService.save(drinkPrice);
+
+        return new ResponseEntity<>(drinkPriceToDrinkPriceDTO.convert(drinkPrice), HttpStatus.OK);
     }
 
     /***
@@ -62,11 +71,10 @@ public class DrinkPriceController {
         DrinkPrice drinkPrice = drinkPriceService.findOne(id);
 
         if (drinkPrice == null){
-            System.out.println("Drink menu je null");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        DrinkPriceDTO drinkPriceDTO = drinkPriceToDrinkPriceDTO.convert(drinkPrice);
-        return new ResponseEntity<>(drinkPriceDTO, HttpStatus.OK);
+        
+        return new ResponseEntity<>(drinkPriceToDrinkPriceDTO.convert(drinkPrice), HttpStatus.OK);
     }
 
     /***
@@ -95,17 +103,21 @@ public class DrinkPriceController {
      */
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DrinkPriceDTO> edit(@PathVariable Integer id, @RequestBody DrinkPriceDTO drinkPriceDTO) {
-        DrinkPrice drinkPrice = drinkPriceService.findOne(drinkPriceDTO.getId());
+    public ResponseEntity<DrinkPriceDTO> edit(@PathVariable Integer id, @RequestBody DrinkPriceDTO drinkPriceDTO) throws Exception {
+//        DrinkPrice drinkPrice = drinkPriceService.findOne(drinkPriceDTO.getId());
+//
+//        if (drinkPrice == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        DrinkPrice newDrinkPrice = drinkPriceDTOToDrinkPrice.convert(drinkPriceDTO);
+//
+//        drinkPrice = drinkPriceService.save(newDrinkPrice);
+//        return new ResponseEntity<>(drinkPriceToDrinkPriceDTO.convert(drinkPrice), HttpStatus.OK);
+        DrinkPrice dp;
+        dp = drinkPriceService.edit(id, drinkPriceDTO);
 
-        if (drinkPrice == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        DrinkPrice newDrinkPrice = drinkPriceDTOToDrinkPrice.convert(drinkPriceDTO);
-
-        drinkPrice = drinkPriceService.save(newDrinkPrice);
-        return new ResponseEntity<>(drinkPriceToDrinkPriceDTO.convert(drinkPrice), HttpStatus.OK);
+        return new ResponseEntity<>(drinkPriceToDrinkPriceDTO.convert(dp), HttpStatus.OK);
     }
 
     /***
@@ -117,7 +129,7 @@ public class DrinkPriceController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
         try {
             success = drinkPriceService.deleteOne(id);

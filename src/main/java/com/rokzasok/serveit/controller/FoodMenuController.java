@@ -163,7 +163,7 @@ public class FoodMenuController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
         try {
             success = foodMenuService.deleteOne(id);
@@ -242,7 +242,7 @@ public class FoodMenuController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/{menuId}/delete-dish/{id}")
-    public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
         FoodMenu menu = foodMenuService.findOne(menuId);
 
         boolean success;
@@ -272,7 +272,7 @@ public class FoodMenuController {
      * @return dto for changed menu
      */
     @PutMapping("/{menuId}/edit-dish-price")
-    public ResponseEntity<FoodMenuDTO> editDishPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) {
+    public ResponseEntity<FoodMenuDTO> editDishPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) throws Exception {
         FoodMenu menu = foodMenuService.findOne(menuId);
         if (menu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

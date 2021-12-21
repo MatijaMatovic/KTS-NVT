@@ -3,11 +3,8 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DrinkDTOtoDrink;
 import com.rokzasok.serveit.converters.DrinkToDrinkDTO;
 import com.rokzasok.serveit.dto.DrinkDTO;
-import com.rokzasok.serveit.model.Dish;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.service.IDrinkService;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -130,7 +127,7 @@ public class DrinkController {
      * @return the response entity
      */
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) throws Exception {
         boolean success = drinkService.deleteOne(id);
         return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
