@@ -96,7 +96,7 @@ public class DishPriceServiceUnitTest {
     }
 
     @Test
-    public void testDelete() {
+    public void testDelete() throws Exception {
         Boolean deleted = dishPriceService.deleteOne(ID1);
 
         verify(dishPriceRepository, times(1)).findById(ID1);
@@ -104,7 +104,7 @@ public class DishPriceServiceUnitTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testDelete_NonExistingID() {
+    public void testDelete_NonExistingID() throws Exception {
         Boolean deleted = dishPriceService.deleteOne(NON_EXISTING_ID);
 
         assertEquals(false, deleted);

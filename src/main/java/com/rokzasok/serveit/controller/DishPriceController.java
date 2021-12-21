@@ -39,13 +39,22 @@ public class DishPriceController {
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> create(@RequestBody DishPriceDTO dishPriceDTO) {
+    public ResponseEntity<DishPriceDTO> create(@RequestBody DishPriceDTO dishPriceDTO) {
         DishPrice dishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
-        DishPrice dishPriceSaved = dishPriceService.save(dishPrice);
-        if (dishPriceSaved == null) {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        boolean exists = false;
+
+        if (dishPriceDTO.getId() != null) {
+            exists = dishPriceService.findOne(dishPriceDTO.getId()) != null;
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        dishPrice = dishPriceService.save(dishPrice);
+
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
     }
 
     /***
@@ -62,11 +71,10 @@ public class DishPriceController {
         DishPrice dishPrice = dishPriceService.findOne(id);
 
         if (dishPrice == null){
-            System.out.println("Dish menu je null");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        DishPriceDTO dishPriceDTO = dishPriceToDishPriceDTO.convert(dishPrice);
-        return new ResponseEntity<>(dishPriceDTO, HttpStatus.OK);
+
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
     }
 
     /***
@@ -96,17 +104,22 @@ public class DishPriceController {
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DishPriceDTO> edit(@PathVariable Integer id, @RequestBody DishPriceDTO dishPriceDTO) throws Exception {
-        DishPrice dishPrice = dishPriceService.findOne(dishPriceDTO.getId());
+//        DishPrice dishPrice = dishPriceService.findOne(dishPriceDTO.getId());
+//
+//        if (dishPrice == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        DishPrice newDishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
+//
+//        dishPrice = dishPriceService.save(newDishPrice);
+//        dishPriceService.deleteOne(id);
+//        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
 
-        if (dishPrice == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        DishPrice dp;
+        dp = dishPriceService.edit(id, dishPriceDTO);
 
-        DishPrice newDishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
-
-        dishPrice = dishPriceService.save(newDishPrice);
-        dishPriceService.deleteOne(id);
-        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dp), HttpStatus.OK);
     }
 
     /***

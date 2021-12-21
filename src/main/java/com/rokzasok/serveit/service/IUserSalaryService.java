@@ -7,5 +7,13 @@ import com.rokzasok.serveit.model.UserSalary;
 
 public interface IUserSalaryService extends IGenericService<UserSalary>{
     UserSalary current(User user) throws Exception;
-    UserSalary edit(Integer id, UserSalaryDTO userSalaryDTO) throws Exception;
+
+    /**
+     *
+     * @param userId - id usera
+     * @param userSalaryDTO - id unutar ovog dto-a je id stare cene
+     * @return
+     * @throws Exception
+     */
+    UserSalary edit(Integer userId, UserSalaryDTO userSalaryDTO) throws Exception;
 }
