@@ -4,8 +4,6 @@ import com.rokzasok.serveit.dto.SittingTableDTO;
 import com.rokzasok.serveit.exceptions.SittingTableNotFoundException;
 import com.rokzasok.serveit.service.impl.SittingTableService;
 import org.junit.Test;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,7 +20,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SittingTableControllerIntegrationTest {
 
     @Autowired

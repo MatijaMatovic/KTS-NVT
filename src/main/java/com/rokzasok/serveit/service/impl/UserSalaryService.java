@@ -1,13 +1,16 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.dto.UserSalaryDTO;
+import com.rokzasok.serveit.exceptions.UserNotFoundException;
+import com.rokzasok.serveit.exceptions.UserSalaryNotFoundException;
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserSalary;
+import com.rokzasok.serveit.repository.UserRepository;
 import com.rokzasok.serveit.repository.UserSalaryRepository;
 import com.rokzasok.serveit.service.IUserSalaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +20,9 @@ import java.util.stream.Collectors;
 public class UserSalaryService implements IUserSalaryService {
     @Autowired
     UserSalaryRepository userSalaryRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public List<UserSalary> findAll() {
@@ -34,19 +40,17 @@ public class UserSalaryService implements IUserSalaryService {
     }
 
     @Override
-    public Boolean deleteOne(Integer id) {
-        UserSalary toDelete = findOne(id);
-        if (toDelete == null)
-            throw new EntityNotFoundException("User sallary with given ID not found");
+    public Boolean deleteOne(Integer id) throws Exception {
+        UserSalary toDelete = userSalaryRepository.findById(id).orElseThrow(() -> new UserSalaryNotFoundException("Salary with provided ID does not exist"));
         userSalaryRepository.delete(toDelete);
         return true;
     }
 
     @Override
-    public UserSalary current(User user) {
+    public UserSalary current(User user) throws Exception {
         List<UserSalary> userSalaries = userSalaryRepository.findByUser(user);
         if (userSalaries.isEmpty())
-            throw new EntityNotFoundException("There is no salary for given user");
+            throw new UserSalaryNotFoundException("There is no salary for given user");
 
         List<UserSalary> NotFutureSalaries = userSalaries.stream()
                 .filter(us -> !us.getSalaryDate().isAfter(LocalDate.now()))
@@ -58,8 +62,10 @@ public class UserSalaryService implements IUserSalaryService {
     }
 
     @Override
-    public UserSalary edit(UserSalary us) {
-        UserSalary newUs = new UserSalary(null, us.getSalary(), us.getSalaryDate(), false, us.getUser());
+    public UserSalary edit(Integer userId, UserSalaryDTO us) throws Exception {
+        //UserSalary toEdit = userSalaryRepository.findById(id).orElseThrow(() -> new UserSalaryNotFoundException("Salary with provided ID does not exist"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with provided ID does not exist"));
+        UserSalary newUs = new UserSalary(null, us.getSalary(), us.getSalaryDate(), false, user);
         UserSalary savedUs = save(newUs);
         deleteOne(us.getId());
         return savedUs;

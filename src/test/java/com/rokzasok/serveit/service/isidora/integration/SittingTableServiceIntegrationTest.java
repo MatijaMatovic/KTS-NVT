@@ -64,9 +64,10 @@ public class SittingTableServiceIntegrationTest {
 
     @Test
     public void testDelete_IdExisting_ShouldReturn_True() throws Exception {
-        sittingTableService.deleteOne(ID_TO_DELETE);
+        Boolean success = sittingTableService.deleteOne(ID_TO_DELETE);
         SittingTable sittingTable = sittingTableService.findOne(ID_TO_DELETE);
         assertNull(sittingTable);
+        assertTrue(success);
     }
 
     @Test(expected = SittingTableNotFoundException.class)
