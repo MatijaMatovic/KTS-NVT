@@ -23,7 +23,7 @@ public class PriceConstants {
 
     public static final Integer NON_EXISTING_ID = 440;
 
-    public static final int FIND_ALL_NUMBER_OF_ITEMS_DRINK = 3;
+    public static final int FIND_ALL_NUMBER_OF_ITEMS_DRINK = 4;
     public static final int FIND_ALL_NUMBER_OF_ITEMS_DISH = 6;
     public static final Integer DRINK_ID = 1;
     public static final Integer DISH_ID = 1;
