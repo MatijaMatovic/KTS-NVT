@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -66,6 +67,7 @@ public class UserControllerUnitTest {
     @Test
     @Transactional
     @Rollback(value = true)
+    @WithMockUser(roles = {"ADMINISTRATOR"})
     public void testEdit() throws Exception {
 
         UserDTO editedDTO = generator.nextObject(UserDTO.class);
@@ -94,6 +96,7 @@ public class UserControllerUnitTest {
     @Test
     @Transactional
     @Rollback(true)
+    @WithMockUser(roles = {"ADMINISTRATOR"})
     public void testEdit_NonExistingID() throws Exception {
         UserDTO editedDTO = generator.nextObject(UserDTO.class);
         editedDTO.setId(NON_EXISTENT_USER_ID);

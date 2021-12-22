@@ -1,6 +1,8 @@
 package com.rokzasok.serveit.controller.matija.integration;
 
+import com.rokzasok.serveit.dto.JwtAuthenticationRequest;
 import com.rokzasok.serveit.dto.UserDTO;
+import com.rokzasok.serveit.dto.UserTokenState;
 import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.model.UserType;
 import com.rokzasok.serveit.service.impl.UserService;
@@ -9,10 +11,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -35,6 +36,18 @@ public class UserControllerIntegrationTest {
 
     @Autowired
     UserService userService;
+
+
+    public String login(String username, String password) {
+        ResponseEntity<UserTokenState> responseEntity
+                = dispatcher.postForEntity(
+                        "/auth/login",
+                        new JwtAuthenticationRequest(username,password),
+                        UserTokenState.class
+        );
+        return "Bearer " + responseEntity.getBody().getAccessToken();
+    }
+
 
     @Test
     public void testGetAllUsers() {
@@ -77,10 +90,13 @@ public class UserControllerIntegrationTest {
 
         toEditDTO.setFirstName(newName);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<UserDTO> editedUserResponse
                 = dispatcher.exchange(
                         URL_PREFIX + "/edit", HttpMethod.PUT,
-                new HttpEntity<>(toEditDTO), UserDTO.class
+                new HttpEntity<>(toEditDTO, headers), UserDTO.class
         );
 
         UserDTO editedUser = editedUserResponse.getBody();
