@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class DrinkOrderItemControllerIntegrationTest {
-    private static final String URL_PREFIX = "/api/dish-order-items";
+    private static final String URL_PREFIX = "/api/drink-order-items";
     private static final Integer DRINK_ORDER_ITEM_ID = 1;
     private static final Integer READY_DRINK_ORDER_ITEM_ID = 2;
     private static final Integer IN_PROGRESS_DRINK_ORDER_ITEM_ID = 4;
@@ -112,6 +112,7 @@ public class DrinkOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/accept-drink-order/" + DRINK_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
@@ -180,6 +181,7 @@ public class DrinkOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/complete-drink-order/" + IN_PROGRESS_DRINK_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
 
     }

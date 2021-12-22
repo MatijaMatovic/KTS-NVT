@@ -112,7 +112,7 @@ public class DishOrderItemControllerIntegrationTest {
         ResponseEntity<Object> response = dispatcher.exchange(
                 URL_PREFIX + "/accept-dish-order/" + CREATED_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
-
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
@@ -181,6 +181,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/complete-dish-order/" + IN_PROGRESS_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 }
