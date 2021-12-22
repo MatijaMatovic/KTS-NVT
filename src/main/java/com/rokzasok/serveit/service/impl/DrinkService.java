@@ -1,5 +1,6 @@
 package com.rokzasok.serveit.service.impl;
 
+import com.rokzasok.serveit.exceptions.DrinkNotFoundException;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.repository.DrinkRepository;
 import com.rokzasok.serveit.service.IDrinkService;
@@ -33,11 +34,11 @@ public class DrinkService implements IDrinkService {
     }
 
     @Override
-    public Boolean deleteOne(Integer id) {
+    public Boolean deleteOne(Integer id) throws DrinkNotFoundException {
         Drink drink = findOne(id);
 
         if (drink == null) {
-            return false;
+            throw new DrinkNotFoundException("Drink not found for given id.");
         }
 
         drinkRepository.delete(drink);
