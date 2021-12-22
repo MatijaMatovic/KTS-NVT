@@ -1,6 +1,7 @@
-package com.rokzasok.serveit.service.jovan;
+package com.rokzasok.serveit.service.jovan.integration;
 
 import com.rokzasok.serveit.constants.DishConstants;
+import com.rokzasok.serveit.exceptions.DishNotFoundException;
 import com.rokzasok.serveit.model.Dish;
 import com.rokzasok.serveit.service.impl.DishService;
 import org.junit.Test;
@@ -66,14 +67,13 @@ public class DishServiceIntegrationTest {
 
 
     @Test
-    public void testDeleteOne_CorrectId() {
+    public void testDeleteOne_CorrectId() throws DishNotFoundException {
         Boolean isDeletedSuccessfully = dishService.deleteOne(DishConstants.CORRECT_ID);
         assertEquals(true, isDeletedSuccessfully);
     }
 
-    @Test
-    public void testDeleteOne_IncorrectId() {
-        Boolean isDeletedSuccessfully = dishService.deleteOne(DishConstants.WRONG_ID);
-        assertEquals(false, isDeletedSuccessfully);
+    @Test(expected = DishNotFoundException.class)
+    public void testDeleteOne_IncorrectId() throws DishNotFoundException {
+        dishService.deleteOne(DishConstants.WRONG_ID);
     }
 }

@@ -30,7 +30,7 @@ public class DrinkControllerIntegrationTest {
 
 
     @Test
-    public void testGetDrinks() {
+    public void testGetDrinks_ReturnsStatusOkAndListOfDrinksWithCorrectNumberOfInstances() {
         ResponseEntity<DrinkDTO[]> responseEntity = restTemplate.getForEntity("/api/drinks/", DrinkDTO[].class);
 
         DrinkDTO[] drinks = responseEntity.getBody();
@@ -40,7 +40,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void getDrink_CorrectID() {
+    public void getDrink_CorrectID_ReturnsStatusOkAndCorrectDrinkDTO() {
         String url = String.format("/api/drinks/%d", DrinkConstants.CORRECT_ID);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.getForEntity(url, DrinkDTO.class);
 
@@ -52,7 +52,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void getDrink_WrongID() {
+    public void getDrink_WrongID_ReturnsStatusNotFound() {
         String url = String.format("/api/drinks/%d", DrinkConstants.WRONG_ID);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.getForEntity(url, DrinkDTO.class);
 
@@ -63,7 +63,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void addNewDrink_NewIdDrink() {
+    public void addNewDrink_NewIdDrink_ReturnsStatusOkAndCorrectDrinkDto() {
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NEW_ID_DRINK);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
 
@@ -76,14 +76,14 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void addNewDrink_ExistingIdDrink() {
+    public void addNewDrink_ExistingIdDrink_ReturnsStatusBadRequest() {
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.EXISTING_ID_DRINK);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
-    public void addNewDrink_NoIdDrink() {
+    public void addNewDrink_NoIdDrink_ReturnsStatusOkAndCorrectDrinkDto() {
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NO_ID_DRINK);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
 
@@ -97,7 +97,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void updateDrink_ExistingDrink() {
+    public void updateDrink_ExistingDrink_ReturnsStatusOkAndCorrectDrinkDto() {
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.EXISTING_ID_DRINK);
         HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks", HttpMethod.PUT, existingDrinkDTO, DrinkDTO.class);
@@ -111,7 +111,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void updateDrink_WrongDrink() {
+    public void updateDrink_WrongDrink_ReturnsStatusBadRequest() {
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NEW_ID_DRINK);
         HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks", HttpMethod.PUT, existingDrinkDTO, DrinkDTO.class);
@@ -120,7 +120,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void deleteDrink_ExistingID() {
+    public void deleteDrink_ExistingID_ReturnsStatusOkAndTrue() {
         String url = String.format("/api/drinks/%d", DrinkConstants.CORRECT_ID);
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
         Boolean success = responseEntity.getBody();
@@ -130,7 +130,7 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void deleteDrink_WrongID() {
+    public void deleteDrink_WrongID_ReturnsStatusBadRequestAndFalse() {
         String url = String.format("/api/drinks/%d", DrinkConstants.WRONG_ID);
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
 

@@ -127,8 +127,14 @@ public class DrinkController {
      * @return the response entity
      */
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) throws Exception {
-        boolean success = drinkService.deleteOne(id);
+    public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) {
+        boolean success = false;
+        try {
+            success = drinkService.deleteOne(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 

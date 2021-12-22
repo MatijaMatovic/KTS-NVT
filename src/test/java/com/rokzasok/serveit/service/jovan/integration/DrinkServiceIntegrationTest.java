@@ -1,6 +1,7 @@
-package com.rokzasok.serveit.service.jovan;
+package com.rokzasok.serveit.service.jovan.integration;
 
 import com.rokzasok.serveit.constants.DrinkConstants;
+import com.rokzasok.serveit.exceptions.DrinkNotFoundException;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.service.impl.DrinkService;
 import org.junit.Test;
@@ -24,19 +25,19 @@ public class DrinkServiceIntegrationTest {
     private DrinkService drinkService;
 
     @Test
-    public void testFindAll() {
+    public void testFindAll_ReturnsCorrectNumberOfDrinks() {
         List<Drink> found = drinkService.findAll();
         assertEquals(DrinkConstants.NUMBER_OF_INSTANCES, found.size());
     }
 
     @Test
-    public void testFindOne_CorrectId() {
+    public void testFindOne_CorrectId_ReturnsDrinkWithCorrectId() {
         Drink found = drinkService.findOne(DrinkConstants.CORRECT_ID);
         assertEquals(DrinkConstants.CORRECT_ID, found.getId());
     }
 
     @Test
-    public void testFindOne_WrongId() {
+    public void testFindOne_WrongId_ReturnsNull() {
         Drink found = drinkService.findOne(DrinkConstants.WRONG_ID);
         assertNull(found);
     }
@@ -49,28 +50,27 @@ public class DrinkServiceIntegrationTest {
     }
 
     @Test
-    public void testSave_ExistingId() {
+    public void testSave_NewId_ReturnsSavedDrink() {
         Drink savedDrink = drinkService.save(DrinkConstants.EXISTING_ID_DRINK);
 
         assertEquals(DrinkConstants.EXISTING_ID_DRINK, savedDrink);
     }
 
     @Test
-    public void testSave_NoId() {
+    public void testSave_NoID_ReturnsSavedDrinkWithCorrectlyGeneratedID() {
         Drink savedDrink = drinkService.save(DrinkConstants.NO_ID_DRINK);
 
         assertEquals(Integer.valueOf(DrinkConstants.NUMBER_OF_INSTANCES + 1), savedDrink.getId());
     }
 
     @Test
-    public void testDeleteOne_CorrectId() {
+    public void testDeleteOne_CorrectId_ReturnsTrue() throws DrinkNotFoundException {
         Boolean isDeletedSuccessfully = drinkService.deleteOne(DrinkConstants.CORRECT_ID);
         assertEquals(true, isDeletedSuccessfully);
     }
 
-    @Test
-    public void testDeleteOne_IncorrectId() {
-        Boolean isDeletedSuccessfully = drinkService.deleteOne(DrinkConstants.WRONG_ID);
-        assertEquals(false, isDeletedSuccessfully);
+    @Test(expected = DrinkNotFoundException.class)
+    public void testDeleteOne_IncorrectId() throws DrinkNotFoundException {
+        drinkService.deleteOne(DrinkConstants.WRONG_ID);
     }
 }
