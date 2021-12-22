@@ -54,7 +54,7 @@ public class UserSalaryServiceIntegrationTest {
     }
 
     @Test
-    public void testFindOne_IdNotExisting_ShouldThrow() {
+    public void testFindOne_IdNotExisting_ShouldReturn_Null() {
         UserSalary found = userSalaryService.findOne(NON_EXISTING_ID);
         assertNull(found);
     }
@@ -63,7 +63,13 @@ public class UserSalaryServiceIntegrationTest {
     @Test
     public void testSave(){
         User u = userService.findOne(3);
-        UserSalary userSalary = UserSalary.builder().id(null).user(u).salary(80000.0).salaryDate(LocalDate.now()).isDeleted(false).build();
+        UserSalary userSalary = UserSalary.builder()
+                .id(null)
+                .user(u)
+                .salary(80000.0)
+                .salaryDate(LocalDate.now())
+                .isDeleted(false)
+                .build();
         List<UserSalary> oldAll = userSalaryService.findAll();
         Integer lastOldId = oldAll.get(oldAll.size() - 1).getId();
         UserSalary created = userSalaryService.save(userSalary);
@@ -97,7 +103,7 @@ public class UserSalaryServiceIntegrationTest {
     }
 
     @Test(expected = UserNotFoundException.class)
-    public void testEdit_UsedIdNotExisting_ShouldThrow_UserNotFound() throws Exception {
+    public void testEdit_UserIdNotExisting_ShouldThrow_UserNotFound() throws Exception {
         UserSalary toEdit = userSalaryService.findOne(ID1);
         Double beforeEditSalary = toEdit.getSalary();
         toEdit.setSalary(beforeEditSalary + 10000.0);
