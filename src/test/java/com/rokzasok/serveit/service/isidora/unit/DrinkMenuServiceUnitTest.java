@@ -117,7 +117,7 @@ public class DrinkMenuServiceUnitTest {
     }
 
     @Test
-    public void testEdit() {
+    public void testEdit() throws Exception {
         DrinkMenu editedDrinkMenu = drinkMenuService.edit(menu2.getId(), converter.convert(menu2));
 
         verify(drinkMenuRepository, times(1)).findById(ID2);
@@ -125,7 +125,7 @@ public class DrinkMenuServiceUnitTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testEdit_NonExistingID() {
+    public void testEdit_NonExistingID() throws Exception {
         DrinkMenu editedDrinkMenu = drinkMenuService.edit(empty.getId(), converter.convert(empty));
 
         verify(drinkMenuRepository, times(1)).findById(ID2);

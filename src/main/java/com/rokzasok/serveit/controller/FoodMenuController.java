@@ -61,13 +61,22 @@ public class FoodMenuController {
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> create(@RequestBody FoodMenuDTO foodMenuDTO) {
+    public ResponseEntity<FoodMenuDTO> create(@RequestBody FoodMenuDTO foodMenuDTO) {
         FoodMenu foodMenu = foodMenuDTOToFoodMenu.convert(foodMenuDTO);
-        FoodMenu foodMenuSaved = foodMenuService.save(foodMenu);
-        if (foodMenuSaved == null) {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        boolean exists = false;
+
+        if (foodMenuDTO.getId() != null) {
+            exists = foodMenuService.findOne(foodMenuDTO.getId()) != null;
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        foodMenu = foodMenuService.save(foodMenu);
+
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
     }
 
     /***
@@ -84,15 +93,14 @@ public class FoodMenuController {
         FoodMenu foodMenu = foodMenuService.findOne(id);
 
         if (foodMenu == null){
-            System.out.println("Food menu je null");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        FoodMenuDTO foodMenuDTO = foodMenuToFoodMenuDTO.convert(foodMenu);
-        if (foodMenuDTO == null) {
-            System.out.println("Food menu DTO je null");
-            return new ResponseEntity<>(null, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
+//        FoodMenuDTO foodMenuDTO = ;
+//        if (foodMenuDTO == null) {
+//            System.out.println("Food menu DTO je null");
+//            return new ResponseEntity<>(null, HttpStatus.OK);
+//        }
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
     }
 
     /***
@@ -124,7 +132,6 @@ public class FoodMenuController {
         FoodMenu foodMenu = foodMenuService.last();
 
         if (foodMenu == null){
-            System.out.println("Nema jelovnika");
             return new ResponseEntity<>(null, HttpStatus.OK); // todo NOT_FOUND?
         }
         FoodMenuDTO foodMenuDTO = foodMenuToFoodMenuDTO.convert(foodMenu);
@@ -141,17 +148,20 @@ public class FoodMenuController {
      */
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<FoodMenuDTO> edit(@PathVariable Integer id, @RequestBody FoodMenuDTO foodMenuDTO) {
-        FoodMenu foodMenu = foodMenuService.findOne(foodMenuDTO.getId());
+    public ResponseEntity<FoodMenuDTO> edit(@PathVariable Integer id, @RequestBody FoodMenuDTO foodMenuDTO) throws Exception {
+//        FoodMenu foodMenu = foodMenuService.findOne(foodMenuDTO.getId());
+//
+//        if (foodMenu == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        FoodMenu newFoodMenu = foodMenuDTOToFoodMenu.convert(foodMenuDTO);
 
-        if (foodMenu == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        FoodMenu newFoodMenu = foodMenuDTOToFoodMenu.convert(foodMenuDTO);
-
-        foodMenu = foodMenuService.save(newFoodMenu);
-        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
+        FoodMenu menu;
+        menu = foodMenuService.edit(id, foodMenuDTO);
+//
+//        foodMenu = foodMenuService.save(newFoodMenu);
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(menu), HttpStatus.OK);
     }
 
     /***

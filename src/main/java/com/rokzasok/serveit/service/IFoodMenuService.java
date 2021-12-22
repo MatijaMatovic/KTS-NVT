@@ -5,6 +5,6 @@ import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.FoodMenu;
 
 public interface IFoodMenuService extends IGenericService<FoodMenu>{
-    FoodMenu edit(Integer id, FoodMenuDTO foodMenuDTO);
+    FoodMenu edit(Integer id, FoodMenuDTO foodMenuDTO) throws Exception;
     FoodMenu last();
 }
