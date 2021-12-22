@@ -2,6 +2,7 @@ package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.dto.DrinkMenuDTO;
 import com.rokzasok.serveit.dto.DrinkPriceDTO;
+import com.rokzasok.serveit.exceptions.DrinkMenuNotFoundException;
 import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.DrinkPrice;
 import com.rokzasok.serveit.repository.DrinkMenuRepository;
@@ -56,10 +57,10 @@ public class DrinkMenuService implements IDrinkMenuService {
     }
 
     @Override
-    public DrinkMenu edit(Integer id, DrinkMenuDTO drinkMenuDTO) throws EntityNotFoundException {
+    public DrinkMenu edit(Integer id, DrinkMenuDTO drinkMenuDTO) throws Exception {
         DrinkMenu toEdit = findOne(id);
         if (toEdit == null)
-            throw new EntityNotFoundException("Drink Menu with given ID not found");
+            throw new DrinkMenuNotFoundException("Drink Menu with given ID not found");
         toEdit.setDate(drinkMenuDTO.getDate());
 
         Set<DrinkPrice> drinkPriceSet = new HashSet<>();

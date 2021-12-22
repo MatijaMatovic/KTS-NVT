@@ -67,13 +67,22 @@ public class DrinkMenuController {
      */
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> create(@RequestBody DrinkMenuDTO drinkMenuDTO) {
+    public ResponseEntity<DrinkMenuDTO> create(@RequestBody DrinkMenuDTO drinkMenuDTO) {
         DrinkMenu drinkMenu = drinkMenuDTOToDrinkMenu.convert(drinkMenuDTO);
-        DrinkMenu drinkMenuSaved = drinkMenuService.save(drinkMenu);
-        if (drinkMenuSaved == null) {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        boolean exists = false;
+
+        if (drinkMenuDTO.getId() != null) {
+            exists = drinkMenuService.findOne(drinkMenuDTO.getId()) != null;
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        drinkMenu = drinkMenuService.save(drinkMenu);
+
+        return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(drinkMenu), HttpStatus.OK);
     }
 
     /***
@@ -90,11 +99,10 @@ public class DrinkMenuController {
         DrinkMenu drinkMenu = drinkMenuService.findOne(id);
 
         if (drinkMenu == null){
-            System.out.println("Ne postoji karta pica sa tim id-jem: " + id);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        DrinkMenuDTO drinkMenuDTO = drinkMenuToDrinkMenuDTO.convert(drinkMenu);
-        return new ResponseEntity<>(drinkMenuDTO, HttpStatus.OK);
+
+        return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(drinkMenu), HttpStatus.OK);
     }
 
     /***
@@ -126,7 +134,6 @@ public class DrinkMenuController {
         DrinkMenu drinkMenu = drinkMenuService.last();
 
         if (drinkMenu == null){
-            System.out.println("Nema karti pica");
             return new ResponseEntity<>(null, HttpStatus.OK); // todo NOT_FOUND?
         }
         DrinkMenuDTO drinkMenuDTO = drinkMenuToDrinkMenuDTO.convert(drinkMenu);
@@ -143,16 +150,16 @@ public class DrinkMenuController {
      */
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DrinkMenuDTO> edit(@PathVariable Integer id, @RequestBody DrinkMenuDTO drinkMenuDTO) {
-        DrinkMenu drinkMenu = drinkMenuService.findOne(drinkMenuDTO.getId());
+    public ResponseEntity<DrinkMenuDTO> edit(@PathVariable Integer id, @RequestBody DrinkMenuDTO drinkMenuDTO) throws Exception {
+//        DrinkMenu drinkMenu = drinkMenuService.findOne(drinkMenuDTO.getId());
 
-        if (drinkMenu == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+//        if (drinkMenu == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+        DrinkMenu drinkMenu;
+        drinkMenu = drinkMenuService.edit(id, drinkMenuDTO);
 
-        DrinkMenu newDrinkMenu = drinkMenuDTOToDrinkMenu.convert(drinkMenuDTO);
-
-        drinkMenu = drinkMenuService.save(newDrinkMenu);
+//        drinkMenu = drinkMenuService.save(newDrinkMenu);
         return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(drinkMenu), HttpStatus.OK);
     }
 

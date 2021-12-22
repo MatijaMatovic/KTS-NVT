@@ -72,7 +72,7 @@ public class FoodMenuServiceIntegrationTest {
     }
 
     @Test
-    public void testEdit_WithoutDishes() {
+    public void testEdit_WithoutDishes() throws Exception {
         FoodMenu toEdit = foodMenuService.findOne(ID_TO_EDIT1);
         LocalDate beforeEditDate = toEdit.getDate();
         toEdit.setDate(beforeEditDate.plusDays(13));
@@ -83,7 +83,7 @@ public class FoodMenuServiceIntegrationTest {
     }
 
     @Test
-    public void testEdit_WithDishes() {
+    public void testEdit_WithDishes() throws Exception {
         FoodMenu toEdit = foodMenuService.findOne(ID_TO_EDIT1);
         int beforeEditDishesSize = toEdit.getDishes().size();
         Dish d = dishService.findOne(1);

@@ -74,7 +74,7 @@ public class DrinkMenuServiceIntegrationTest {
     }
 
     @Test
-    public void testEdit_WithoutDrinkes() {
+    public void testEdit_WithoutDrinkes() throws Exception {
         DrinkMenu toEdit = drinkMenuService.findOne(ID_TO_EDIT1);
         LocalDate beforeEditDate = toEdit.getDate();
         toEdit.setDate(beforeEditDate.plusDays(13));
@@ -85,7 +85,7 @@ public class DrinkMenuServiceIntegrationTest {
     }
 
     @Test
-    public void testEdit_WithDrinkes() {
+    public void testEdit_WithDrinkes() throws Exception {
         DrinkMenu toEdit = drinkMenuService.findOne(ID_TO_EDIT1);
         int beforeEditDrinksSize = toEdit.getDrinks().size();
         Drink d = drinkService.findOne(1);
