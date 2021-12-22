@@ -107,8 +107,8 @@ public class DishOrderItemController {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    @ExceptionHandler({ DishOrderItemNotFoundException.class, UserNotFoundException.class})
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "Entity not found")
+    @ExceptionHandler({ DishOrderItemNotFoundException.class, UserNotFoundException.class, ItemStatusSetException.class})
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad request")
     public void handleNotFoundException() {
 
     }

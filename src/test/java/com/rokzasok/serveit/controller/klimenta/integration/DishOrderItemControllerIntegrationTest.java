@@ -62,7 +62,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/accept-dish-order/" + NON_EXISTING_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/accept-dish-order/" + DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -96,7 +96,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/accept-dish-order/" + READY_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/complete-dish-order/" + NON_EXISTING_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -147,7 +147,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/complete-dish-order/" + DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class DishOrderItemControllerIntegrationTest {
                 URL_PREFIX + "/complete-dish-order/" + READY_DISH_ORDER_ITEM_ID, HttpMethod.PUT, request, Object.class
         );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
