@@ -32,7 +32,7 @@ public class DishControllerIntegrationTest {
 
 
     @Test
-    public void testGetDishes() {
+    public void testGetDishes_ReturnsStatusOkAndListOfDishesWithCorrectNumberOfInstances() {
         ResponseEntity<DishDTO[]> responseEntity = restTemplate.getForEntity("/api/dishes/", DishDTO[].class);
 
         DishDTO[] dishes = responseEntity.getBody();
@@ -42,7 +42,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void getDish_CorrectID() {
+    public void getDish_CorrectID_ReturnsStatusOkAndCorrectDishDto() {
         String url = String.format("/api/dishes/%d", DishConstants.CORRECT_ID);
         ResponseEntity<DishDTO> responseEntity = restTemplate.getForEntity(url, DishDTO.class);
 
@@ -54,7 +54,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void getDish_WrongID() {
+    public void getDish_WrongID_ReturnsStatusNotFound() {
         String url = String.format("/api/dishes/%d", DishConstants.WRONG_ID);
         ResponseEntity<DishDTO> responseEntity = restTemplate.getForEntity(url, DishDTO.class);
 
@@ -65,7 +65,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void addNewDish_NewIdDish() {
+    public void addNewDish_NewIdDishReturnsStatusOkAndCorrectDishDto() {
         DishDTO dishDTO = dishToDishDTO.convert(DishConstants.NEW_ID_DISH);
         ResponseEntity<DishDTO> responseEntity = restTemplate.postForEntity("/api/dishes/", dishDTO, DishDTO.class);
 
@@ -78,14 +78,14 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void addNewDish_ExistingIdDish() {
+    public void addNewDish_ExistingIdDish_ReturnsStatusBadRequest() {
         DishDTO dishDTO = dishToDishDTO.convert(DishConstants.EXISTING_ID_DISH);
         ResponseEntity<DishDTO> responseEntity = restTemplate.postForEntity("/api/dishes/", dishDTO, DishDTO.class);
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
-    public void addNewDish_NoIdDish() {
+    public void addNewDish_NoIdDish_ReturnsStatusOkAndCorrectDishDto() {
         DishDTO dishDTO = dishToDishDTO.convert(DishConstants.NO_ID_DISH);
         ResponseEntity<DishDTO> responseEntity = restTemplate.postForEntity("/api/dishes/", dishDTO, DishDTO.class);
 
@@ -99,7 +99,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void updateDish_ExistingDish() {
+    public void updateDish_ExistingDish_ReturnsStatusOkAndCorrectDishDto() {
         DishDTO dishDTO = dishToDishDTO.convert(DishConstants.EXISTING_ID_DISH);
         HttpEntity<DishDTO> existingDishDTO = new HttpEntity<>(dishDTO);
         ResponseEntity<DishDTO> responseEntity = restTemplate.exchange("/api/dishes", HttpMethod.PUT, existingDishDTO, DishDTO.class);
@@ -113,7 +113,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void updateDish_WrongDish() {
+    public void updateDish_WrongDish_ReturnsStatusBadRequest() {
         DishDTO dishDTO = dishToDishDTO.convert(DishConstants.NEW_ID_DISH);
         HttpEntity<DishDTO> existingDishDTO = new HttpEntity<>(dishDTO);
         ResponseEntity<DishDTO> responseEntity = restTemplate.exchange("/api/dishes", HttpMethod.PUT, existingDishDTO, DishDTO.class);
@@ -122,7 +122,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void deleteDish_ExistingID() {
+    public void deleteDish_ExistingID_ReturnsStatusOkAndTrue() {
         String url = String.format("/api/dishes/%d", DishConstants.CORRECT_ID);
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
         Boolean success = responseEntity.getBody();
@@ -132,7 +132,7 @@ public class DishControllerIntegrationTest {
     }
 
     @Test
-    public void deleteDish_WrongID() {
+    public void deleteDish_WrongID_ReturnsStatusBadRequestAndFalse() {
         String url = String.format("/api/dishes/%d", DishConstants.WRONG_ID);
         ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
 

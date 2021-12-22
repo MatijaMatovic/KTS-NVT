@@ -1,4 +1,4 @@
-package com.rokzasok.serveit.service.jovan;
+package com.rokzasok.serveit.service.jovan.integration;
 
 import com.rokzasok.serveit.model.*;
 import com.rokzasok.serveit.service.impl.DrinkOrderItemService;

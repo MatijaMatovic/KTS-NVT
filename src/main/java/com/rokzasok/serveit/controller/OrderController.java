@@ -112,7 +112,7 @@ public class OrderController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = orderService.deleteOne(id);
             if (!deleted)

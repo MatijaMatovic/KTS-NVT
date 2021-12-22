@@ -127,7 +127,13 @@ public class DishController {
      */
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDish(@PathVariable Integer id) {
-        boolean success = dishService.deleteOne(id);
+        boolean success = false;
+        try {
+            success = dishService.deleteOne(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
