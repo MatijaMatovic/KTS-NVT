@@ -12,8 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -113,11 +111,14 @@ public class UserControllerIntegrationTest {
         User foundUser = userService.findOne(WAITER_ID);
         int initialDbSize = userService.findAll().size();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<Boolean> deletedResponse
                 = dispatcher.exchange(
                         URL_PREFIX + "/delete/" + WAITER_ID,
                         HttpMethod.DELETE,
-                        new HttpEntity<>(null),
+                        new HttpEntity<>(null, headers),
                         Boolean.class
                 );
 
@@ -136,11 +137,14 @@ public class UserControllerIntegrationTest {
     public void testDeleteUser_DeleteAdminFails() {
         int initialDbSize = userService.findAll().size();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<Object> deletedResponse
                 = dispatcher.exchange(
                 URL_PREFIX + "/delete/" + ADMIN_ID,
                 HttpMethod.DELETE,
-                new HttpEntity<>(null),
+                new HttpEntity<>(null, headers),
                 Object.class
         );
 
@@ -155,11 +159,14 @@ public class UserControllerIntegrationTest {
     public void testDeleteUser_NonExistingUser() {
         int initialDbSize = userService.findAll().size();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<Object> deletedResponse
                 = dispatcher.exchange(
                 URL_PREFIX + "/delete/" + NON_EXISTENT_USER_ID,
                 HttpMethod.DELETE,
-                new HttpEntity<>(null),
+                new HttpEntity<>(null, headers),
                 Object.class
         );
 

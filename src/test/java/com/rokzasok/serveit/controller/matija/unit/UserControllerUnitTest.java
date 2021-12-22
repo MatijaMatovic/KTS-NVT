@@ -117,6 +117,7 @@ public class UserControllerUnitTest {
     @Test
     @Transactional
     @Rollback(true)
+    @WithMockUser(roles = {"ADMINISTRATOR"})
     public void testDelete() throws Exception {
         given(userService.deleteOne(USER_ID)).willReturn(true);
         mockMvc.perform(
@@ -128,6 +129,7 @@ public class UserControllerUnitTest {
     @Test
     @Transactional
     @Rollback(true)
+    @WithMockUser(roles = {"ADMINISTRATOR"})
     public void testDelete_NonExistingID() throws Exception {
         given(userService.deleteOne(NON_EXISTENT_USER_ID)).willThrow(EntityNotFoundException.class);
 
@@ -138,6 +140,7 @@ public class UserControllerUnitTest {
     @Test
     @Transactional
     @Rollback(true)
+    @WithMockUser(roles = {"ADMINISTRATOR"})
     public void testDelete_DeleteAdminNotAllowed() throws Exception {
         UserDTO admin = generator.nextObject(UserDTO.class);
         admin.setType(UserType.ADMINISTRATOR);
