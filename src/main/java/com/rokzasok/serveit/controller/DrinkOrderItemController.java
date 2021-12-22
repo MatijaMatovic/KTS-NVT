@@ -60,7 +60,7 @@ public class DrinkOrderItemController {
      * @param orderItemWorkerDTO dto from frontend
      * @return DrinkOrderItemDTO if successful
      */
-    //@PreAuthorize("hasRole('ROLE_BARTENDER')")
+    @PreAuthorize("hasRole('ROLE_BARTENDER')")
     @PutMapping(value = "/complete-drink-order/{id}", consumes = "application/json")
     public ResponseEntity<DrinkOrderItemDTO> completeDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
@@ -78,7 +78,7 @@ public class DrinkOrderItemController {
      * @param orderItemWorkerDTO dto from frontend
      * @return DrinkOrderItemDTO if successful
      */
-    //@PreAuthorize("hasRole('ROLE_BARTENDER')")
+    @PreAuthorize("hasRole('ROLE_BARTENDER')")
     @PutMapping(value = "/accept-drink-order/{id}", consumes = "application/json")
     public ResponseEntity<DrinkOrderItemDTO> acceptDrinkOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {

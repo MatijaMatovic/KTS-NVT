@@ -34,10 +34,10 @@ public class AuthenticationController {
 
         // Ukoliko kredencijali nisu ispravni, logovanje nece biti uspesno, desice se
         // AuthenticationException
-        String sd = authenticationRequest.getEmail();
+        String sd = authenticationRequest.getUsername();
         String ps = authenticationRequest.getPassword();
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+                authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 
         // Ukoliko je autentifikacija uspesna, ubaci korisnika u trenutni security
         // kontekst
