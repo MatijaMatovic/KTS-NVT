@@ -160,6 +160,8 @@ public class OrderController {
      * @param orderItemDTO dto of new ordered item
      * @return changed order dto
      */
+    //TODO:dodati za svako find all provjeru za null, i za konvertere, ako je npr kad je nesto created cook mora
+    //biti null i onda ce bacati exception ovdje jer je user null
     @PostMapping(value = "/{orderId}/add-order-item")
     public ResponseEntity<OrderDTO> addOrderItem(@PathVariable Integer orderId, @RequestBody OrderItemDTO orderItemDTO) {
         Order o = orderService.findOne(orderId);
@@ -192,6 +194,8 @@ public class OrderController {
      * @param orderItemDTOs list of dtos of new ordered items
      * @return changed order dto
      */
+    //TODO:dodati za svako find all provjeru za null, i za konvertere, ako je npr kad je nesto created cook mora
+    //biti null i onda ce bacati exception ovdje jer je user null
     @PostMapping(value = "/{orderId}/add-order-items")
     public ResponseEntity<OrderDTO> addOrderItems(@PathVariable Integer orderId, @RequestBody List<OrderItemDTO> orderItemDTOs) {
         Order o = orderService.findOne(orderId);
@@ -228,6 +232,7 @@ public class OrderController {
      * @param orderItemId id of drink order item which is being deleted
      * @return dto of changed order
      */
+    //TODO:sve isto vazi kao i za sledecu metodu
     @DeleteMapping(value = "/{orderId}/delete-drink-order-item/{orderItemId}")
     public ResponseEntity<OrderDTO> deleteDrinkOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
         Order o = orderService.findOne(orderId);
@@ -252,6 +257,9 @@ public class OrderController {
      * @param orderItemId id of drink order item which is being deleted
      * @return dto of changed order
      */
+    //TODO: dodati provjere da li find one vraca null, dodati to da se moze obrisati samo ako je item status CREATED, mozda promijeniti da metoda vraca boolena
+    //ako ne to, onda izmjeniti u kontroleru da ne puca ako je za neki item kuvar null, jer stvari koje se brisu su created i nemaju kuvara
+
     @DeleteMapping(value = "/{orderId}/delete-dish-order-item/{orderItemId}")
     public ResponseEntity<OrderDTO> deleteDishOrderItem(@PathVariable Integer orderId, @PathVariable Integer orderItemId) {
         Order o = orderService.findOne(orderId);

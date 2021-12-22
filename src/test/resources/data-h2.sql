@@ -253,12 +253,12 @@ values
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
 values
-    ('CREATED', 'Nek bude zapeceno', 2, 1, 1, null, false);
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 1, 3, false);
 
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
 values
-    ('CREATED', 'Nek bude zapeceno', 2, 1, 2, null, false);
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 2, 3, false);
 
 insert into dish_order_item
 (status, note, amount, priority, dish_price_id, cook_id, is_deleted)
@@ -280,6 +280,10 @@ insert into dish_order_item
 values
     ('DELIVERED', 'Nek bude ljuto i zacinjeno', 2, 1, 6, 4, false);
 
+insert into dish_order_item
+(status, note, amount, priority, dish_price_id, cook_id, is_deleted)
+values
+    ('CREATED', 'Nek bude zapeceno', 2, 1, 1, null, false);
 
 
 --DRINK ORDER ITEMS
@@ -303,6 +307,10 @@ insert into drink_order_item
 values
     ('IN_PROGRESS', 'Nista', 3, 4, 8, false);
 
+insert into drink_order_item
+(status, note, amount, drink_price_id, bartender_id, is_deleted)
+values
+    ('CREATED', 'Nista', 2, 1, 8, false);
 
 --ORDERS
 insert into orders
@@ -314,6 +322,11 @@ insert into orders
 (status, creation_date_time, note, table_id, waiter_id, is_deleted)
 values
     ('NOT_FINISHED', '2021-12-06 17:55', 'Donesi vruce', 2, 6, false);
+
+insert into orders
+(status, creation_date_time, note, table_id, waiter_id, is_deleted)
+values
+  ('FINISHED', '2021-10-06 17:55', 'Donesi rapidno', 3, 6, false);
 
 --ORDER dishes
 insert into order_dishes
@@ -346,6 +359,11 @@ insert into order_dishes
 values
     (2, 6);
 
+insert into order_dishes
+(order_id, item_id)
+values
+    (3, 7);
+
 
 --ORDER drinks
 insert into order_drinks
@@ -359,6 +377,10 @@ values(2, 2);
 insert into order_drinks
 (order_id, item_id)
 values(2, 3);
+
+insert into order_drinks
+(order_id, item_id)
+values(3,5);
 
 
 
