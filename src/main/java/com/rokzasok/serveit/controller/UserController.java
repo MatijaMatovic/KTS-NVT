@@ -97,6 +97,7 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = userService.deleteOne(id);
