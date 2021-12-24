@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.IllegalUserException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
@@ -56,8 +57,10 @@ public class DishOrderItemService implements IDishOrderItemService {
     @Override
     public DishOrderItem acceptDishOrderItem(Integer id, Integer cookId, IUserService userService)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
-        DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElseThrow(
-                                                    ()-> new DishOrderItemNotFoundException("DishOrderItem Not Found"));
+        DishOrderItem dishOrderItem = this.findOne(id);
+
+        if(dishOrderItem == null)
+            throw new DishOrderItemNotFoundException("DishOrderItem Not Found");
 
         User cook = userService.findOne(cookId);
         if (cook == null)
@@ -68,14 +71,16 @@ public class DishOrderItemService implements IDishOrderItemService {
 
         dishOrderItem.setCook(cook);
         dishOrderItem.setStatus(ItemStatus.IN_PROGRESS);
-        DishOrderItem savedDishOrderItem = save(dishOrderItem);
-        return savedDishOrderItem;
+        return save(dishOrderItem);
     }
 
     @Override
     public DishOrderItem completeDishOrderItem(Integer id, Integer cookId, IUserService userService)
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
-        DishOrderItem dishOrderItem = dishOrderItemRepository.findById(id).orElseThrow(()-> new DishOrderItemNotFoundException("DishOrderItem Not Found"));
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
+        DishOrderItem dishOrderItem = this.findOne(id);
+
+        if(dishOrderItem == null)
+            throw new DishOrderItemNotFoundException("DishOrderItem Not Found");
 
         User cook = userService.findOne(cookId);
         if (cook == null)
@@ -83,6 +88,10 @@ public class DishOrderItemService implements IDishOrderItemService {
 
         if(dishOrderItem.getStatus() != ItemStatus.IN_PROGRESS)
             throw new ItemStatusSetException("Can not change item status from" + dishOrderItem.getStatus().name() + "to READY");
+
+        if((dishOrderItem.getCook() != null && !dishOrderItem.getCook().getId().equals(cookId))
+                || !cook.getRoles().get(0).getName().equals("ROLE_COOK"))
+            throw new IllegalUserException("User with id" + cookId + "can not change dish order item status with id" + id);
 
         dishOrderItem.setStatus(ItemStatus.READY);
         return save(dishOrderItem);

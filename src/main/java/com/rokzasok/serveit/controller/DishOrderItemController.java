@@ -3,6 +3,7 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
 import com.rokzasok.serveit.dto.*;
 import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.IllegalUserException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
@@ -54,15 +55,16 @@ public class DishOrderItemController {
      * authorized: COOK
      * PUT
      *
-     * @param orderItemWorkerDTO dto from frontend
+     * @param id dish order item id,
+     * @param cookId cook id
      * @return DishOrderItemDTO if successful
      */
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/complete-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+    public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody Integer cookId)
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(id, cookId, userService);
 
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
 
@@ -74,15 +76,16 @@ public class DishOrderItemController {
      * authorized: COOK
      * PUT
      *
-     * @param orderItemWorkerDTO dto from frontend
+     * @param id dish order item id,
+     * @param cookId cook id
      * @return DishOrderItemDTO if successful
      */
     @PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/accept-dish-order/{id}", consumes = "application/json")
-    public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+    public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody Integer cookId)
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
-        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, orderItemWorkerDTO.getWorkerId(), userService);
+        DishOrderItem savedDishOrderItem = dishOrderItemService.acceptDishOrderItem(id, cookId, userService);
 
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
     }
@@ -107,9 +110,9 @@ public class DishOrderItemController {
     }
 
     //------------------------------------------------------------------------------------------------------------------
-    @ExceptionHandler({ DishOrderItemNotFoundException.class, UserNotFoundException.class, ItemStatusSetException.class})
+    @ExceptionHandler({ DishOrderItemNotFoundException.class, UserNotFoundException.class, ItemStatusSetException.class,
+            IllegalUserException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Bad request")
     public void handleNotFoundException() {
-
     }
 }

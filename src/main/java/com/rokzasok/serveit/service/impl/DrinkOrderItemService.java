@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.exceptions.DrinkOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.IllegalUserException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DrinkOrderItem;
@@ -58,16 +59,22 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
     @Override
     public DrinkOrderItem completeDrinkOrderItem(Integer id, Integer workerId, IUserService userService)
-            throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
-        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id)
-                                        .orElseThrow(()-> new DrinkOrderItemNotFoundException("DrinkOrderItem Not Found"));
+            throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
+        DrinkOrderItem drinkOrderItem = this.findOne(id);
+
+        if (drinkOrderItem == null)
+            throw new DrinkOrderItemNotFoundException("DrinkOrderItem Not Found");
 
         User bartender = userService.findOne(workerId);
-        if (bartender == null )
+        if (bartender == null)
             throw new UserNotFoundException("Bartender Not Found");
 
         if(drinkOrderItem.getStatus() != ItemStatus.IN_PROGRESS)
             throw new ItemStatusSetException("Can not change item status from" + drinkOrderItem.getStatus().name() + "to READY");
+
+        if((drinkOrderItem.getBartender() != null && !drinkOrderItem.getBartender().getId().equals(workerId))
+                || !bartender.getRoles().get(0).getName().equals("ROLE_BARTENDER"))
+            throw new IllegalUserException("User with id" + workerId + "can not change drink order item status with id" + id);
 
         drinkOrderItem.setStatus(ItemStatus.READY);
         return save(drinkOrderItem);
@@ -75,8 +82,10 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
     public DrinkOrderItem acceptDrinkOrderItem(Integer id, Integer workerId, IUserService userService)
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
-        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository.findById(id)
-                .orElseThrow(()-> new DrinkOrderItemNotFoundException("DrinkOrderItem Not Found"));
+        DrinkOrderItem drinkOrderItem = this.findOne(id);
+
+        if (drinkOrderItem == null)
+            throw new DrinkOrderItemNotFoundException("DrinkOrderItem Not Found");
 
         User bartender = userService.findOne(workerId);
         if (bartender == null)

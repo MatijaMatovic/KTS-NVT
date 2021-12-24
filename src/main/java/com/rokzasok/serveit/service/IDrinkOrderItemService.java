@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.service;
 
 import com.rokzasok.serveit.exceptions.DrinkOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.IllegalUserException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
@@ -14,7 +15,7 @@ import java.util.List;
 public interface IDrinkOrderItemService extends IGenericService<DrinkOrderItem>{
     List<DrinkOrderItem> findAllByBartenderID(Integer bartenderID);
     DrinkOrderItem completeDrinkOrderItem(Integer id, Integer workerId, IUserService userService)
-            throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
+            throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException;
     DrinkOrderItem acceptDrinkOrderItem(Integer id, Integer workerId, IUserService userService)
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
 }

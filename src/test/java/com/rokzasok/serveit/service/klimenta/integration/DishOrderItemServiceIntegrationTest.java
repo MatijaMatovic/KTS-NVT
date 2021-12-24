@@ -1,19 +1,21 @@
 package com.rokzasok.serveit.service.klimenta.integration;
 
 import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
+import com.rokzasok.serveit.exceptions.IllegalUserException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
 import com.rokzasok.serveit.exceptions.UserNotFoundException;
 import com.rokzasok.serveit.model.DishOrderItem;
-import com.rokzasok.serveit.model.ItemStatus;
-import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.service.impl.DishOrderItemService;
 import com.rokzasok.serveit.service.impl.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +33,8 @@ public class DishOrderItemServiceIntegrationTest {
     private static final Integer IN_PROGRESS_DISH_ORDER_ITEM_ID = 4;
 
     private static final Integer COOK_ID = 4;
+    private static final Integer BARTENDER_ID = 8;
+    private static final Integer ILLEGAL_COOK_ID = 9;
     private static final Integer DISH_ORDER_ITEM_ID = 1;
     private static final Integer NON_EXISTING_ID = 111;
 
@@ -65,28 +69,44 @@ public class DishOrderItemServiceIntegrationTest {
 
     @Test(expected = DishOrderItemNotFoundException.class)
     public void testCompleteDishOrderItem_NonExistingDishOrderItem()
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
         dishOrderItemService.completeDishOrderItem(NON_EXISTING_ID, COOK_ID, userService);
     }
 
     @Test(expected = UserNotFoundException.class)
     public void testCompleteDishOrderItem_NonExistingCook()
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
         dishOrderItemService.completeDishOrderItem(DISH_ORDER_ITEM_ID, NON_EXISTING_ID, userService);
     }
 
     @Test(expected = ItemStatusSetException.class)
     public void testCompleteDishOrderItem_WrongItemStatus()
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
         dishOrderItemService.completeDishOrderItem(READY_DISH_ORDER_ITEM_ID, COOK_ID, userService);
     }
 
+    @Test(expected = IllegalUserException.class)
+    public void testCompleteDishOrderItem_CookWhoDidNotAcceptItemChangingStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException{
+
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(IN_PROGRESS_DISH_ORDER_ITEM_ID, ILLEGAL_COOK_ID, userService);
+    }
+
+    @Test(expected = IllegalUserException.class)
+    public void testCompleteDishOrderItem_BartenderChangingStatus()
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException{
+
+        DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(IN_PROGRESS_DISH_ORDER_ITEM_ID, BARTENDER_ID, userService);
+    }
+
     @Test
+    @Transactional
+    @Rollback(true)
     public void testCompleteDishOrderItem_CorrectDishOrderItem_CorrectCook_CorrectItemStatus()
-            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
+            throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException, IllegalUserException {
 
         DishOrderItem savedDishOrderItem = dishOrderItemService.completeDishOrderItem(IN_PROGRESS_DISH_ORDER_ITEM_ID, COOK_ID, userService);
         assertNotNull(savedDishOrderItem);
