@@ -324,6 +324,7 @@ insert into orders
 values
     ('NOT_FINISHED', '2021-12-06 17:55', 'Donesi vruce', 2, 6, false);
 
+
 --ORDER dishes
 insert into order_dishes
 (order_id, item_id)
