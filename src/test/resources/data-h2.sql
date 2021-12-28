@@ -80,6 +80,16 @@ values
      false, true);
 
 
+insert into users
+(username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
+values
+    ('sefko', 'sefkuhinje@maildrop.cc', 'CHEF',
+     '$2a$10$puaZa6SuasjiagmJJi6Dtecz7cxA3HuXJUzcqlana.SO.U22uXOJq',
+     'Sefko', 'Kuhinjic', 'Ulica 3', '123456789',
+     'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
+     false, true);
+
+
 
 --USER ROLE
 insert into user_role
@@ -113,6 +123,10 @@ values (7, 4);
 insert into user_role
 (user_id, role_id)
 values (8, 6);
+
+insert into user_role
+(user_id, role_id)
+values (9, 7);
 
 
 
