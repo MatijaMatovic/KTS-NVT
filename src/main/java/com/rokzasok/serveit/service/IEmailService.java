@@ -10,4 +10,7 @@ public interface IEmailService {
 
     @Async
     void sendPasswordChangedEmail(String emailAddress, String username) throws MailException, InterruptedException, MessagingException;
+
+    @Async
+    void sendPasswordResetEmail(String emailAddress, String passwordHash) throws MailException, InterruptedException, MessagingException;
 }
