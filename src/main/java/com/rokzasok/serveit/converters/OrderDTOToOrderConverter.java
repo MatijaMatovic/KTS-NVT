@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.converters;
 
 import com.rokzasok.serveit.dto.DishOrderItemDTO;
+import com.rokzasok.serveit.dto.DishOrderItemWithNameDTO;
 import com.rokzasok.serveit.dto.DrinkOrderItemDTO;
 import com.rokzasok.serveit.dto.OrderDTO;
 import com.rokzasok.serveit.model.*;
@@ -21,7 +22,7 @@ public class OrderDTOToOrderConverter implements Converter<OrderDTO, Order> {
     UserService userService;
 
     final
-    DishOrderItemDTOToDishOrderItem dishConverter;
+    DishOrderItemWithNameDTOToDishOrderItem dishConverter;
 
     final
     DrinkOrderItemDTOToDrinkOrderItem drinkConverter;
@@ -30,7 +31,7 @@ public class OrderDTOToOrderConverter implements Converter<OrderDTO, Order> {
     SittingTableService sittingTableService;
 
     public OrderDTOToOrderConverter
-    (UserService userService, DishOrderItemDTOToDishOrderItem dishConverter
+    (UserService userService, DishOrderItemWithNameDTOToDishOrderItem dishConverter
             , DrinkOrderItemDTOToDrinkOrderItem drinkConverter) {
         this.userService = userService;
         this.dishConverter = dishConverter;
@@ -47,10 +48,10 @@ public class OrderDTOToOrderConverter implements Converter<OrderDTO, Order> {
 
         User waiter = userService.findOne(source.getWaiterID());
 
-        SittingTable table = sittingTableService.findOne(source.getSittingTableID());
+        SittingTable table = sittingTableService.findOne(source.getSittingTable().getId());
 
         Set<DishOrderItem> dishes = new HashSet<>();
-        for (DishOrderItemDTO dish : source.getDishes()) {
+        for (DishOrderItemWithNameDTO dish : source.getDishes()) {
             dishes.add(dishConverter.convert(dish));
         }
 

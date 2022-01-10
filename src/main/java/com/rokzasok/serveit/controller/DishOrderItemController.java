@@ -77,7 +77,7 @@ public class DishOrderItemController {
      * @param orderItemWorkerDTO dto from frontend
      * @return DishOrderItemDTO if successful
      */
-    @PreAuthorize("hasRole('ROLE_COOK')")
+    //@PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/accept-dish-order/{id}", consumes = "application/json")
     public ResponseEntity<DishOrderItemDTO> acceptDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
