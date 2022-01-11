@@ -15,7 +15,8 @@ public class DrinkOrderItemToDrinkOrderItemDTO implements Converter<DrinkOrderIt
                 source.getNote(),
                 source.getAmount(),
                 source.getBartender().getId(),
-                source.getDrink().getId()
+                source.getDrink().getId(),
+                source.getDrink().getDrink().getName()
         );
     }
 }
