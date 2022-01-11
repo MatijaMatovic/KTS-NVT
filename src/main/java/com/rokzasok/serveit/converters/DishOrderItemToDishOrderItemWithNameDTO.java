@@ -4,7 +4,9 @@ import com.rokzasok.serveit.dto.DishOrderItemDTO;
 import com.rokzasok.serveit.dto.DishOrderItemWithNameDTO;
 import com.rokzasok.serveit.model.DishOrderItem;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DishOrderItemToDishOrderItemWithNameDTO implements Converter<DishOrderItem, DishOrderItemWithNameDTO> {
     @Override
     public DishOrderItemWithNameDTO convert(DishOrderItem source) {

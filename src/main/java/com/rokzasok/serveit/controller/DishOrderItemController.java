@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.controller;
 
 import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemDTO;
+import com.rokzasok.serveit.converters.DishOrderItemToDishOrderItemWithNameDTO;
 import com.rokzasok.serveit.dto.*;
 import com.rokzasok.serveit.exceptions.DishOrderItemNotFoundException;
 import com.rokzasok.serveit.exceptions.ItemStatusSetException;
@@ -24,11 +25,16 @@ import java.util.Optional;
 public class DishOrderItemController {
     final IDishOrderItemService dishOrderItemService;
     final DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO;
+    final DishOrderItemToDishOrderItemWithNameDTO dishOrderItemToDishOrderItemWithNameDTO;
     final IUserService userService;
 
-    public DishOrderItemController(IDishOrderItemService dishOrderItemService, DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO, IUserService userService) {
+    public DishOrderItemController(IDishOrderItemService dishOrderItemService,
+                                   DishOrderItemToDishOrderItemDTO dishOrderItemToDishOrderItemDTO,
+                                   DishOrderItemToDishOrderItemWithNameDTO dishOrderItemToDishOrderItemWithNameDTO,
+                                   IUserService userService) {
         this.dishOrderItemService = dishOrderItemService;
         this.dishOrderItemToDishOrderItemDTO = dishOrderItemToDishOrderItemDTO;
+        this.dishOrderItemToDishOrderItemWithNameDTO = dishOrderItemToDishOrderItemWithNameDTO;
         this.userService = userService;
     }
 
@@ -57,7 +63,7 @@ public class DishOrderItemController {
      * @param orderItemWorkerDTO dto from frontend
      * @return DishOrderItemDTO if successful
      */
-    @PreAuthorize("hasRole('ROLE_COOK')")
+    //@PreAuthorize("hasRole('ROLE_COOK')")
     @PutMapping(value = "/complete-dish-order/{id}", consumes = "application/json")
     public ResponseEntity<DishOrderItemDTO> completeDishOrderItem(@PathVariable Integer id, @RequestBody OrderItemWorkerDTO orderItemWorkerDTO)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException {
@@ -95,7 +101,7 @@ public class DishOrderItemController {
      *
      * @return list of DishOrderItemDTO
      */
-    @PreAuthorize("hasRole('ROLE_COOK')")
+    //@PreAuthorize("hasRole('ROLE_COOK')")
     @GetMapping(value = "/cook-orders/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DishOrderItemDTO>> getCookOrders(@PathVariable Integer id) {
         List<DishOrderItem> orders = dishOrderItemService.findAllByCookID(id);
