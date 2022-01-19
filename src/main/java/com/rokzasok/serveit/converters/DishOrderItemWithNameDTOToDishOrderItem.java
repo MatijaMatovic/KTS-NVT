@@ -34,7 +34,8 @@ public class DishOrderItemWithNameDTOToDishOrderItem implements Converter<DishOr
         dish.setPriority(source.getPriority());
         dish.setIsDeleted(false);
 
-        dish.setCook(userService.findOne(source.getCookId()));
+        if (source.getCookId() != null)
+            dish.setCook(userService.findOne(source.getCookId()));
         dish.setDish(dishPriceService.findOne(source.getDishPriceId()));
 
         return dish;

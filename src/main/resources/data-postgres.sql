@@ -1,3 +1,10 @@
+/* PREGLED BAZE IZ TERMINALA:
+   sudo -i -u postgres
+   psql -d jpa
+   \dt  //izlista sve tabele prisutne u bazi
+ */
+
+
 insert into ROLE (name) values ('ROLE_ADMINISTRATOR');
 insert into ROLE (name) values ('ROLE_DIRECTOR');
 insert into ROLE (name) values ('ROLE_MANAGER');
@@ -338,3 +345,27 @@ values(2, 2);
 insert into order_drinks
 (order_id, item_id)
 values(2, 3);
+
+
+--food menus
+insert into food_menu (date, is_deleted) values ('2021-11-06', false);
+insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+
+insert into food_menu_prices (menu_id, price_id) values (1, 4);
+insert into food_menu_prices (menu_id, price_id) values (1, 5);
+insert into food_menu_prices (menu_id, price_id) values (1, 6);
+
+insert into food_menu_prices (menu_id, price_id) values (2, 4);
+insert into food_menu_prices (menu_id, price_id) values (2, 5);
+insert into food_menu_prices (menu_id, price_id) values (2, 6);
+
+
+--drink menus
+insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
+insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
+
+insert into drink_menu_prices (menu_id, price_id) values (1, 1);
+insert into drink_menu_prices (menu_id, price_id) values (1, 2);
+
+insert into drink_menu_prices (menu_id, price_id) values (2, 1);
+insert into drink_menu_prices (menu_id, price_id) values (2, 2);

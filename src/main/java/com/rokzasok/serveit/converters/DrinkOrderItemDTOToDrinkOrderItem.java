@@ -32,7 +32,8 @@ public class DrinkOrderItemDTOToDrinkOrderItem implements Converter<DrinkOrderIt
         drink.setAmount(source.getAmount());
         drink.setIsDeleted(false);
 
-        drink.setBartender(userService.findOne(source.getBartenderId()));
+        if (source.getBartenderId() != null)
+            drink.setBartender(userService.findOne(source.getBartenderId()));
         drink.setDrink(drinkService.findOne(source.getDrinkPriceId()));
 
         return drink;
