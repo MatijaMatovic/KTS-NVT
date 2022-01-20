@@ -86,7 +86,37 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 1, false);
 
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 2, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 3, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 4, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 5, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 6, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 7, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 8, false);
 
 --USER ROLE
 insert into user_role
@@ -294,12 +324,12 @@ values
 insert into orders
 (status, creation_date_time, note, table_id, waiter_id, is_deleted)
 values
-    ('NOT_FINISHED', '2021-12-06 18:00', 'Brzobrzo', 1, 5, false);
+    ('NOT_FINISHED', '2022-01-06 18:00', 'Brzobrzo', 1, 5, false);
 
 insert into orders
 (status, creation_date_time, note, table_id, waiter_id, is_deleted)
 values
-    ('NOT_FINISHED', '2021-12-06 17:55', 'Donesi vruce', 2, 6, false);
+    ('NOT_FINISHED', '2022-01-06 17:55', 'Donesi vruce', 2, 6, false);
 
 --ORDER dishes
 insert into order_dishes
