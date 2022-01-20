@@ -6,7 +6,6 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 @SuppressWarnings("LombokEqualsAndHashCodeInspection")
@@ -32,10 +31,10 @@ public class DrinkMenu {
     private LocalDate date;
     private Boolean isDeleted;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(name = "drink_menu_prices",
-                joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
-                inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "menu_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "price_id", referencedColumnName = "id"))
     @ToString.Exclude
-    private Set<DrinkPrice> drinks = new HashSet<>();
+    private Set<DrinkPrice> drinks;
 }
