@@ -378,6 +378,8 @@ insert into user_salary (user_id, is_deleted, salary, salary_date) values (3, fa
 --food menus
 insert into food_menu (date, is_deleted) values ('2021-11-06', false);
 insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+--insert into food_menu (date, is_deleted) values ('2022-01-06', false);
 
 insert into food_menu_prices (menu_id, price_id) values (1, 4);
 insert into food_menu_prices (menu_id, price_id) values (1, 5);
