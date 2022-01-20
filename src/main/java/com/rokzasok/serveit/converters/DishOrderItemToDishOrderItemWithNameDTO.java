@@ -10,13 +10,15 @@ import org.springframework.stereotype.Component;
 public class DishOrderItemToDishOrderItemWithNameDTO implements Converter<DishOrderItem, DishOrderItemWithNameDTO> {
     @Override
     public DishOrderItemWithNameDTO convert(DishOrderItem source) {
+        Integer assignedCookId = source.getCook() == null ? null : source.getCook().getId();
+
         return new DishOrderItemWithNameDTO(
                 source.getId(),
                 source.getStatus(),
                 source.getNote(),
                 source.getAmount(),
                 source.getPriority(),
-                source.getCook().getId(),
+                assignedCookId,
                 source.getDish().getId(),
                 source.getDish().getDish().getName()
         );
