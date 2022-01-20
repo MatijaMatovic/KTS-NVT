@@ -6,7 +6,6 @@ import com.rokzasok.serveit.converters.DrinkMenuToDrinkMenuDTO;
 import com.rokzasok.serveit.converters.DrinkPriceDTOToDrinkPrice;
 import com.rokzasok.serveit.dto.DrinkMenuDTO;
 import com.rokzasok.serveit.dto.DrinkPriceDTO;
-import com.rokzasok.serveit.dto.NewDrinkInMenuDTO;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.model.DrinkPrice;
@@ -134,7 +133,7 @@ public class DrinkMenuController {
         DrinkMenu drinkMenu = drinkMenuService.last();
 
         if (drinkMenu == null){
-            return new ResponseEntity<>(null, HttpStatus.OK); // todo NOT_FOUND?
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         DrinkMenuDTO drinkMenuDTO = drinkMenuToDrinkMenuDTO.convert(drinkMenu);
         return new ResponseEntity<>(drinkMenuDTO, HttpStatus.OK);
@@ -189,33 +188,38 @@ public class DrinkMenuController {
      * authorized: MANAGER
      *
      * @param menuId id of the menu
-     * @param newDrinkInMenuDTO dto of the new drink with price
+     * @param drinkPriceDTO dto of the new drink with price
      * @return true if successful, false otherwise
      */
-    @PostMapping("/{menuId}/add-new-drink")
-    public ResponseEntity<Boolean> addDrink(@PathVariable Integer menuId, @RequestBody NewDrinkInMenuDTO newDrinkInMenuDTO) {
+    @PostMapping("/{menuId}/add-drink")
+    public ResponseEntity<DrinkMenuDTO> addDrink(@PathVariable Integer menuId, @RequestBody DrinkPriceDTO drinkPriceDTO) {
         DrinkMenu drinkMenu = drinkMenuService.findOne(menuId);
         if (drinkMenu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        Drink drink = drinkService.findOne(drinkPriceDTO.getDrinkId());
+        if (drink == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Drink newDrink = drinkDTOtoDrink.convert(newDrinkInMenuDTO.getDrink());
-        Drink newDrinkS = drinkService.save(newDrink);
+        for (DrinkPrice dp : drinkMenu.getDrinks()){
+            if (dp.getDrink().getId().equals(drink.getId())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
 
-        DrinkPrice newDrinkPrice = DrinkPrice.builder()
+        DrinkPrice newPrice = DrinkPrice.builder()
                 .isDeleted(false)
-                .price(newDrinkInMenuDTO.getPrice())
-                .priceDate(newDrinkInMenuDTO.getPriceDate())
-                .drink(newDrinkS)
+                .price(drinkPriceDTO.getPrice())
+                .priceDate(drinkPriceDTO.getPriceDate())
+                .drink(drink)
                 .build();
-        DrinkPrice newDrinkPriceS = drinkPriceService.save(newDrinkPrice);
+        DrinkPrice newPriceS = drinkPriceService.save(newPrice);
 
-        System.out.println(newDrinkPriceS);
-
-        drinkMenu.getDrinks().add(newDrinkPriceS);
+        drinkMenu.getDrinks().add(newPriceS);
         drinkMenuService.save(drinkMenu);
 
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(drinkMenu), HttpStatus.OK);
     }
 
     /***
@@ -226,9 +230,13 @@ public class DrinkMenuController {
      * @param oldMenuId dto of the current drink menu
      * @return new drink menu or null if unsuccessful
      */
-    @PostMapping("/{oldMenuId}/copy-create")
+    @GetMapping("/copy-create/{oldMenuId}")
     public ResponseEntity<DrinkMenuDTO> copyCreate(@PathVariable Integer oldMenuId) {
         DrinkMenu currentDrinkMenu = drinkMenuService.findOne(oldMenuId);
+
+        if (currentDrinkMenu == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         DrinkMenu newDrinkMenu = DrinkMenu.builder()
                 .isDeleted(false)
@@ -240,10 +248,9 @@ public class DrinkMenuController {
             newDrinkMenu.getDrinks().add(price);
         }
 
-        if (drinkMenuService.save(newDrinkMenu) == null)
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        DrinkMenu saved = drinkMenuService.save(newDrinkMenu);
 
-        DrinkMenuDTO newDrinkMenuDTO = drinkMenuToDrinkMenuDTO.convert(newDrinkMenu);
+        DrinkMenuDTO newDrinkMenuDTO = drinkMenuToDrinkMenuDTO.convert(saved);
 
         return new ResponseEntity<>(newDrinkMenuDTO, HttpStatus.OK);
     }
@@ -256,21 +263,31 @@ public class DrinkMenuController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/{menuId}/delete-drink/{id}")
-    public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
+    public ResponseEntity<DrinkMenuDTO> deleteDrink(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
         DrinkMenu menu = drinkMenuService.findOne(menuId);
 
-        boolean success;
-        if (menu == null){
-            success = false;
-        } else {
-            DrinkPrice oldPrice = drinkPriceService.findOne(id);
-            drinkPriceService.deleteOne(oldPrice.getId());
-
-            menu.getDrinks().remove(oldPrice);
-            drinkMenuService.save(menu);
-            success = true;
+        if (menu == null) {
+            System.out.println("error: menu = null");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(success, HttpStatus.OK);
+
+        DrinkPrice oldPrice = drinkPriceService.findOne(id);
+        if (oldPrice == null) {
+            System.out.println("error: oldPrice = null");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(menu);
+        System.out.println(menu.getDrinks());
+        boolean succ = menu.getDrinks().remove(oldPrice);
+
+        if (!succ) {
+            System.out.println("error: cannot remove old price");
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        drinkMenuService.save(menu);
+
+        return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(menu), HttpStatus.OK);
     }
 
     /***
@@ -293,17 +310,18 @@ public class DrinkMenuController {
         }
         DrinkPrice newPrice = drinkPriceDTOToDrinkPrice.convert(newPriceDTO);
         DrinkPrice newPriceS = drinkPriceService.save(newPrice);
-
-        DrinkPrice oldPrice = menu.getDrinks()
-                .stream()
-                .filter(dPrice -> dPrice.getDrink().getId().equals(newPriceDTO.getDrinkId()))
-                .collect(Collectors.toList()).get(0);
-        drinkPriceService.deleteOne(oldPrice.getId());
-
-        menu.getDrinks().remove(oldPrice);
-        menu.getDrinks().add(newPriceS);
-
+        try {
+            DrinkPrice oldPrice = menu.getDrinks()
+                    .stream()
+                    .filter(dPrice -> dPrice.getDrink().getId().equals(newPriceDTO.getDrinkId()))
+                    .collect(Collectors.toList()).get(0);
+            menu.getDrinks().remove(oldPrice);
+            menu.getDrinks().add(newPriceS);
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         drinkMenuService.save(menu);
+
         return new ResponseEntity<>(drinkMenuToDrinkMenuDTO.convert(menu), HttpStatus.OK);
     }
 }

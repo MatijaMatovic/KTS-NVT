@@ -86,6 +86,16 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
+--manager
+insert into users
+(username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
+values
+    ('manager', 'manager@maildrop.cc', 'MANAGER',
+     '$2a$10$puaZa6SuasjiagmJJi6Dtecz7cxA3HuXJUzcqlana.SO.U22uXOJq',
+     'Menadzer', 'Menadzment', 'Ulica 1', '123456789',
+     'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
+     false, true);
+
 insert into user_salary
 (salary, salary_date, user_id, is_deleted)
 values (100, '2021-08-30', 1, false);
@@ -250,7 +260,18 @@ insert into dish_price
 values
     (160, '2021-12-06', 6, false);
 
+--food menus
+insert into food_menu (date, is_deleted) values ('2021-11-06', false);
+insert into food_menu (date, is_deleted) values ('2021-12-06', false);
 
+insert into food_menu_prices (menu_id, price_id) values (1, 4);
+
+insert into food_menu_prices (menu_id, price_id) values (2, 1);
+insert into food_menu_prices (menu_id, price_id) values (2, 2);
+insert into food_menu_prices (menu_id, price_id) values (2, 3);
+insert into food_menu_prices (menu_id, price_id) values (2, 4);
+insert into food_menu_prices (menu_id, price_id) values (2, 5);
+insert into food_menu_prices (menu_id, price_id) values (2, 6);
 
 --DRINK PRICES
 insert into drink_price
@@ -301,6 +322,15 @@ insert into dish_order_item
 values
     ('DELIVERED', 'Nek bude ljuto i zacinjeno', 2, 1, 6, 4, false);
 
+--drink menus
+insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
+insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
+
+insert into drink_menu_prices (menu_id, price_id) values (1, 1);
+
+insert into drink_menu_prices (menu_id, price_id) values (2, 1);
+insert into drink_menu_prices (menu_id, price_id) values (2, 2);
+insert into drink_menu_prices (menu_id, price_id) values (2, 3);
 
 
 --DRINK ORDER ITEMS

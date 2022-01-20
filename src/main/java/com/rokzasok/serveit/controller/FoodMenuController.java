@@ -132,7 +132,7 @@ public class FoodMenuController {
         FoodMenu foodMenu = foodMenuService.last();
 
         if (foodMenu == null){
-            return new ResponseEntity<>(null, HttpStatus.OK); // todo NOT_FOUND?
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         FoodMenuDTO foodMenuDTO = foodMenuToFoodMenuDTO.convert(foodMenu);
         return new ResponseEntity<>(foodMenuDTO, HttpStatus.OK);
@@ -193,12 +193,21 @@ public class FoodMenuController {
      * @return true if successful, false otherwise
      */
     @PostMapping("/{menuId}/add-dish")
-    public ResponseEntity<Boolean> addDish(@PathVariable Integer menuId, @RequestBody DishPriceDTO dishPriceDTO) {
+    public ResponseEntity<FoodMenuDTO> addDish(@PathVariable Integer menuId, @RequestBody DishPriceDTO dishPriceDTO) {
         FoodMenu foodMenu = foodMenuService.findOne(menuId);
         if (foodMenu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         Dish dish = dishService.findOne(dishPriceDTO.getDishId());
+        if (dish == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        for (DishPrice dp : foodMenu.getDishes()){
+            if (dp.getDish().getId().equals(dishPriceDTO.getDishId())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
 
         DishPrice newPrice = DishPrice.builder()
                 .isDeleted(false)
@@ -211,7 +220,7 @@ public class FoodMenuController {
         foodMenu.getDishes().add(newPriceS);
         foodMenuService.save(foodMenu);
 
-        return new ResponseEntity<>(true, HttpStatus.OK);
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(foodMenu), HttpStatus.OK);
     }
 
     /***
@@ -222,9 +231,13 @@ public class FoodMenuController {
      * @param oldMenuId id of the current food menu
      * @return new food menu or null if unsuccessful
      */
-    @PostMapping("/{oldMenuId}/copy-create")
+    @GetMapping("/copy-create/{oldMenuId}")
     public ResponseEntity<FoodMenuDTO> copyCreate(@PathVariable Integer oldMenuId) {
         FoodMenu currentFoodMenu = foodMenuService.findOne(oldMenuId);
+
+        if (currentFoodMenu == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         FoodMenu newFoodMenu = FoodMenu.builder()
                 .isDeleted(false)
@@ -236,10 +249,9 @@ public class FoodMenuController {
             newFoodMenu.getDishes().add(price);
         }
 
-        if (foodMenuService.save(newFoodMenu) == null)
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        FoodMenu saved = foodMenuService.save(newFoodMenu);
 
-        FoodMenuDTO newFoodMenuDTO = foodMenuToFoodMenuDTO.convert(newFoodMenu);
+        FoodMenuDTO newFoodMenuDTO = foodMenuToFoodMenuDTO.convert(saved);
 
         return new ResponseEntity<>(newFoodMenuDTO, HttpStatus.OK);
     }
@@ -252,21 +264,26 @@ public class FoodMenuController {
      * @return true if successful, false otherwise
      */
     @DeleteMapping("/{menuId}/delete-dish/{id}")
-    public ResponseEntity<Boolean> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
+    public ResponseEntity<FoodMenuDTO> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
         FoodMenu menu = foodMenuService.findOne(menuId);
 
-        boolean success;
-        if (menu == null){
-            success = false;
-        } else {
-            DishPrice oldPrice = dishPriceService.findOne(id);
-            dishPriceService.deleteOne(oldPrice.getId());
+        if (menu == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-            menu.getDishes().remove(oldPrice);
-            foodMenuService.save(menu);
-            success = true;
+        DishPrice oldPrice = dishPriceService.findOne(id);
+        if (oldPrice == null)
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+        boolean succ = menu.getDishes().remove(oldPrice);
+
+        if (!succ) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(success, HttpStatus.OK);
+
+        foodMenuService.save(menu);
+
+        return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(menu), HttpStatus.OK);
     }
 
     /***
@@ -287,17 +304,22 @@ public class FoodMenuController {
         if (menu == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+        if (dishPriceService.findOne(newPriceDTO.getDishId()) == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         DishPrice newPrice = dishPriceDTOToDishPrice.convert(newPriceDTO);
         DishPrice newPriceS = dishPriceService.save(newPrice);
 
-        DishPrice oldPrice = menu.getDishes()
-                .stream()
-                .filter(dPrice -> dPrice.getDish().getId().equals(newPriceDTO.getDishId()))
-                .collect(Collectors.toList()).get(0);
-        dishPriceService.deleteOne(oldPrice.getId());
-
-        menu.getDishes().remove(oldPrice);
-        menu.getDishes().add(newPriceS);
+        try {
+            DishPrice oldPrice = menu.getDishes()
+                    .stream()
+                    .filter(dPrice -> dPrice.getDish().getId().equals(newPriceDTO.getDishId()))
+                    .collect(Collectors.toList()).get(0);
+            menu.getDishes().remove(oldPrice);
+            menu.getDishes().add(newPriceS);
+        } catch (IndexOutOfBoundsException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         foodMenuService.save(menu);
 
         return new ResponseEntity<>(foodMenuToFoodMenuDTO.convert(menu), HttpStatus.OK);
