@@ -131,7 +131,7 @@ public class OrderServiceUnitTest {
     }
 
     @Test(expected = EntityNotFoundException.class)
-    public void testDeleteOne_NonExistenOrderId() {
+    public void testDeleteOne_NonExistentOrderId() {
         Boolean success = orderService.deleteOne(NON_EXISTENT_ORDER_ID);
 
         System.out.println("You shouldn't be able to come here");
