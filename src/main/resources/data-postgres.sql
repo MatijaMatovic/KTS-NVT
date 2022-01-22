@@ -261,17 +261,17 @@ values
     (160, '2021-12-06', 6, false);
 
 --food menus
-insert into food_menu (date, is_deleted) values ('2021-11-06', false);
-insert into food_menu (date, is_deleted) values ('2021-12-06', false);
-
-insert into food_menu_prices (menu_id, price_id) values (1, 4);
-
-insert into food_menu_prices (menu_id, price_id) values (2, 1);
-insert into food_menu_prices (menu_id, price_id) values (2, 2);
-insert into food_menu_prices (menu_id, price_id) values (2, 3);
-insert into food_menu_prices (menu_id, price_id) values (2, 4);
-insert into food_menu_prices (menu_id, price_id) values (2, 5);
-insert into food_menu_prices (menu_id, price_id) values (2, 6);
+-- insert into food_menu (date, is_deleted) values ('2021-11-06', false);
+-- insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+--
+-- insert into food_menu_prices (menu_id, price_id) values (1, 4);
+--
+-- insert into food_menu_prices (menu_id, price_id) values (2, 1);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 2);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 3);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 4);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 5);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 6);
 
 --DRINK PRICES
 insert into drink_price
@@ -323,14 +323,14 @@ values
     ('DELIVERED', 'Nek bude ljuto i zacinjeno', 2, 1, 6, 4, false);
 
 --drink menus
-insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
-insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
-
-insert into drink_menu_prices (menu_id, price_id) values (1, 1);
-
-insert into drink_menu_prices (menu_id, price_id) values (2, 1);
-insert into drink_menu_prices (menu_id, price_id) values (2, 2);
-insert into drink_menu_prices (menu_id, price_id) values (2, 3);
+-- insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
+-- insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
+--
+-- insert into drink_menu_prices (menu_id, price_id) values (1, 1);
+--
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 1);
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 2);
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 3);
 
 
 --DRINK ORDER ITEMS
