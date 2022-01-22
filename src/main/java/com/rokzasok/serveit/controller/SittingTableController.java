@@ -8,6 +8,7 @@ import com.rokzasok.serveit.service.ISittingTableService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class SittingTableController {
      * @param sittingTableDTO dto from frontend
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SittingTableDTO> create(@RequestBody SittingTableDTO sittingTableDTO) {
@@ -63,6 +65,7 @@ public class SittingTableController {
      * @param id id of table
      * @return sittingTableDTO if found, null otherwise
      */
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SittingTableDTO> one(@PathVariable Integer id) {
         SittingTable sittingTable = sittingTableService.findOne(id);
@@ -82,6 +85,7 @@ public class SittingTableController {
      *
      * @return list of sittingTableDTOs
      */
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SittingTableDTO>> all() {
         List<SittingTable> sittingTables = sittingTableService.findAll();
@@ -99,6 +103,7 @@ public class SittingTableController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SittingTableDTO> edit(@PathVariable Integer id, @RequestBody SittingTableDTO sittingTableDTO) throws Exception {
@@ -117,6 +122,7 @@ public class SittingTableController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;

@@ -11,6 +11,7 @@ import com.rokzasok.serveit.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class UserSalaryController {
      *
      * @return dto of created salary
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(value = "/create", consumes = "application/json")
     public ResponseEntity<UserSalaryDTO> create(@RequestBody UserSalaryDTO userSalaryDTO) {
         User u = userService.findOne(userSalaryDTO.getUserId());
@@ -70,6 +72,7 @@ public class UserSalaryController {
      *
      * @return list of dtos of salaries
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/all")
     public ResponseEntity<List<UserSalaryDTO>> all() {
         List<UserSalary> list = userSalaryService.findAll();
@@ -84,6 +87,7 @@ public class UserSalaryController {
      *
      * @return dto of salary
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/one/{id}")
     public ResponseEntity<UserSalaryDTO> one(@PathVariable Integer id) {
         UserSalary us = userSalaryService.findOne(id);
@@ -101,6 +105,7 @@ public class UserSalaryController {
      *
      * @return dto of current salary
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/current/{id}")
     public ResponseEntity<UserSalaryDTO> current(@PathVariable Integer id) throws Exception {
         User u = userService.findOne(id);
@@ -119,6 +124,7 @@ public class UserSalaryController {
      *
      * @return list of dtos of current salaries
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/current-salaries")
     public ResponseEntity<List<UserSalaryDTO>> currentSalaries() throws Exception {
         List<User> users = userService.findAll();
