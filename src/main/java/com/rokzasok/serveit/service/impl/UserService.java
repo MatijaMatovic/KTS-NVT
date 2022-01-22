@@ -6,7 +6,6 @@ import com.rokzasok.serveit.repository.UserRepository;
 import com.rokzasok.serveit.service.IUserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.MethodNotAllowedException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -61,6 +60,8 @@ public class UserService implements IUserService {
         toEdit.setAddress(user.getAddress());
         toEdit.setImagePath(user.getImagePath());
         toEdit.setPhoneNumber(user.getPhoneNumber());
+        toEdit.setType(user.getType());
+        toEdit.setRoles(user.getRoles());
 
         return userRepository.save(toEdit);
     }
