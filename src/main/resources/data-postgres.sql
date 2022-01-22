@@ -32,7 +32,6 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
---cook
 insert into users
 (username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
 values
@@ -51,7 +50,6 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
---waiter
 insert into users
 (username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
 values
@@ -79,7 +77,6 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
---bartender
 insert into users
 (username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
 values
@@ -99,6 +96,37 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 1, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 2, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-30', 3, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 4, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 5, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-10', 6, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 7, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 8, false);
 
 --USER ROLE
 insert into user_role
@@ -180,6 +208,8 @@ values
     ('D6', 'Riblja corba', 'None', 'Riba, voda, paradajiz', 'Pomesaj i kuvaj', 100, 'Dobro ali zdravo', 'none', 40, 'SOUP', false);
 
 
+
+
 --DRINK
 insert into drink
 (code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
@@ -231,17 +261,17 @@ values
     (160, '2021-12-06', 6, false);
 
 --food menus
-insert into food_menu (date, is_deleted) values ('2021-11-06', false);
-insert into food_menu (date, is_deleted) values ('2021-12-06', false);
-
---insert into food_menu_prices (menu_id, price_id) values (1, 4);
-
---insert into food_menu_prices (menu_id, price_id) values (2, 1);
---insert into food_menu_prices (menu_id, price_id) values (2, 2);
---insert into food_menu_prices (menu_id, price_id) values (2, 3);
---insert into food_menu_prices (menu_id, price_id) values (2, 4);
---insert into food_menu_prices (menu_id, price_id) values (2, 5);
---insert into food_menu_prices (menu_id, price_id) values (2, 6);
+-- insert into food_menu (date, is_deleted) values ('2021-11-06', false);
+-- insert into food_menu (date, is_deleted) values ('2021-12-06', false);
+--
+-- insert into food_menu_prices (menu_id, price_id) values (1, 4);
+--
+-- insert into food_menu_prices (menu_id, price_id) values (2, 1);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 2);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 3);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 4);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 5);
+-- insert into food_menu_prices (menu_id, price_id) values (2, 6);
 
 --DRINK PRICES
 insert into drink_price
@@ -293,15 +323,14 @@ values
     ('DELIVERED', 'Nek bude ljuto i zacinjeno', 2, 1, 6, 4, false);
 
 --drink menus
-insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
-insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
-
---insert into drink_menu_prices (menu_id, price_id) values (1, 1);
-
---insert into drink_menu_prices (menu_id, price_id) values (2, 1);
---insert into drink_menu_prices (menu_id, price_id) values (2, 2);
---insert into drink_menu_prices (menu_id, price_id) values (2, 3);
-
+-- insert into drink_menu (date, is_deleted) values ('2021-11-06', false);
+-- insert into drink_menu (date, is_deleted) values ('2021-12-06', false);
+--
+-- insert into drink_menu_prices (menu_id, price_id) values (1, 1);
+--
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 1);
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 2);
+-- insert into drink_menu_prices (menu_id, price_id) values (2, 3);
 
 --DRINK ORDER ITEMS
 insert into drink_order_item
@@ -324,12 +353,12 @@ values
 insert into orders
 (status, creation_date_time, note, table_id, waiter_id, is_deleted)
 values
-    ('NOT_FINISHED', '2021-12-06 18:00', 'Brzobrzo', 1, 5, false);
+    ('NOT_FINISHED', '2022-01-06 18:00', 'Brzobrzo', 1, 5, false);
 
 insert into orders
 (status, creation_date_time, note, table_id, waiter_id, is_deleted)
 values
-    ('NOT_FINISHED', '2021-12-06 17:55', 'Donesi vruce', 2, 6, false);
+    ('NOT_FINISHED', '2022-01-06 17:55', 'Donesi vruce', 2, 6, false);
 
 --ORDER dishes
 insert into order_dishes

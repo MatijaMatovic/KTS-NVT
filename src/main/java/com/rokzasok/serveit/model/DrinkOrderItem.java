@@ -10,7 +10,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -24,7 +23,6 @@ import javax.persistence.*;
 public class DrinkOrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.STRING)
@@ -42,4 +40,22 @@ public class DrinkOrderItem {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "drink_price_id", referencedColumnName = "id")
     private DrinkPrice drink;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DrinkOrderItem that = (DrinkOrderItem) o;
+
+        if (this.getId() == null || that.getId() == null)
+            return false;
+
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
+    }
 }
