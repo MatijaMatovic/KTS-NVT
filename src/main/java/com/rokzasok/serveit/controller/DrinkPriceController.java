@@ -8,6 +8,7 @@ import com.rokzasok.serveit.service.IDrinkPriceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,6 +38,7 @@ public class DrinkPriceController {
      * @param drinkPriceDTO dto from frontend
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkPriceDTO> create(@RequestBody DrinkPriceDTO drinkPriceDTO) {
@@ -66,6 +68,7 @@ public class DrinkPriceController {
      * @param id id of table
      * @return drinkPriceDTO if found //todo , null otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkPriceDTO> one(@PathVariable Integer id) {
         DrinkPrice drinkPrice = drinkPriceService.findOne(id);
@@ -85,6 +88,7 @@ public class DrinkPriceController {
      *
      * @return list of drinkPriceDTOs
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DrinkPriceDTO>> all() {
         List<DrinkPrice> drinkPrices = drinkPriceService.findAll();
@@ -101,6 +105,7 @@ public class DrinkPriceController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DrinkPriceDTO> edit(@PathVariable Integer id, @RequestBody DrinkPriceDTO drinkPriceDTO) throws Exception {
@@ -128,6 +133,7 @@ public class DrinkPriceController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;

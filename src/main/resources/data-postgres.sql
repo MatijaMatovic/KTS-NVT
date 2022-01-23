@@ -332,7 +332,6 @@ values
 -- insert into drink_menu_prices (menu_id, price_id) values (2, 2);
 -- insert into drink_menu_prices (menu_id, price_id) values (2, 3);
 
-
 --DRINK ORDER ITEMS
 insert into drink_order_item
 (status, note, amount, drink_price_id, bartender_id, is_deleted)

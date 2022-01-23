@@ -3,7 +3,6 @@ package com.rokzasok.serveit.controller;
 import com.rokzasok.serveit.converters.RegistrationDTOtoUser;
 import com.rokzasok.serveit.converters.UserToUserDTO;
 import com.rokzasok.serveit.dto.LoginDTO;
-import com.rokzasok.serveit.dto.RegistrationDTO;
 import com.rokzasok.serveit.dto.UserDTO;
 import com.rokzasok.serveit.model.Role;
 import com.rokzasok.serveit.model.User;
@@ -13,14 +12,11 @@ import com.rokzasok.serveit.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.MethodNotAllowedException;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
-import java.lang.module.ResolutionException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -98,12 +94,13 @@ public class UserController {
         newUser.setPassword(userService.generateInitialPassword());
 
         //TODO: Dodati da se salje link za promenu lozinke
-        return new ResponseEntity<>(new UserDTO(userService.save(newUser)), HttpStatus.OK);
+        User userSaved = userService.save(newUser);
+        return new ResponseEntity<>(new UserDTO(userSaved), HttpStatus.OK);
     }
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMINISTRATOR')")
+    //@PreAuthorize("hasRole('ADMINISTRATOR')")
     public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
         User edited, user = new UserToUserDTO().convert(userDTO);
         try {
@@ -172,7 +169,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    //@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> allUsers = userService.findAll().stream()
                                             .map(UserDTO::new)

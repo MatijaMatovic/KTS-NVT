@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rokzasok.serveit.dto.DishPriceDTO;
+import com.rokzasok.serveit.dto.JwtAuthenticationRequest;
+import com.rokzasok.serveit.dto.UserTokenState;
 import com.rokzasok.serveit.exceptions.DishPriceNotFoundException;
 import com.rokzasok.serveit.model.DishCategory;
 import com.rokzasok.serveit.repository.DishPriceRepository;
 import com.rokzasok.serveit.service.impl.DishPriceService;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +22,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -40,8 +45,26 @@ public class DishPriceControllerIntegrationTest {
     private static final MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), StandardCharsets.UTF_8);
 
+    @Autowired
+    TestRestTemplate dispatcher;
+    private String accessToken;
+
+    @Before
+    public void login() {
+        JwtAuthenticationRequest loginDto = new JwtAuthenticationRequest(
+                "managerko","password"
+        );
+
+        ResponseEntity<UserTokenState> response = dispatcher.postForEntity("/auth/login", loginDto, UserTokenState.class);
+        UserTokenState user = response.getBody();
+        accessToken = user.getAccessToken();
+    }
+
     @Test
     public void testCreate_IdNull_ShouldReturnNewTableDTO_OK_200() throws Exception {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/create";
 
         DishPriceDTO priceDTO = DishPriceDTO.builder()
@@ -52,7 +75,7 @@ public class DishPriceControllerIntegrationTest {
                 .priceDate(LocalDate.now())
                 .dishCategory(DishCategory.BREAKFAST)
                 .build();
-        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO);
+        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO, headers);
         ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.POST, priceDTOHttpEntity, DishPriceDTO.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -69,6 +92,9 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testCreate_IdNotNull_ShouldReturnNewTableDTO_OK_200() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/create";
 
         DishPriceDTO priceDTO = DishPriceDTO.builder()
@@ -79,7 +105,7 @@ public class DishPriceControllerIntegrationTest {
                 .priceDate(LocalDate.now())
                 .dishCategory(DishCategory.BREAKFAST)
                 .build();
-        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO);
+        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO, headers);
         ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.POST, priceDTOHttpEntity, DishPriceDTO.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -96,6 +122,9 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testCreate_IdExisting_ShouldThrow_BadRequest_400() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/create";
 
         DishPriceDTO priceDTO = DishPriceDTO.builder()
@@ -106,7 +135,7 @@ public class DishPriceControllerIntegrationTest {
                 .priceDate(LocalDate.now())
                 .dishCategory(DishCategory.BREAKFAST)
                 .build();
-        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO);
+        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO, headers);
         ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.POST, priceDTOHttpEntity, DishPriceDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -114,47 +143,69 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testOne_IdExisting_ShouldReturnTableDTO_OK_200() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/one/1";
 
-        ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, null, DishPriceDTO.class);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Object> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         assertTrue(responseEntity.hasBody());
         assertNotNull(responseEntity.getBody());
 
-        assertNotNull(responseEntity.getBody().getId());
-        assertEquals(1, (int) responseEntity.getBody().getId());
-        assertEquals(1, (int) responseEntity.getBody().getDishId());
-        assertEquals((Double) 150.0, responseEntity.getBody().getPrice());
-        assertEquals(LocalDate.of(2021, 12, 6), responseEntity.getBody().getPriceDate());
+        System.out.println(responseEntity.getBody());
+        System.out.println(responseEntity.getBody().getClass());
+
+        LinkedHashMap body = (LinkedHashMap) responseEntity.getBody();
+
+        assertNotNull(body.get("id"));
+        assertEquals(1, (int) body.get("id"));
+        assertEquals(1, (int) body.get("dishId"));
+        assertEquals((Double) 150.0, body.get("price"));
+        List<Integer> dateList = (ArrayList<Integer>) body.get("priceDate");
+        assertEquals(LocalDate.of(2021, 12, 6), LocalDate.of(dateList.get(0), dateList.get(1), dateList.get(2)));
     }
 
     @Test
     public void testOne_IdNotExisting_ShouldThrow_NotFound_404() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/one/44";
 
-        ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, null, DishPriceDTO.class);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Object> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
     public void testAll_ShouldReturnList_OK_200() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/all";
 
-        ResponseEntity<DishPriceDTO[]> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, null, DishPriceDTO[].class);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        ResponseEntity<Object> responseEntity = testRestTemplate.exchange(url, HttpMethod.GET, entity, Object.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         assertTrue(responseEntity.hasBody());
         assertNotNull(responseEntity.getBody());
 
-        assertEquals(repository.findAll().size(), responseEntity.getBody().length);
+        System.out.println(responseEntity.getBody());
+        assertEquals(repository.findAll().size(), ((ArrayList<Void>)responseEntity.getBody()).size());
     }
 
     @Test
     public void testEdit_IdExisting_ShouldReturnChangedTableDTO_OK_200() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/edit/3";
 
         DishPriceDTO priceDTO = DishPriceDTO.builder()
@@ -165,7 +216,7 @@ public class DishPriceControllerIntegrationTest {
                 .priceDate(LocalDate.now())
                 .dishCategory(DishCategory.BREAKFAST)
                 .build();
-        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO);
+        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO, headers);
         ResponseEntity<DishPriceDTO> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, priceDTOHttpEntity, DishPriceDTO.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -182,6 +233,9 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testEdit_IdNotExisting_ShouldThrow_NotFound_404() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/edit/55";
 
         DishPriceDTO priceDTO = DishPriceDTO.builder()
@@ -192,7 +246,7 @@ public class DishPriceControllerIntegrationTest {
                 .priceDate(LocalDate.now())
                 .dishCategory(DishCategory.BREAKFAST)
                 .build();
-        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO);
+        HttpEntity<DishPriceDTO> priceDTOHttpEntity = new HttpEntity<>(priceDTO, headers);
         ResponseEntity<DishPriceNotFoundException> responseEntity = testRestTemplate.exchange(url, HttpMethod.PUT, priceDTOHttpEntity, DishPriceNotFoundException.class);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
@@ -200,9 +254,13 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testDelete_IdExisting_ShouldReturnTrue_OK_200() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/delete/2";
 
-        ResponseEntity<Boolean> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
+        HttpEntity entity = new HttpEntity<>(null, headers);
+        ResponseEntity<Boolean> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, entity, Boolean.class);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
@@ -214,9 +272,13 @@ public class DishPriceControllerIntegrationTest {
 
     @Test
     public void testDelete_IdNotExisting_ShouldThrow_NotFound_404() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         String url = "/api/dish-prices/delete/55";
 
-        ResponseEntity<DishPriceNotFoundException> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, null, DishPriceNotFoundException.class);
+        HttpEntity entity = new HttpEntity<>(null, headers);
+        ResponseEntity<DishPriceNotFoundException> responseEntity = testRestTemplate.exchange(url, HttpMethod.DELETE, entity, DishPriceNotFoundException.class);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }

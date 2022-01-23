@@ -14,6 +14,7 @@ import com.rokzasok.serveit.service.IFoodMenuService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -59,6 +60,7 @@ public class FoodMenuController {
      * @param foodMenuDTO dto from frontend
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> create(@RequestBody FoodMenuDTO foodMenuDTO) {
@@ -88,6 +90,7 @@ public class FoodMenuController {
      * @param id id of drink menu
      * @return FoodMenuDTO if found //todo , null otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> one(@PathVariable Integer id) {
         FoodMenu foodMenu = foodMenuService.findOne(id);
@@ -111,6 +114,7 @@ public class FoodMenuController {
      *
      * @return list of FoodMenuDTOs
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FoodMenuDTO>> all() {
         List<FoodMenu> foodMenus = foodMenuService.findAll();
@@ -127,6 +131,7 @@ public class FoodMenuController {
      *
      * @return foodMenuDTO if found, null otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/last", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> last() {
         FoodMenu foodMenu = foodMenuService.last();
@@ -146,6 +151,7 @@ public class FoodMenuController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FoodMenuDTO> edit(@PathVariable Integer id, @RequestBody FoodMenuDTO foodMenuDTO) throws Exception {
@@ -172,6 +178,7 @@ public class FoodMenuController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
@@ -192,6 +199,7 @@ public class FoodMenuController {
      * @param dishPriceDTO dto of the dish price
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping("/{menuId}/add-dish")
     public ResponseEntity<FoodMenuDTO> addDish(@PathVariable Integer menuId, @RequestBody DishPriceDTO dishPriceDTO) {
         FoodMenu foodMenu = foodMenuService.findOne(menuId);
@@ -231,6 +239,7 @@ public class FoodMenuController {
      * @param oldMenuId id of the current food menu
      * @return new food menu or null if unsuccessful
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping("/copy-create/{oldMenuId}")
     public ResponseEntity<FoodMenuDTO> copyCreate(@PathVariable Integer oldMenuId) {
         FoodMenu currentFoodMenu = foodMenuService.findOne(oldMenuId);
@@ -263,6 +272,7 @@ public class FoodMenuController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/{menuId}/delete-dish/{id}")
     public ResponseEntity<FoodMenuDTO> deleteDish(@PathVariable Integer menuId, @PathVariable Integer id) throws Exception {
         FoodMenu menu = foodMenuService.findOne(menuId);
@@ -298,6 +308,7 @@ public class FoodMenuController {
      * @param newPriceDTO dto for a new price
      * @return dto for changed menu
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping("/{menuId}/edit-dish-price")
     public ResponseEntity<FoodMenuDTO> editDishPrice(@PathVariable Integer menuId, @RequestBody DishPriceDTO newPriceDTO) throws Exception {
         FoodMenu menu = foodMenuService.findOne(menuId);
