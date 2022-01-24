@@ -207,6 +207,11 @@ insert into dish
 values
     ('D6', 'Riblja corba', 'None', 'Riba, voda, paradajiz', 'Pomesaj i kuvaj', 100, 'Dobro ali zdravo', 'none', 40, 'SOUP', false);
 
+insert into dish
+(code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
+values
+    ('D7', 'Burek sa sirom', 'None', 'Kore, sir, mast', 'Pomesaj i peci', 100, 'Dobro ali masno', 'none', 30, 'MAIN_COURSE', false);
+
 
 
 

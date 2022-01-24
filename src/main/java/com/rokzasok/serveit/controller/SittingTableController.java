@@ -85,7 +85,7 @@ public class SittingTableController {
      *
      * @return list of sittingTableDTOs
      */
-    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR') || hasRole('ROLE_WAITER')")
+    //@PreAuthorize("hasRole('ROLE_ADMINISTRATOR') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SittingTableDTO>> all() {
         List<SittingTable> sittingTables = sittingTableService.findAll();

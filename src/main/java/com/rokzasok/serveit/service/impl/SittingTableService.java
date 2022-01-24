@@ -8,7 +8,6 @@ import com.rokzasok.serveit.service.ISittingTableService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SittingTableService implements ISittingTableService {
@@ -20,10 +19,7 @@ public class SittingTableService implements ISittingTableService {
 
     @Override
     public List<SittingTable> findAll() {
-        return sittingTableRepository.findAll()
-                .stream()
-                .filter(table -> !table.getIsDeleted())
-                .collect(Collectors.toList());
+        return sittingTableRepository.findAll();
     }
 
     @Override
