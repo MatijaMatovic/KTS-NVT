@@ -40,7 +40,7 @@ public class UserSalaryController {
      *
      * @return dto of created salary
      */
-    @PreAuthorize("hasRole('ROLE_MANAGER' || 'ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMINISTRATOR')")
     @PostMapping(value = "/create", consumes = "application/json")
     public ResponseEntity<UserSalaryDTO> create(@RequestBody UserSalaryDTO userSalaryDTO) {
         User u = userService.findOne(userSalaryDTO.getUserId());
@@ -72,7 +72,7 @@ public class UserSalaryController {
      *
      * @return list of dtos of salaries
      */
-    @PreAuthorize("hasRole('ROLE_MANAGER' || 'ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMINISTRATOR')")
     @GetMapping(value = "/all")
     public ResponseEntity<List<UserSalaryDTO>> all() {
         List<UserSalary> list = userSalaryService.findAll();
@@ -87,7 +87,7 @@ public class UserSalaryController {
      *
      * @return dto of salary
      */
-    @PreAuthorize("hasRole('ROLE_MANAGER' || 'ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMINISTRATOR')")
     @GetMapping(value = "/one/{id}")
     public ResponseEntity<UserSalaryDTO> one(@PathVariable Integer id) {
         UserSalary us = userSalaryService.findOne(id);
@@ -105,7 +105,7 @@ public class UserSalaryController {
      *
      * @return dto of current salary
      */
-    @PreAuthorize("hasRole('ROLE_MANAGER' || 'ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMINISTRATOR')")
     @GetMapping(value = "/current/{id}")
     public ResponseEntity<UserSalaryDTO> current(@PathVariable Integer id) throws Exception {
         User u = userService.findOne(id);
