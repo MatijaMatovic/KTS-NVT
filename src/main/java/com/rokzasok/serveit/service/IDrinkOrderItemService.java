@@ -17,4 +17,7 @@ public interface IDrinkOrderItemService extends IGenericService<DrinkOrderItem>{
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
     DrinkOrderItem acceptDrinkOrderItem(Integer id, Integer workerId, IUserService userService)
             throws DrinkOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
+
+    DrinkOrderItem deliverDrinkOrderItem(Integer id)
+            throws DrinkOrderItemNotFoundException, ItemStatusSetException;
 }

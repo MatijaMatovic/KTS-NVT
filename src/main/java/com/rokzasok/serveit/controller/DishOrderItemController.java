@@ -93,6 +93,19 @@ public class DishOrderItemController {
         return new ResponseEntity<>(dishOrderItemToDishOrderItemDTO.convert(savedDishOrderItem), HttpStatus.OK);
     }
 
+
+    @PutMapping(value = "/deliver-dish-order/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_WAITER')")
+    public ResponseEntity<DishOrderItemWithNameDTO> deliverDishOrderItem(@PathVariable Integer id)
+            throws ItemStatusSetException, DishOrderItemNotFoundException {
+        DishOrderItem deliveredDishOrderItem = dishOrderItemService.deliverDishOrderItem(id);
+
+        return new ResponseEntity<>(
+                dishOrderItemToDishOrderItemWithNameDTO.convert(deliveredDishOrderItem),
+                HttpStatus.OK
+        );
+    }
+
     /***
      * dodaj opis
      * author: jovana-klimenta

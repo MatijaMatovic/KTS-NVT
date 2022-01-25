@@ -9,12 +9,9 @@ import com.rokzasok.serveit.model.User;
 import com.rokzasok.serveit.repository.DrinkOrderItemRepository;
 import com.rokzasok.serveit.service.IDrinkOrderItemService;
 import com.rokzasok.serveit.service.IUserService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class DrinkOrderItemService implements IDrinkOrderItemService {
@@ -87,6 +84,22 @@ public class DrinkOrderItemService implements IDrinkOrderItemService {
 
         drinkOrderItem.setBartender(bartender);
         drinkOrderItem.setStatus(ItemStatus.IN_PROGRESS);
+        return save(drinkOrderItem);
+    }
+
+    @Override
+    public DrinkOrderItem deliverDrinkOrderItem(Integer id)
+            throws DrinkOrderItemNotFoundException, ItemStatusSetException {
+        DrinkOrderItem drinkOrderItem = drinkOrderItemRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new DrinkOrderItemNotFoundException("DrinkOrderItem with given ID not found")
+                );
+
+        if (drinkOrderItem.getStatus() != ItemStatus.READY)
+            throw new ItemStatusSetException("Cannot change item status from " + drinkOrderItem.getStatus().name() + " to DELIVERED");
+
+        drinkOrderItem.setStatus(ItemStatus.DELIVERED);
         return save(drinkOrderItem);
     }
 }
