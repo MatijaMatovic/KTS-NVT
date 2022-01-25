@@ -9,7 +9,7 @@ public interface IUserService extends IGenericService<User>{
 
     String generateInitialPassword();
 
-    void renewPassword(String email, String password, String oldPasswordHash);
+    void renewPassword(String username, String password, String oldPasswordHash);
 
     boolean resetPassword(String username, String newPassword, String oldPassword);
 }
