@@ -83,11 +83,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void renewPassword(String email, String password, String oldPasswordHash) {
-        User user = userRepository.findByEmail(email).orElse(null);
+    public void renewPassword(String username, String password, String oldPasswordHash) {
+        User user = userRepository.findByUsername(username).orElse(null);
 
         if (user == null)
-            throw new EntityNotFoundException("User with given email not found!");
+            throw new EntityNotFoundException("User with given username not found!");
 
         if (!user.getPassword().equals(oldPasswordHash))
             throw new IllegalArgumentException("Incorrect password link");

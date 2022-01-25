@@ -18,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -118,13 +120,15 @@ public class UserController {
 
     @PutMapping(value = "/renew-password/{oldHash}")
     public ResponseEntity<Boolean>
-    editUserPassword(@PathVariable String oldHash, @RequestBody LoginDTO loginDTO) {
+    editUserPassword(@PathVariable String oldHash, @RequestBody LoginDTO loginDTO)
+            throws UnsupportedEncodingException {
+        oldHash = java.net.URLDecoder.decode(oldHash, StandardCharsets.UTF_8.name());
         try {
-            userService.renewPassword(loginDTO.getEmail(), loginDTO.getPassword(), oldHash);
+            userService.renewPassword(loginDTO.getUsername(), loginDTO.getPassword(), oldHash);
         }
         catch (EntityNotFoundException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "User with such email not found");
+                    "User with such username not found");
         }
         catch (IllegalArgumentException ex) {
             throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED,
