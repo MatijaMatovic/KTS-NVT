@@ -12,6 +12,7 @@ import com.rokzasok.serveit.service.impl.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,7 @@ public class OrderController {
 
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_WAITER')")
     public OrderDTO addOrder(@RequestBody OrderDTO newOrderDTO) {
         Order newOrder = orderConverter.convert(newOrderDTO);
         newOrder = orderService.save(newOrder);
@@ -61,6 +63,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<Order> orders = orderService.findAll();
         return new ResponseEntity<>(
@@ -70,6 +73,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<OrderDTO> findOrderByID(@PathVariable Integer id) {
         Order theOne = orderService.findOne(id);
         if (theOne == null)
@@ -79,6 +83,7 @@ public class OrderController {
     }
 
     @GetMapping(value = "/all-by-waiter/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_WAITER')")
     public ResponseEntity<List<OrderDTO>> getAllOrdersByWaiter(@PathVariable Integer id) {
         //TODO: Check if waiter has to be JOIN FETCH-ed
         //TODO: Check if this should only return unfinished orders
@@ -95,6 +100,7 @@ public class OrderController {
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
                     produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_WAITER')")
     public ResponseEntity<OrderDTO> editOrder(@RequestBody OrderDTO editedOrderDTO) {
         //TODO: Check later if anything should be adapted here later
         int orderId = editedOrderDTO.getId();
@@ -112,6 +118,7 @@ public class OrderController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_WAITER')")
     public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = orderService.deleteOne(id);

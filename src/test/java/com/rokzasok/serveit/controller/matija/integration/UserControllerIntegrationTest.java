@@ -51,8 +51,14 @@ public class UserControllerIntegrationTest {
     public void testGetAllUsers() {
         int initialDbSize = userService.findAll().size();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<UserDTO[]> foundUsersResponse
-                = dispatcher.getForEntity(URL_PREFIX + "/all", UserDTO[].class);
+                = dispatcher.exchange(
+                URL_PREFIX + "/all", HttpMethod.GET,
+                new HttpEntity<>(headers), UserDTO[].class
+        );
 
         UserDTO[] foundUsers = foundUsersResponse.getBody();
         assertNotNull(foundUsers);

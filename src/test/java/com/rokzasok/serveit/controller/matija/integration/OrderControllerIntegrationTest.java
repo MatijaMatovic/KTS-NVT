@@ -1,6 +1,9 @@
 package com.rokzasok.serveit.controller.matija.integration;
 
+import com.rokzasok.serveit.dto.JwtAuthenticationRequest;
 import com.rokzasok.serveit.dto.OrderDTO;
+import com.rokzasok.serveit.dto.UserDTO;
+import com.rokzasok.serveit.dto.UserTokenState;
 import com.rokzasok.serveit.model.Order;
 import com.rokzasok.serveit.service.impl.OrderService;
 import org.junit.Test;
@@ -8,10 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -33,12 +33,29 @@ public class OrderControllerIntegrationTest {
     @Autowired
     OrderService orderService;
 
+    public String login(String username, String password) {
+        ResponseEntity<UserTokenState> responseEntity
+                = dispatcher.postForEntity(
+                "/auth/login",
+                new JwtAuthenticationRequest(username,password),
+                UserTokenState.class
+        );
+        return "Bearer " + responseEntity.getBody().getAccessToken();
+    }
+
     @Test
     public void testGetAllOrders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         int dbSize = orderService.findAll().size();
 
         ResponseEntity<OrderDTO[]> allOrdersResponse
-                = dispatcher.getForEntity(URL_PREFIX + "/all", OrderDTO[].class);
+                = dispatcher.exchange(
+                URL_PREFIX + "/all", HttpMethod.GET,
+                new HttpEntity<>(headers), OrderDTO[].class
+        );
+
 
         OrderDTO[] allOrders = allOrdersResponse.getBody();
 
@@ -49,8 +66,15 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testFindOneById() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("admin", "password"));
+
         ResponseEntity<OrderDTO> foundOrderResponse
-                = dispatcher.getForEntity(URL_PREFIX + "/one/" + IN_PROGRESS_ORDER_ID, OrderDTO.class);
+                = dispatcher.exchange(
+                URL_PREFIX + "/one/" + IN_PROGRESS_ORDER_ID, HttpMethod.GET,
+                new HttpEntity<>(headers), OrderDTO.class
+        );
 
         OrderDTO foundOrder = foundOrderResponse.getBody();
 
@@ -60,9 +84,15 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testFindAllByWaiter() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         ResponseEntity<OrderDTO[]> foundOrdersResponse
-                = dispatcher.getForEntity(URL_PREFIX + "/all-by-waiter/" + WAITER_ID,
-                OrderDTO[].class);
+                = dispatcher.exchange(
+                URL_PREFIX + "/all-by-waiter/" + WAITER_ID, HttpMethod.GET,
+                new HttpEntity<>(headers), OrderDTO[].class
+        );
 
         OrderDTO[] foundOrders = foundOrdersResponse.getBody();
 
@@ -73,14 +103,23 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testFindOneById_NonExistingID() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         ResponseEntity<Object> foundOrderResponse
-                = dispatcher.getForEntity(URL_PREFIX + "/one/" + NON_EXISTENT_ORDER_ID, Object.class);
+                = dispatcher.exchange(
+                URL_PREFIX + "/one/" + NON_EXISTENT_ORDER_ID, HttpMethod.GET,
+                new HttpEntity<>(headers), Object.class
+        );
 
         assertEquals(HttpStatus.NOT_FOUND, foundOrderResponse.getStatusCode());
     }
 
     @Test
     public void testEditOrder() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         Order toEdit = orderService.findOne(IN_PROGRESS_ORDER_ID);
         OrderDTO toEditDTO = new OrderDTO(toEdit);
 
@@ -91,7 +130,7 @@ public class OrderControllerIntegrationTest {
                 = dispatcher.exchange(
                         URL_PREFIX + "/edit",
                         HttpMethod.PUT,
-                        new HttpEntity<>(toEditDTO),
+                        new HttpEntity<>(toEditDTO, headers),
                         OrderDTO.class
         );
 
@@ -103,13 +142,16 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testDeleteOrder() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         int dbSize = orderService.findAll().size();
 
         ResponseEntity<Boolean> deleteSuccess
                 = dispatcher.exchange(
                         URL_PREFIX + "/delete/" + ORDER_ID,
                         HttpMethod.DELETE,
-                        new HttpEntity<>(null),
+                        new HttpEntity<>(null, headers),
                         Boolean.class
         );
 
@@ -123,13 +165,16 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testDeleteOrder_OrderInProgress() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         int dbSize = orderService.findAll().size();
 
         ResponseEntity<Object> deleteSuccess
                 = dispatcher.exchange(
                 URL_PREFIX + "/delete/" + IN_PROGRESS_ORDER_ID,
                 HttpMethod.DELETE,
-                new HttpEntity<>(null),
+                new HttpEntity<>(null, headers),
                 Object.class
         );
 
@@ -141,13 +186,16 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testDeleteOrder_NonExistentID() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", login("potrcko", "password"));
+
         int dbSize = orderService.findAll().size();
 
         ResponseEntity<Object> deleteSuccess
                 = dispatcher.exchange(
                 URL_PREFIX + "/delete/" + NON_EXISTENT_ORDER_ID,
                 HttpMethod.DELETE,
-                new HttpEntity<>(null),
+                new HttpEntity<>(null, headers),
                 Object.class
         );
 

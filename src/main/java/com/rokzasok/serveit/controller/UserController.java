@@ -12,6 +12,7 @@ import com.rokzasok.serveit.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -42,6 +43,7 @@ public class UserController {
 
     @PostMapping(value = "/director/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<UserDTO> createCompanyDirector(@RequestBody UserDTO directorDTO) {
         User director = new UserToUserDTO().convert(directorDTO);
 
@@ -61,6 +63,7 @@ public class UserController {
 
     @PostMapping(value = "/manager/create",
         consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<UserDTO> createManager(@RequestBody UserDTO managerDTO) {
         User manager = new UserToUserDTO().convert(managerDTO);
 
@@ -80,6 +83,7 @@ public class UserController {
 
     @PostMapping(value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO newUserDTO) {
         UserType[] administrativeTypes = {
                 UserType.MANAGER, UserType.ADMINISTRATOR, UserType.DIRECTOR
@@ -100,7 +104,7 @@ public class UserController {
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
     public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
         User edited, user = new UserToUserDTO().convert(userDTO);
         try {
@@ -154,7 +158,7 @@ public class UserController {
 
 
     @DeleteMapping(value = "/delete/{id}")
-    //@PreAuthorize("hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = userService.deleteOne(id);
@@ -169,7 +173,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    //@PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> allUsers = userService.findAll().stream()
                                             .map(UserDTO::new)
