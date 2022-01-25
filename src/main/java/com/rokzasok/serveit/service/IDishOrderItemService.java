@@ -14,4 +14,6 @@ public interface IDishOrderItemService extends IGenericService<DishOrderItem> {
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
     DishOrderItem completeDishOrderItem(Integer id, Integer cookId, IUserService userService)
             throws DishOrderItemNotFoundException, UserNotFoundException, ItemStatusSetException;
+    DishOrderItem deliverDishOrderItem(Integer id)
+            throws DishOrderItemNotFoundException, ItemStatusSetException;
 }

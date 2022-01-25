@@ -87,6 +87,18 @@ public class DrinkOrderItemController {
         return new ResponseEntity<>(drinkOrderItemToDrinkOrderItemDTO.convert(savedDrinkOrderItem), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/deliver-drink-order/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_WAITER')")
+    public ResponseEntity<DrinkOrderItemDTO> deliverDrinkOrderItem(@PathVariable Integer id)
+            throws ItemStatusSetException, DrinkOrderItemNotFoundException {
+        DrinkOrderItem deliveredDrinkOrderItem = drinkOrderItemService.deliverDrinkOrderItem(id);
+
+        return new ResponseEntity<>(
+                drinkOrderItemToDrinkOrderItemDTO.convert(deliveredDrinkOrderItem),
+                HttpStatus.OK
+        );
+    }
+
     /***
      * dodaj opis
      * author: jovana-klimenta

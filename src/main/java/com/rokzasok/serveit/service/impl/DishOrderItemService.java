@@ -88,4 +88,20 @@ public class DishOrderItemService implements IDishOrderItemService {
         return save(dishOrderItem);
     }
 
+    @Override
+    public DishOrderItem deliverDishOrderItem(Integer id)
+            throws DishOrderItemNotFoundException, ItemStatusSetException {
+        DishOrderItem dishOrderItem = dishOrderItemRepository
+                .findById(id)
+                .orElseThrow(
+                        () -> new DishOrderItemNotFoundException("DishOrderItem with given ID not found")
+                );
+
+        if (dishOrderItem.getStatus() != ItemStatus.READY)
+            throw new ItemStatusSetException("Cannot change item status from " + dishOrderItem.getStatus().name() + " to DELIVERED");
+
+        dishOrderItem.setStatus(ItemStatus.DELIVERED);
+        return save(dishOrderItem);
+    }
+
 }
