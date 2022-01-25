@@ -135,7 +135,7 @@ public class OrderController {
     }
 
     //todo: Da li ovde raditi proveru da li je status NOT_FINISHED?
-    @PutMapping(value = "/deliver-order/{id}", consumes = "application/json")
+    @PutMapping(value = "/deliver-order/{id}", produces = "application/json")
     public ResponseEntity<OrderDTO> deliverOrder(@PathVariable Integer id) {
         Order order = orderService.findOne(id);
 
