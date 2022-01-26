@@ -162,7 +162,7 @@ public class UserController {
 
 
     @DeleteMapping(value = "/delete/{id}")
-    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_MANAGER'})")
     public ResponseEntity<Boolean> deleteUser(@PathVariable Integer id) throws Exception {
         try {
             Boolean deleted = userService.deleteOne(id);
@@ -177,7 +177,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_MANAGER'})")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> allUsers = userService.findAll().stream()
                                             .map(UserDTO::new)
