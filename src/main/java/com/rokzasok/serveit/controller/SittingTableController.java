@@ -51,9 +51,15 @@ public class SittingTableController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        table = sittingTableService.save(table);
+        try {
+            table = sittingTableService.save(table);
 
-        return new ResponseEntity<>(sittingTableToSittingTableDTO.convert(table), HttpStatus.OK);
+            return new ResponseEntity<>(sittingTableToSittingTableDTO.convert(table), HttpStatus.OK);
+        } catch (Exception e) {
+            // if names are same between new and existing table
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     /***
