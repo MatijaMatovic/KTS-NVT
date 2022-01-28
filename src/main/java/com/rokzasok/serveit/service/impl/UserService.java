@@ -60,6 +60,7 @@ public class UserService implements IUserService {
         toEdit.setAddress(user.getAddress());
         toEdit.setImagePath(user.getImagePath());
         toEdit.setPhoneNumber(user.getPhoneNumber());
+        toEdit.setEmail(user.getEmail());
         toEdit.setType(user.getType());
         toEdit.setRoles(user.getRoles());
 
