@@ -103,9 +103,7 @@ public class UserService implements IUserService {
         if (user == null)
             throw new EntityNotFoundException("User with given username not found");
 
-        String oldPasswordHash = passwordEncoder.encode(oldPassword);
-
-        if (!oldPasswordHash.equals(user.getPassword()))
+        if (!passwordEncoder.matches(oldPassword, user.getPassword()))
             throw new IllegalArgumentException("Old and new passwords don't match");
 
         String newPasswordHash = passwordEncoder.encode(newPassword);

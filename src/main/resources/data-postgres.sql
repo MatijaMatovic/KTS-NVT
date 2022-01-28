@@ -128,6 +128,10 @@ insert into user_salary
 (salary, salary_date, user_id, is_deleted)
 values (100, '2021-08-19', 8, false);
 
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 9, false);
+
 --USER ROLE
 insert into user_role
 (user_id, role_id)
