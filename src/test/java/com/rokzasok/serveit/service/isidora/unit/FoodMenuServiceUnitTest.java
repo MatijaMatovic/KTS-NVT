@@ -1,6 +1,7 @@
 package com.rokzasok.serveit.service.isidora.unit;
 
 import com.rokzasok.serveit.converters.FoodMenuToFoodMenuDTO;
+import com.rokzasok.serveit.exceptions.FoodMenuNotFoundException;
 import com.rokzasok.serveit.model.FoodMenu;
 import com.rokzasok.serveit.repository.FoodMenuRepository;
 import com.rokzasok.serveit.service.impl.FoodMenuService;
@@ -124,7 +125,7 @@ public class FoodMenuServiceUnitTest {
         assertNotEquals(editedFoodMenu.getId(), menu2.getId());
     }
 
-    @Test(expected = EntityNotFoundException.class)
+    @Test(expected = FoodMenuNotFoundException.class)
     public void testEdit_NonExistingID() throws Exception {
         FoodMenu editedFoodMenu = foodMenuService.edit(empty.getId(), converter.convert(empty));
 

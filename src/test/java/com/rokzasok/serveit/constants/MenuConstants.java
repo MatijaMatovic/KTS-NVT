@@ -17,7 +17,7 @@ public class MenuConstants {
 
     public static final Integer NON_EXISTING_ID = 440;
 
-    public static final int FIND_ALL_NUMBER_OF_ITEMS = 2;
+    public static final int FIND_ALL_NUMBER_OF_ITEMS = 3;
     public static final Integer ID_TO_DELETE = 2;
     public static final Integer ID_TO_EDIT1 = 1;
 }
