@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 @TestPropertySource("classpath:application-test.properties")
 public class UserControllerIntegrationTest {
     public static final String URL_PREFIX = "/api/users";
-    public static final int DB_SIZE = 8;
+    public static final int DB_SIZE = 9;
     public static final Integer ADMIN_ID = 1;
     public static final Integer WAITER_ID = 8;
     public static final Integer NON_EXISTENT_USER_ID = 420;
