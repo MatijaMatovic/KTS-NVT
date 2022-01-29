@@ -7,6 +7,7 @@ import com.rokzasok.serveit.model.Dish;
 import com.rokzasok.serveit.service.IDishService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,6 +49,7 @@ public class DishController {
      *
      * @return the dishes
      */
+    @PreAuthorize("hasRole('ROLE_CHEF')")
     @GetMapping
     public ResponseEntity<List<DishDTO>> getDishes() {
         List<Dish> dishes = dishService.findAll();
@@ -64,6 +66,7 @@ public class DishController {
      * @param id the id
      * @return the dish
      */
+    @PreAuthorize("hasRole('ROLE_CHEF')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<DishDTO> getDish(@PathVariable Integer id) {
         Dish dish = dishService.findOne(id);
@@ -81,6 +84,7 @@ public class DishController {
      * @param dishDTO the dish dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_CHEF')")
     @PostMapping(consumes = "application/json")
     public ResponseEntity<DishDTO> addNewDish(@RequestBody DishDTO dishDTO) {
         Dish dish = dishDTOtoDish.convert(dishDTO);
@@ -105,6 +109,7 @@ public class DishController {
      * @param dishDTO the dish dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_CHEF')")
     @PutMapping(consumes = "application/json")
     public ResponseEntity<DishDTO> updateDish(@RequestBody DishDTO dishDTO) {
         Dish dish = dishService.findOne(dishDTO.getId());
@@ -125,6 +130,7 @@ public class DishController {
      * @param id the id
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_CHEF')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDish(@PathVariable Integer id) {
         boolean success = false;

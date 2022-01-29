@@ -1,17 +1,19 @@
 package com.rokzasok.serveit.controller.jovan;
 
+import com.rokzasok.serveit.constants.DishConstants;
 import com.rokzasok.serveit.constants.DrinkConstants;
 import com.rokzasok.serveit.converters.DrinkToDrinkDTO;
+import com.rokzasok.serveit.dto.DishDTO;
 import com.rokzasok.serveit.dto.DrinkDTO;
+import com.rokzasok.serveit.dto.JwtAuthenticationRequest;
+import com.rokzasok.serveit.dto.UserTokenState;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,10 +30,26 @@ public class DrinkControllerIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private String accessToken;
+
+    @Before
+    public void login(){
+        JwtAuthenticationRequest chefLogin = new JwtAuthenticationRequest("managerko", "password");
+
+        ResponseEntity<UserTokenState> response = restTemplate.postForEntity("/auth/login", chefLogin, UserTokenState.class);
+        UserTokenState user = response.getBody();
+        accessToken = user != null ? user.getAccessToken() : null;
+    }
 
     @Test
-    public void testGetDrinks_ReturnsStatusOkAndListOfDrinksWithCorrectNumberOfInstances() {
-        ResponseEntity<DrinkDTO[]> responseEntity = restTemplate.getForEntity("/api/drinks/", DrinkDTO[].class);
+    public void getDrinks_ReturnsStatusOkAndListOfDrinksWithCorrectNumberOfInstances() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
+        HttpEntity request = new HttpEntity(null, headers);
+
+        ResponseEntity<DrinkDTO[]> responseEntity = restTemplate.exchange("/api/drinks/", HttpMethod.GET, request, DrinkDTO[].class);
+
 
         DrinkDTO[] drinks = responseEntity.getBody();
 
@@ -39,10 +57,16 @@ public class DrinkControllerIntegrationTest {
         assertEquals(DrinkConstants.NUMBER_OF_INSTANCES, drinks != null ? drinks.length : 0);
     }
 
+
     @Test
-    public void getDrink_CorrectID_ReturnsStatusOkAndCorrectDrinkDTO() {
+    public void getDrink_CorrectID_ReturnsStatusOkAndCorrectDrinkDto() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
+        HttpEntity request = new HttpEntity(null, headers);
         String url = String.format("/api/drinks/%d", DrinkConstants.CORRECT_ID);
-        ResponseEntity<DrinkDTO> responseEntity = restTemplate.getForEntity(url, DrinkDTO.class);
+
+        ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET, request, DrinkDTO.class);
 
         DrinkDTO drinkDTO = responseEntity.getBody();
 
@@ -53,8 +77,13 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void getDrink_WrongID_ReturnsStatusNotFound() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
+        HttpEntity request = new HttpEntity(null, headers);
+
         String url = String.format("/api/drinks/%d", DrinkConstants.WRONG_ID);
-        ResponseEntity<DrinkDTO> responseEntity = restTemplate.getForEntity(url, DrinkDTO.class);
+        ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange(url, HttpMethod.GET, request, DrinkDTO.class);
 
         DrinkDTO drinkDTO = responseEntity.getBody();
 
@@ -63,9 +92,15 @@ public class DrinkControllerIntegrationTest {
     }
 
     @Test
-    public void addNewDrink_NewIdDrink_ReturnsStatusOkAndCorrectDrinkDto() {
+    public void addNewDrink_NewIdDrinkReturnsStatusOkAndCorrectDrinkDto() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NEW_ID_DRINK);
-        ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
+
+        HttpEntity<DrinkDTO> request = new HttpEntity<>(drinkDTO, headers);
+
+        ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks/", HttpMethod.POST, request, DrinkDTO.class);
 
         DrinkDTO savedDrinkDTO = responseEntity.getBody();
 
@@ -77,15 +112,27 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void addNewDrink_ExistingIdDrink_ReturnsStatusBadRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.EXISTING_ID_DRINK);
-        ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
+
+        HttpEntity<DrinkDTO> request = new HttpEntity<>(drinkDTO, headers);
+
+        ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks/", HttpMethod.POST, request, DrinkDTO.class);
+
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 
     @Test
     public void addNewDrink_NoIdDrink_ReturnsStatusOkAndCorrectDrinkDto() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NO_ID_DRINK);
-        ResponseEntity<DrinkDTO> responseEntity = restTemplate.postForEntity("/api/drinks/", drinkDTO, DrinkDTO.class);
+
+        HttpEntity<DrinkDTO> request = new HttpEntity<>(drinkDTO, headers);
+
+        ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks/", HttpMethod.POST, request, DrinkDTO.class);
 
         DrinkDTO savedDrinkDTO = responseEntity.getBody();
 
@@ -98,8 +145,12 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void updateDrink_ExistingDrink_ReturnsStatusOkAndCorrectDrinkDto() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.EXISTING_ID_DRINK);
-        HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO);
+        HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO, headers);
+
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks", HttpMethod.PUT, existingDrinkDTO, DrinkDTO.class);
 
         DrinkDTO updatedDrinkDTO = responseEntity.getBody();
@@ -112,8 +163,11 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void updateDrink_WrongDrink_ReturnsStatusBadRequest() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+
         DrinkDTO drinkDTO = drinkToDrinkDTO.convert(DrinkConstants.NEW_ID_DRINK);
-        HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO);
+        HttpEntity<DrinkDTO> existingDrinkDTO = new HttpEntity<>(drinkDTO, headers);
         ResponseEntity<DrinkDTO> responseEntity = restTemplate.exchange("/api/drinks", HttpMethod.PUT, existingDrinkDTO, DrinkDTO.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
@@ -121,8 +175,12 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void deleteDrink_ExistingID_ReturnsStatusOkAndTrue() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity request = new HttpEntity(null, headers);
+
         String url = String.format("/api/drinks/%d", DrinkConstants.CORRECT_ID);
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, request, Boolean.class);
         Boolean success = responseEntity.getBody();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
@@ -131,8 +189,13 @@ public class DrinkControllerIntegrationTest {
 
     @Test
     public void deleteDrink_WrongID_ReturnsStatusBadRequestAndFalse() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.accessToken);
+        HttpEntity request = new HttpEntity(null, headers);
+
+
         String url = String.format("/api/drinks/%d", DrinkConstants.WRONG_ID);
-        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, null, Boolean.class);
+        ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.DELETE, request, Boolean.class);
 
         Boolean success = responseEntity.getBody();
 

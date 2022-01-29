@@ -7,6 +7,7 @@ import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.service.IDrinkService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class DrinkController {
      *
      * @return the drinks
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping
     public ResponseEntity<List<DrinkDTO>> getDrinks() {
         List<Drink> drinks = drinkService.findAll();
@@ -65,6 +67,7 @@ public class DrinkController {
      * @param id the id
      * @return the drink
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<DrinkDTO> getDrink(@PathVariable Integer id) {
         Drink drink = drinkService.findOne(id);
@@ -82,6 +85,7 @@ public class DrinkController {
      * @param drinkDTO the drink dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(consumes = "application/json")
     public ResponseEntity<DrinkDTO> addNewDrink(@RequestBody DrinkDTO drinkDTO) {
         Drink drink = drinkDTOtoDrink.convert(drinkDTO);
@@ -106,6 +110,7 @@ public class DrinkController {
      * @param drinkDTO the drink dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping(consumes = "application/json")
     public ResponseEntity<DrinkDTO> updateDrink(@RequestBody DrinkDTO drinkDTO) {
         Drink drink = drinkService.findOne(drinkDTO.getId());
@@ -126,6 +131,7 @@ public class DrinkController {
      * @param id the id
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) {
         boolean success = false;
