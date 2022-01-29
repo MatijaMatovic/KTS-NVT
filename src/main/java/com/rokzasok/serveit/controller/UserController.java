@@ -85,7 +85,7 @@ public class UserController {
 
     @PostMapping(value = "/create",
             consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_MANAGER'})")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO newUserDTO) {
         UserType[] administrativeTypes = {
                 UserType.MANAGER, UserType.ADMINISTRATOR, UserType.DIRECTOR
@@ -106,7 +106,7 @@ public class UserController {
 
     @PutMapping(value = "/edit", consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_USER'})")
+    @PreAuthorize("hasAnyRole({'ROLE_ADMINISTRATOR', 'ROLE_MANAGER'})")
     public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
         User edited, user = new UserToUserDTO().convert(userDTO);
         try {
