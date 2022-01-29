@@ -27,6 +27,9 @@ public class DrinkMenuToDrinkMenuDTO implements Converter<DrinkMenu, DrinkMenuDT
                 .date(source.getDate())
                 .drinks(new ArrayList<>())
                 .build();
+        if (source.getDrinks() == null) return dto;
+        int sizeOfSet = source.getDrinks().size();
+        if (sizeOfSet == 0) return dto;
         for (DrinkPrice dp : source.getDrinks()){
             dto.getDrinks().add(drinkPriceToDrinkPriceDTO.convert(dp));
         }

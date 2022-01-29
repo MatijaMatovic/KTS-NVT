@@ -13,6 +13,9 @@ public class UserToUserDTO implements Converter<UserDTO, User> {
     @Override
     public User convert(UserDTO source) {
         User user = new User();
+        user.setId(source.getId());
+        user.setUsername(source.getUsername());
+        user.setEmail(source.getEmail());
         user.setFirstName(source.getFirstName());
         user.setLastName(source.getLastName());
         user.setAddress(source.getAddress());
@@ -42,7 +45,7 @@ public class UserToUserDTO implements Converter<UserDTO, User> {
                 roles.add(new Role("ROLE_DIRECTOR"));
                 break;
             case ADMINISTRATOR:
-                roles.add(new Role("ROLE_ADMIN"));
+                roles.add(new Role("ROLE_ADMINISTRATOR"));
                 break;
         }
         user.setRoles(roles);

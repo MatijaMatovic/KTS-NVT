@@ -5,10 +5,9 @@ import com.rokzasok.serveit.converters.DrinkToDrinkDTO;
 import com.rokzasok.serveit.dto.DrinkDTO;
 import com.rokzasok.serveit.model.Drink;
 import com.rokzasok.serveit.service.IDrinkService;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +50,7 @@ public class DrinkController {
      *
      * @return the drinks
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping
     public ResponseEntity<List<DrinkDTO>> getDrinks() {
         List<Drink> drinks = drinkService.findAll();
@@ -67,6 +67,7 @@ public class DrinkController {
      * @param id the id
      * @return the drink
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @GetMapping(value = "/{id}")
     public ResponseEntity<DrinkDTO> getDrink(@PathVariable Integer id) {
         Drink drink = drinkService.findOne(id);
@@ -84,9 +85,20 @@ public class DrinkController {
      * @param drinkDTO the drink dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<DrinkDTO> saveDrink(@RequestBody DrinkDTO drinkDTO) {
+    public ResponseEntity<DrinkDTO> addNewDrink(@RequestBody DrinkDTO drinkDTO) {
         Drink drink = drinkDTOtoDrink.convert(drinkDTO);
+        boolean exists = false;
+
+        if (drinkDTO.getId() != null) {
+            exists = drinkService.findOne(drinkDTO.getId()) != null;
+        }
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         drink = drinkService.save(drink);
 
         return new ResponseEntity<>(drinkToDrinkDTO.convert(drink), HttpStatus.OK);
@@ -98,6 +110,7 @@ public class DrinkController {
      * @param drinkDTO the drink dto
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping(consumes = "application/json")
     public ResponseEntity<DrinkDTO> updateDrink(@RequestBody DrinkDTO drinkDTO) {
         Drink drink = drinkService.findOne(drinkDTO.getId());
@@ -118,9 +131,17 @@ public class DrinkController {
      * @param id the id
      * @return the response entity
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<Boolean> deleteDrink(@PathVariable Integer id) {
-        return new ResponseEntity<>(drinkService.deleteOne(id), HttpStatus.OK);
+        boolean success = false;
+        try {
+            success = drinkService.deleteOne(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return new ResponseEntity<>(success, success ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
 

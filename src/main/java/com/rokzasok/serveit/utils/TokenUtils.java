@@ -1,17 +1,16 @@
 package com.rokzasok.serveit.utils;
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
 
 import com.rokzasok.serveit.model.User;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @Component
 public class TokenUtils {
@@ -25,7 +24,7 @@ public class TokenUtils {
     public String SECRET;
 
     // Period vazenja tokena - 30 minuta
-    @Value("1800000")
+    @Value("3600000")
     private int EXPIRES_IN;
 
     // Naziv headera kroz koji ce se prosledjivati JWT u komunikaciji server-klijent
@@ -53,13 +52,14 @@ public class TokenUtils {
      * @param username Korisničko ime korisnika kojem se token izdaje
      * @return JWT token
      */
-    public String generateToken(String username,String role) {
+    public String generateToken(String username, String role, Integer id) {
         return Jwts.builder()
                 .setIssuer(APP_NAME)
                 .setSubject(username)
                 .setAudience(generateAudience())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate()).claim("role", role)
+                .setExpiration(generateExpirationDate()).claim("id", id)
                 .signWith(SIGNATURE_ALGORITHM, SECRET).compact();
 
 

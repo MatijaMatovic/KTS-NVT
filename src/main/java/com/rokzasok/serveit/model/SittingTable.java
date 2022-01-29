@@ -27,7 +27,7 @@ public class SittingTable {
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false) // unique = true
     private String name;
 
     private Integer x;

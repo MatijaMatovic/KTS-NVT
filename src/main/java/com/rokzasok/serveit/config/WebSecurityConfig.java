@@ -86,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // samo korisnik koji ima rolu 'ADMIN', navodimo na sledeci nacin:
                 // .antMatchers("/admin").hasRole("ADMIN") ili .antMatchers("/admin").hasAuthority("ROLE_ADMIN")
 
-                .antMatchers("/api/dish-order-items").hasAuthority("ROLE_COOK")
+                //.antMatchers("/api/dish-order-items").hasAuthority("ROLE_COOK")
                 // za svaki drugi zahtev korisnik mora biti autentifikovan
                 .anyRequest().permitAll().and()
                 //.anyRequest().authenticated().and()

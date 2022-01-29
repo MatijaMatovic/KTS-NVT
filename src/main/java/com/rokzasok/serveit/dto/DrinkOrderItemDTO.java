@@ -27,4 +27,5 @@ public class DrinkOrderItemDTO {
     private Integer bartenderId;
 
     private Integer drinkPriceId;
+    private String drinkName;
 }

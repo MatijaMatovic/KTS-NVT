@@ -1,9 +1,8 @@
 package com.rokzasok.serveit.dto;
 
-import com.rokzasok.serveit.model.DrinkCategory;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -17,5 +16,5 @@ public class NewDrinkInMenuDTO {
     private DrinkDTO drink;
     private Integer id; // for price
     private Double price;
-    private Date priceDate;
+    private LocalDate priceDate;
 }

@@ -1,7 +1,6 @@
 package com.rokzasok.serveit.converters;
 
 import com.rokzasok.serveit.dto.DrinkMenuDTO;
-import com.rokzasok.serveit.dto.DrinkPriceDTO;
 import com.rokzasok.serveit.model.DrinkMenu;
 import com.rokzasok.serveit.service.IDrinkPriceService;
 import org.springframework.core.convert.converter.Converter;
@@ -24,16 +23,15 @@ public class DrinkMenuDTOToDrinkMenu implements Converter<DrinkMenuDTO, DrinkMen
 
     @Override
     public DrinkMenu convert(DrinkMenuDTO source) {
-        DrinkMenu drinkMenu = DrinkMenu.builder()
+        /*for (DrinkPriceDTO dp : source.getDrinks()){
+            drinkMenu.getDrinks().add(drinkPriceService.findOne(dp.getId()));
+        }*/ // todo what
+        return DrinkMenu.builder()
                 .id(source.getId())
                 .date(source.getDate())
                 .drinks(new HashSet<>())
                 .isDeleted(false)
                 .build();
-        /*for (DrinkPriceDTO dp : source.getDrinks()){
-            drinkMenu.getDrinks().add(drinkPriceService.findOne(dp.getId()));
-        }*/
-        return drinkMenu;
     }
 
     public List<DrinkMenu> convert(List<DrinkMenuDTO> source) {

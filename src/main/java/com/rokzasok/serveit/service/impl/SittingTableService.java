@@ -1,14 +1,13 @@
 package com.rokzasok.serveit.service.impl;
 
 import com.rokzasok.serveit.dto.SittingTableDTO;
+import com.rokzasok.serveit.exceptions.SittingTableNotFoundException;
 import com.rokzasok.serveit.model.SittingTable;
 import com.rokzasok.serveit.repository.SittingTableRepository;
 import com.rokzasok.serveit.service.ISittingTableService;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SittingTableService implements ISittingTableService {
@@ -20,10 +19,7 @@ public class SittingTableService implements ISittingTableService {
 
     @Override
     public List<SittingTable> findAll() {
-        return sittingTableRepository.findAll()
-                .stream()
-                .filter(table -> !table.getIsDeleted())
-                .collect(Collectors.toList());
+        return sittingTableRepository.findAll();
     }
 
     @Override
@@ -37,19 +33,15 @@ public class SittingTableService implements ISittingTableService {
     }
 
     @Override
-    public Boolean deleteOne(Integer id) throws EntityNotFoundException {
-        SittingTable toDelete = findOne(id);
-        if (toDelete == null)
-            throw new EntityNotFoundException("Table with given ID not found");
+    public Boolean deleteOne(Integer id) throws Exception {
+        SittingTable toDelete = sittingTableRepository.findById(id).orElseThrow(() -> new SittingTableNotFoundException("Table with provided ID does not exist"));
         sittingTableRepository.delete(toDelete);
         return true;
     }
 
     @Override
-    public SittingTable edit(Integer id, SittingTableDTO sittingTableDTO) throws EntityNotFoundException {
-        SittingTable toEdit = findOne(id);
-        if (toEdit == null)
-            throw new EntityNotFoundException("Table with given ID not found");
+    public SittingTable edit(Integer id, SittingTableDTO sittingTableDTO) throws Exception {
+        SittingTable toEdit = sittingTableRepository.findById(id).orElseThrow(() -> new SittingTableNotFoundException("Table with provided ID does not exist"));
         toEdit.setName(sittingTableDTO.getName());
         toEdit.setX(sittingTableDTO.getX());
         toEdit.setY(sittingTableDTO.getY());

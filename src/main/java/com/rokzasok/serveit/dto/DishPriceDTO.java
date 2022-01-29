@@ -2,7 +2,8 @@ package com.rokzasok.serveit.dto;
 
 import com.rokzasok.serveit.model.DishCategory;
 import lombok.*;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class DishPriceDTO {
     @EqualsAndHashCode.Include
     private Integer id;
     private Double price;
-    private Date priceDate;
+    private LocalDate priceDate;
 
     private Integer dishId;
     private String dishCode;

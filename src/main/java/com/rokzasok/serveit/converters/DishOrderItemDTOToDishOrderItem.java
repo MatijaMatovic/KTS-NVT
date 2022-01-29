@@ -26,6 +26,7 @@ public class DishOrderItemDTOToDishOrderItem implements Converter<DishOrderItemD
     public DishOrderItem convert(DishOrderItemDTO source) {
         DishOrderItem dish = new DishOrderItem();
         //TODO: check dish.setId(source.getId());
+        dish.setId(source.getId());
         dish.setStatus(source.getStatus());
         dish.setNote(source.getNote());
         dish.setAmount(source.getAmount());

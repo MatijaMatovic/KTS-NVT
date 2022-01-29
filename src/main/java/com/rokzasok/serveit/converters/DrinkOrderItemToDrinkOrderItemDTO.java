@@ -9,13 +9,16 @@ import org.springframework.stereotype.Component;
 public class DrinkOrderItemToDrinkOrderItemDTO implements Converter<DrinkOrderItem, DrinkOrderItemDTO> {
     @Override
     public DrinkOrderItemDTO convert(DrinkOrderItem source) {
+        Integer assignedBartenderName
+                = source.getBartender() == null ? null : source.getBartender().getId();
         return new DrinkOrderItemDTO(
                 source.getId(),
                 source.getStatus(),
                 source.getNote(),
                 source.getAmount(),
-                source.getBartender().getId(),
-                source.getDrink().getId()
+                assignedBartenderName,
+                source.getDrink().getId(),
+                source.getDrink().getDrink().getName()
         );
     }
 }

@@ -8,6 +8,7 @@ import com.rokzasok.serveit.service.IDishPriceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -37,15 +38,25 @@ public class DishPriceController {
      * @param dishPriceDTO dto from frontend
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> create(@RequestBody DishPriceDTO dishPriceDTO) {
+    public ResponseEntity<DishPriceDTO> create(@RequestBody DishPriceDTO dishPriceDTO) {
         DishPrice dishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
-        DishPrice dishPriceSaved = dishPriceService.save(dishPrice);
-        if (dishPriceSaved == null) {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+
+        boolean exists = false;
+
+        if (dishPriceDTO.getId() != null) {
+            exists = dishPriceService.findOne(dishPriceDTO.getId()) != null;
         }
-        return new ResponseEntity<>(true, HttpStatus.OK);
+
+        if (exists) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        dishPrice = dishPriceService.save(dishPrice);
+
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
     }
 
     /***
@@ -57,16 +68,16 @@ public class DishPriceController {
      * @param id id of table
      * @return dishPriceDTO if found //todo , null otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/one/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DishPriceDTO> one(@PathVariable Integer id) {
         DishPrice dishPrice = dishPriceService.findOne(id);
 
         if (dishPrice == null){
-            System.out.println("Dish menu je null");
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        DishPriceDTO dishPriceDTO = dishPriceToDishPriceDTO.convert(dishPrice);
-        return new ResponseEntity<>(dishPriceDTO, HttpStatus.OK);
+
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
     }
 
     /***
@@ -76,7 +87,9 @@ public class DishPriceController {
      * READ (ALL)
      *
      * @return list of dishPriceDTOs
+     *
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER') || hasRole('ROLE_WAITER')")
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DishPriceDTO>> all() {
         List<DishPrice> dishPrices = dishPriceService.findAll();
@@ -93,19 +106,26 @@ public class DishPriceController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DishPriceDTO> edit(@PathVariable Integer id, @RequestBody DishPriceDTO dishPriceDTO) {
-        DishPrice dishPrice = dishPriceService.findOne(dishPriceDTO.getId());
+    public ResponseEntity<DishPriceDTO> edit(@PathVariable Integer id, @RequestBody DishPriceDTO dishPriceDTO) throws Exception {
+//        DishPrice dishPrice = dishPriceService.findOne(dishPriceDTO.getId());
+//
+//        if (dishPrice == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        DishPrice newDishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
+//
+//        dishPrice = dishPriceService.save(newDishPrice);
+//        dishPriceService.deleteOne(id);
+//        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
 
-        if (dishPrice == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        DishPrice dp;
+        dp = dishPriceService.edit(id, dishPriceDTO);
 
-        DishPrice newDishPrice = dishPriceDTOToDishPrice.convert(dishPriceDTO);
-
-        dishPrice = dishPriceService.save(newDishPrice);
-        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dishPrice), HttpStatus.OK);
+        return new ResponseEntity<>(dishPriceToDishPriceDTO.convert(dp), HttpStatus.OK);
     }
 
     /***
@@ -116,8 +136,9 @@ public class DishPriceController {
      *
      * @return true if successful, false otherwise
      */
+    @PreAuthorize("hasRole('ROLE_MANAGER')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) throws Exception {
         Boolean success;
         try {
             success = dishPriceService.deleteOne(id);
