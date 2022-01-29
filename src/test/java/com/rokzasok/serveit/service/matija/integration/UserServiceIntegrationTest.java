@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class UserServiceIntegrationTest {
-    public static final int DB_USER_COUNT = 8;
+    public static final int DB_USER_COUNT = 9;
     public static final Integer USER_ID = 1;
     public static final Integer OTHER_USER_ID = 8;
     public static final Integer NON_EXISTENT_USER_ID = 420;
