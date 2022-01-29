@@ -371,7 +371,7 @@ public class EmailService implements IEmailService {
         helper.setTo(emailAddress);
         helper.setSubject("ServeIt: Password change link");
 
-        String passwordLink = String.format("http://localhost:4200/change-password/%s", passwordHash);
+        String passwordLink = String.format("http://localhost:4200/user-actions/change-password/%s", passwordHash);
         String messageText = "";
         messageText += "You have successfully signed up! Please change your password at the following link\n";
         messageText += String.format("\t%s",passwordLink);
