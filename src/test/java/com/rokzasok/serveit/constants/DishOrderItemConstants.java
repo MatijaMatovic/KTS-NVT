@@ -16,7 +16,7 @@ public class DishOrderItemConstants {
 
     public static final Integer TEST_COOK_ID = 3;
     public static final Integer WRONG_TEST_COOK_ID = -1;
-    public static final int NUMBER_OF_ITEM_ORDERS_FOR_TEST_COOK_ID = 3;
+    public static final int NUMBER_OF_ITEM_ORDERS_FOR_TEST_COOK_ID = 1;
 
     public static final Integer ID_WITH_READY_STATUS = 5;
 

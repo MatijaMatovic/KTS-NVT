@@ -31,11 +31,11 @@ public class DrinkOrderItemServiceIntegrationTest {
     private static final DrinkOrderItem existingIdDrinkOrderItem = new DrinkOrderItem(1, ItemStatus.CREATED, "Hitno", 1, false, null, null);
     private static final DrinkOrderItem noIdDrinkOrderItem = new DrinkOrderItem(null, ItemStatus.CREATED, "Hitno", 1, false, null, null);
 
-    private static final int numberOfInstances = 3;
+    private static final int numberOfInstances = 4;
     
     private static final Integer testBartenderID = 8;
     private static final Integer wrongTestBartenderID = -1;
-    private static final int numberOfItemOrdersForTestBartenderID = 3;
+    private static final int numberOfItemOrdersForTestBartenderID = 4;
     
     @Autowired
     private DrinkOrderItemService drinkOrderItemService;
