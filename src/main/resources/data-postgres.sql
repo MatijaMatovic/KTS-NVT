@@ -26,7 +26,7 @@ values
 insert into users
 (username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
 values
-    ('managerko', 'managerko@maildrop.cc', 'ADMINISTRATOR',
+    ('managerko', 'managerko@maildrop.cc', 'MANAGER',
      '$2a$10$puaZa6SuasjiagmJJi6Dtecz7cxA3HuXJUzcqlana.SO.U22uXOJq',
      'Manager', 'Manageric', 'Ulica 2', '123456789',
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
@@ -96,6 +96,26 @@ values
      'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
      false, true);
 
+--director
+insert into users
+(username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
+values
+ ('director', 'director@maildrop.cc', 'DIRECTOR',
+  '$2a$10$puaZa6SuasjiagmJJi6Dtecz7cxA3HuXJUzcqlana.SO.U22uXOJq',
+  'Matija', 'Matovic', 'Ulica 1', '123456789',
+  'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
+  false, true);
+
+  --chef
+  insert into users
+  (username, email, type, password, first_name, last_name, address, phone_number, image_path, is_deleted, enabled)
+  values
+   ('chef', 'chef@maildrop.cc', 'CHEF',
+    '$2a$10$puaZa6SuasjiagmJJi6Dtecz7cxA3HuXJUzcqlana.SO.U22uXOJq',
+    'Jovana', 'Klimenta', 'Ulica 3', '123456798',
+    'https://images.generated.photos/D3P-rBhbbbYX9Bg2gB9GE4Yl3_DHXbM4AE-YbNdL1jI/rs:fit:512:512/wm:0.95:sowe:18:18:0.33/czM6Ly9pY29uczgu/Z3Bob3Rvcy1wcm9k/LmNvbmQvMTcwN2Ew/NjYtY2JhZC00YTc4/LTg1ODktNDcwZDgx/MmJhOWQ0LmpwZw.jpg',
+    false, true);
+
 insert into user_salary
 (salary, salary_date, user_id, is_deleted)
 values (100, '2021-08-30', 1, false);
@@ -132,6 +152,15 @@ insert into user_salary
 (salary, salary_date, user_id, is_deleted)
 values (100, '2021-08-19', 9, false);
 
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (300, '2021-08-19', 10, false);
+
+insert into user_salary
+(salary, salary_date, user_id, is_deleted)
+values (100, '2021-08-19', 11, false);
+
+
 --USER ROLE
 insert into user_role
 (user_id, role_id)
@@ -165,6 +194,18 @@ insert into user_role
 (user_id, role_id)
 values (8, 6);
 
+insert into user_role
+(user_id, role_id)
+values (9, 3);
+
+insert into user_role
+(user_id, role_id)
+values (10, 2);
+
+insert into user_role
+(user_id, role_id)
+values (11, 7);
+
 
 
 --SITTING TABLES
@@ -184,37 +225,37 @@ values
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D1', 'Burek', 'None', 'Kore, meso, luk', 'Pomesaj i peci', 100, 'Dobro ali masno', 'none', 30, 'MAIN_COURSE', false);
+    ('D1', 'Burek', 'None', 'Kore, meso, luk', 'Pomesaj i peci', 100, 'Dobro ali masno', 'https://www.recepti.com/img/recipe/32602-preliveni-burek-s-mesom_zoom.jpg', 30, 'MAIN_COURSE', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D2', 'Pita', 'None', 'Kore, sir, luk', 'Pomesaj i peci', 100, 'Dobro ali masno', 'none', 30, 'MAIN_COURSE', false);
+    ('D2', 'Pita', 'None', 'Kore, sir, luk', 'Pomesaj i peci', 100, 'Dobro ali masno', 'https://staticstvarukusa.mondo.rs/Picture/22542/png/Mekana-pita-sa-sirom-spremna-za-pola-sata-VIDEO', 30, 'MAIN_COURSE', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D3', 'Kroasan', 'None', 'Testo, krem, secer', 'Pomesaj i peci', 100, 'Dobro ali secer', 'none', 20, 'DESSERT', false);
+    ('D3', 'Kroasan', 'None', 'Testo, krem, secer', 'Pomesaj i peci', 100, 'Dobro ali secer', 'https://i1.wp.com/www.soibiberblog.com/wp-content/uploads/2019/04/Doma%C4%87i-kroasani-10-1.jpg?resize=665%2C444', 20, 'DESSERT', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D4', 'Rol virsla', 'None', 'Rol, Virsla', 'Pomesaj i peci', 100, 'Dobro ali hemija', 'none', 30, 'BREAKFAST', false);
+    ('D4', 'Rol virsla', 'None', 'Rol, Virsla', 'Pomesaj i peci', 100, 'Dobro ali hemija', 'https://www.recepti.com/img/recipe/17107-rol-virsle.jpg', 30, 'BREAKFAST', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D5', 'Zu-Zu', 'None', 'Kore, pecivo', 'Pomesaj i peci', 100, 'Dobro bezukusno', 'none', 15, 'APPETIZER', false);
+    ('D5', 'Zu-Zu', 'None', 'Kore, pecivo', 'Pomesaj i peci', 100, 'Dobro bezukusno', 'https://podravkaiovariations.azureedge.net/ad2b314c-6110-11eb-bc64-0242ac12002c/v/f2b1f6a6-64bc-11eb-b6c2-0242ac130010/1024x768-f2b21802-64bc-11eb-a115-0242ac130010.webp', 15, 'APPETIZER', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D6', 'Riblja corba', 'None', 'Riba, voda, paradajiz', 'Pomesaj i kuvaj', 100, 'Dobro ali zdravo', 'none', 40, 'SOUP', false);
+    ('D6', 'Riblja corba', 'None', 'Riba, voda, paradajiz', 'Pomesaj i kuvaj', 100, 'Dobro ali zdravo', 'https://i.ytimg.com/vi/y2TKsRY3YJI/maxresdefault.jpg', 40, 'SOUP', false);
 
 insert into dish
 (code, name, allergens, ingredients, recipe, preparation_price, description, image_path, preparation_time, category, is_deleted)
 values
-    ('D7', 'Burek sa sirom', 'None', 'Kore, sir, mast', 'Pomesaj i peci', 100, 'Dobro ali masno', 'none', 30, 'MAIN_COURSE', false);
+    ('D7', 'Burek sa sirom', 'None', 'Kore, sir, mast', 'Pomesaj i peci', 100, 'Dobro ali masno', 'https://podravkaiovariations.azureedge.net/d3d932e4-6408-11eb-a3c6-0242ac12001a/v/f2b1f6a6-64bc-11eb-b6c2-0242ac130010/1024x768-f2b21802-64bc-11eb-a115-0242ac130010.webp', 30, 'MAIN_COURSE', false);
 
 
 
@@ -223,17 +264,23 @@ values
 insert into drink
 (code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
 values
-    ('DR1', 'Kokakola', 'NON_ALCOHOLIC', 'None', 'Poslovna tajna', 55, 'TOO BATO KOKAKOLA', 'None', false);
+    ('DR1', 'Kokakola', 'NON_ALCOHOLIC', 'None', 'Poslovna tajna', 55, 'TOO BATO KOKAKOLA', 'https://www.dnevno.rs/wp-content/uploads/2018/06/14776-koka-kola-sok.jpg', false);
 
 insert into drink
 (code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
 values
-    ('DR2', 'Caj', 'NON_ALCOHOLIC', 'None', 'Voda i trava', 55, 'Zdravo', 'None', false);
+    ('DR2', 'Caj', 'NON_ALCOHOLIC', 'None', 'Voda i trava', 55, 'Zdravo', 'https://www.magazin.novosti.rs/upload/Article/Image/2021_10/1635514273_tea-g38726a8c1_1920.jpg', false);
 
 insert into drink
 (code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
 values
-    ('DR3', 'Rakija', 'ALCOHOLIC', 'None', 'SLJIVA', 55, 'UDRI', 'None', false);
+    ('DR3', 'Rakija', 'ALCOHOLIC', 'None', 'SLJIVA', 55, 'UDRI', 'https://www.espreso.co.rs/data/images/2018/01/08/12/314701_rakija-domaca_share.jpg', false);
+
+
+insert into drink
+(code, name, category, allergens, ingredients, purchase_price, description, image_path, is_deleted)
+values
+    ('DR4', 'Domaca kafa', 'HOT_BEVERAGE', 'None', 'samlevena zrna kafe', 55, 'Za razbudjivanje', 'https://www.korpa-deli-market.com/media/2021/01/Korpa-deli-kafa-domaca-2.jpg', false);
 
 
 
